@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import android.util.Log;
 
 /**
  * Implements VideoSink by displaying the video stream on an EGL Surface. This class is intended to
@@ -233,12 +234,21 @@ public class EglRenderer implements VideoSink {
         // If sharedContext is null, then texture frames are disabled. This is typically for old
         // devices that might not be fully spec compliant, so force EGL 1.0 since EGL 1.4 has
         // caused trouble on some weird devices.
-        if (sharedContext == null) {
-          logD("EglBase10.create context");
-          eglBase = EglBase.createEgl10(configAttributes);
-        } else {
-          logD("EglBase.create shared context");
-          eglBase = EglBase.create(sharedContext, configAttributes);
+
+        Log.i("EglRenderer", "I was here");
+
+        try{
+          if (sharedContext == null) {
+            logD("EglBase10.create context");
+            Log.i("EglRenderer", "EglBase10.create context");
+            eglBase = EglBase.createEgl10(configAttributes);
+          } else {
+            logD("EglBase.create shared context");
+            Log.i("EglRenderer", "EglBase.create shared context");
+            eglBase = EglBase.create(sharedContext, configAttributes);
+          }
+        } catch(Exception e) {
+          Log.i("EglRenderer", "exception");
         }
       });
       renderThreadHandler.post(eglSurfaceCreationRunnable);
