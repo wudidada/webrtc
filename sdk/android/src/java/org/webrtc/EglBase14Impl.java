@@ -279,9 +279,9 @@ class EglBase14Impl implements EglBase14 {
       eglContext = EGL14.eglCreateContext(eglDisplay, eglConfig, rootContext, contextAttributes, 0);
     }
 
-    Log.i("EglRenderer", "EglBaase10");
+    Log.i("EglRenderer", "EglBaase14");
 
-      throw new RuntimeException(
+    throw new RuntimeException(
           "Failed to create EGL context: 0x" + Integer.toHexString(EGL14.eglGetError()));
   }
 }
