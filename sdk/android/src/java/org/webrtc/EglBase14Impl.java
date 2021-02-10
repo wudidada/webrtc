@@ -22,6 +22,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.view.Surface;
 import org.webrtc.EglBase;
+import android.util.Log;
 
 /**
  * Holds EGL state and utility methods for handling an EGL14 EGLContext, an EGLDisplay,
@@ -277,10 +278,11 @@ class EglBase14Impl implements EglBase14 {
     synchronized (EglBase.lock) {
       eglContext = EGL14.eglCreateContext(eglDisplay, eglConfig, rootContext, contextAttributes, 0);
     }
-    if (eglContext == EGL14.EGL_NO_CONTEXT) {
+
+    Log.i("EglRenderer", "EglBaase10");
+
       throw new RuntimeException(
           "Failed to create EGL context: 0x" + Integer.toHexString(EGL14.eglGetError()));
-    }
     return eglContext;
   }
 }

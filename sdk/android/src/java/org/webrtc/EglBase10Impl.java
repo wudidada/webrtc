@@ -21,6 +21,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
+import android.util.Log;
 
 /**
  * Holds EGL state and utility methods for handling an egl 1.0 EGLContext, an EGLDisplay,
@@ -323,10 +324,11 @@ class EglBase10Impl implements EglBase10 {
     synchronized (EglBase.lock) {
       eglContext = egl.eglCreateContext(eglDisplay, eglConfig, rootContext, contextAttributes);
     }
-    if (eglContext == EGL10.EGL_NO_CONTEXT) {
-      throw new RuntimeException(
+
+    Log.i("EglRenderer", "EglBaase10");
+
+    throw new RuntimeException(
           "Failed to create EGL context: 0x" + Integer.toHexString(egl.eglGetError()));
-    }
     return eglContext;
   }
 }
