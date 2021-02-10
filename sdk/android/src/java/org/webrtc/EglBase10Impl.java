@@ -329,6 +329,5 @@ class EglBase10Impl implements EglBase10 {
 
     throw new RuntimeException(
           "Failed to create EGL context: 0x" + Integer.toHexString(egl.eglGetError()));
-    return eglContext;
   }
 }
