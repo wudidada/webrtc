@@ -237,6 +237,7 @@ public class EglRenderer implements VideoSink {
 
         Log.i("EglRenderer", "I was here");
 
+        try{
           if (sharedContext == null) {
             logD("EglBase10.create context");
             Log.i("EglRenderer", "EglBase10.create context");
@@ -246,6 +247,9 @@ public class EglRenderer implements VideoSink {
             Log.i("EglRenderer", "EglBase.create shared context");
             eglBase = EglBase.create(sharedContext, configAttributes);
           }
+        } catch(Exception e) {
+          Log.i("EglRenderer", "exception");
+        }
       });
       renderThreadHandler.post(eglSurfaceCreationRunnable);
       final long currentTimeNs = System.nanoTime();
