@@ -233,13 +233,10 @@ public class EglRenderer implements VideoSink {
         // If sharedContext is null, then texture frames are disabled. This is typically for old
         // devices that might not be fully spec compliant, so force EGL 1.0 since EGL 1.4 has
         // caused trouble on some weird devices.
-        if (sharedContext == null) {
-          logD("EglBase10.create context");
-          eglBase = EglBase.createEgl10(configAttributes);
-        } else {
-          logD("EglBase.create shared context");
-          eglBase = EglBase.create(sharedContext, configAttributes);
-        }
+
+         throw new RuntimeException(
+          "Failed1234 to create EGL context: 0x" + Integer.toHexString(egl.eglGetError()));
+
       });
       renderThreadHandler.post(eglSurfaceCreationRunnable);
       final long currentTimeNs = System.nanoTime();
