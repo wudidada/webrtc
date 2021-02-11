@@ -104,6 +104,7 @@ public class EglRenderer implements VideoSink {
         super.dispatchMessage(msg);
       } catch (Exception e) {
         Logging.e(TAG, "Exception on EglRenderer thread", e);
+        Log.i("HandlerWithExceptionCallback", "HandlerWithExceptionCallback");
         exceptionCallback.run();
         throw e;
       }
@@ -223,6 +224,7 @@ public class EglRenderer implements VideoSink {
             @Override
             public void run() {
               synchronized (handlerLock) {
+                console.log("HandlerWithExceptionCallback", "synchronized (handlerLock)");
                 renderThreadHandler = null;
               }
             }
