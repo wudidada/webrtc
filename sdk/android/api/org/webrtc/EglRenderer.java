@@ -235,7 +235,7 @@ public class EglRenderer implements VideoSink {
         // caused trouble on some weird devices.
 
          throw new RuntimeException(
-          "Failed1234 to create EGL context: 0x" + Integer.toHexString(egl.eglGetError()));
+          "Failed1234 to create EGL context: 0x" );
 
       });
       renderThreadHandler.post(eglSurfaceCreationRunnable);
