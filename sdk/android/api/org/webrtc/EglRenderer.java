@@ -224,7 +224,7 @@ public class EglRenderer implements VideoSink {
             @Override
             public void run() {
               synchronized (handlerLock) {
-                console.log("HandlerWithExceptionCallback", "synchronized (handlerLock)");
+                Log.i("HandlerWithExceptionCallback", "synchronized (handlerLock)");
                 renderThreadHandler = null;
               }
             }
