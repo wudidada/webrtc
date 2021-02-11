@@ -214,6 +214,7 @@ public class EglRenderer implements VideoSink {
         throw new IllegalStateException(name + "Already initialized");
       }
       logD("Initializing EglRenderer");
+      Log.i("Initializing EglRenderer", "thread " + Thread.currentThread().getId());
       this.drawer = drawer;
       this.usePresentationTimeStamp = usePresentationTimeStamp;
 
@@ -224,7 +225,7 @@ public class EglRenderer implements VideoSink {
             @Override
             public void run() {
               synchronized (handlerLock) {
-                Log.i("HandlerWithExceptionCallback", "synchronized (handlerLock)");
+                Log.i("HandlerWithExceptionCallback", "synchronized (handlerLock)" + Thread.currentThread().getId());
                 renderThreadHandler = null;
               }
             }
@@ -250,7 +251,7 @@ public class EglRenderer implements VideoSink {
             eglBase = EglBase.create(sharedContext, configAttributes);
           }
         } catch(Exception e) {
-          Log.i("EglRenderer", "exception");
+          Log.i("EglRenderer", "exception " + Thread.currentThread().getId());
         }
       });
       renderThreadHandler.post(eglSurfaceCreationRunnable);
