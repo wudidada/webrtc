@@ -269,7 +269,7 @@ class EglBase14Impl implements EglBase14 {
   // Return an EGLConfig, or die trying.
   private static EGLContext createEglContext(@Nullable EGLContext sharedContext,
       EGLDisplay eglDisplay, EGLConfig eglConfig, int openGlesVersion) {
-        Log.d("InjectableLogger", s);
+        Log.d("InjectableLogger", "InjectableLogger");
         String msg = "Message that should be logged";
         Logging.d("EGLContext1123", msg);
     if (sharedContext != null && sharedContext == EGL14.EGL_NO_CONTEXT) {
