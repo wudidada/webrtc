@@ -22,6 +22,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.view.Surface;
 import org.webrtc.EglBase;
+import android.util.Log;
 
 /**
  * Holds EGL state and utility methods for handling an EGL14 EGLContext, an EGLDisplay,
@@ -268,6 +269,9 @@ class EglBase14Impl implements EglBase14 {
   // Return an EGLConfig, or die trying.
   private static EGLContext createEglContext(@Nullable EGLContext sharedContext,
       EGLDisplay eglDisplay, EGLConfig eglConfig, int openGlesVersion) {
+        Log.d("InjectableLogger", s);
+        String msg = "Message that should be logged";
+        Logging.d("EGLContext1123", msg);
     if (sharedContext != null && sharedContext == EGL14.EGL_NO_CONTEXT) {
       throw new RuntimeException("Invalid sharedContext");
     }
