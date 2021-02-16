@@ -283,10 +283,10 @@ class EglBase14Impl implements EglBase14 {
     }
     if (eglContext == EGL14.EGL_NO_CONTEXT) {
       throw new RuntimeException(
-          "Failed to create EGL context: 0x" + Integer.toHexString(EGL14.eglGetError()));
+          "Failed to create EGL12313123123 context: 0x" + Integer.toHexString(EGL14.eglGetError()));
     }
 
     throw new RuntimeException(
-          "Failed to create EGL context: 0x" + Integer.toHexString(EGL14.eglGetError()));
+          "Failed to create EGL654321 context: 0x" + Integer.toHexString(EGL14.eglGetError()));
   }
 }
