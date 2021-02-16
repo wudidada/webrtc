@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import android.util.Log;
 
 /**
  * Implements VideoSink by displaying the video stream on an EGL Surface. This class is intended to
@@ -100,9 +101,11 @@ public class EglRenderer implements VideoSink {
     @Override
     public void dispatchMessage(Message msg) {
       try {
+        Log.e(TAG, "Dispatching message"); 
         super.dispatchMessage(msg);
       } catch (Exception e) {
         Logging.e(TAG, "Exception on EglRenderer thread", e);
+        Log.e(TAG, "Exception on EglRenderer thread" + e.toString()); 
         exceptionCallback.run();
         throw e;
       }
