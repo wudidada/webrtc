@@ -145,12 +145,17 @@ public interface EglBase {
     return 1;
   }
 
+  static short eglContextCount = 0;
+
   /**
    * Create a new context with the specified config attributes, sharing data with |sharedContext|.
    * If |sharedContext| is null, a root context is created. This function will try to create an EGL
    * 1.4 context if possible, and an EGL 1.0 context otherwise.
    */
   public static EglBase create(@Nullable Context sharedContext, int[] configAttributes) {
+    if(eglContextCount > 2) {
+      throw new RuntimeException("reached counter");
+    }
     if (sharedContext == null) {
       return EglBase14Impl.isEGL14Supported() ? createEgl14(configAttributes)
                                               : createEgl10(configAttributes);
@@ -180,6 +185,7 @@ public interface EglBase {
 
   /** Explicitly create a root EGl 1.0 context with the specified config attributes. */
   public static EglBase10 createEgl10(int[] configAttributes) {
+    eglContextCount++;
     return new EglBase10Impl(/* sharedContext= */ null, configAttributes);
   }
 
@@ -188,6 +194,7 @@ public interface EglBase {
    * context.
    */
   public static EglBase10 createEgl10(EglBase10.Context sharedContext, int[] configAttributes) {
+    eglContextCount++;
     return new EglBase10Impl(
         sharedContext == null ? null : sharedContext.getRawContext(), configAttributes);
   }
@@ -198,11 +205,13 @@ public interface EglBase {
    */
   public static EglBase10 createEgl10(
       javax.microedition.khronos.egl.EGLContext sharedContext, int[] configAttributes) {
+    eglContextCount++;
     return new EglBase10Impl(sharedContext, configAttributes);
   }
 
   /** Explicitly create a root EGl 1.4 context with the specified config attributes. */
   public static EglBase14 createEgl14(int[] configAttributes) {
+    eglContextCount++;
     return new EglBase14Impl(/* sharedContext= */ null, configAttributes);
   }
 
@@ -211,6 +220,7 @@ public interface EglBase {
    * context.
    */
   public static EglBase14 createEgl14(EglBase14.Context sharedContext, int[] configAttributes) {
+    eglContextCount++;
     return new EglBase14Impl(
         sharedContext == null ? null : sharedContext.getRawContext(), configAttributes);
   }
@@ -221,6 +231,7 @@ public interface EglBase {
    */
   public static EglBase14 createEgl14(
       android.opengl.EGLContext sharedContext, int[] configAttributes) {
+    eglContextCount++;    
     return new EglBase14Impl(sharedContext, configAttributes);
   }
 
