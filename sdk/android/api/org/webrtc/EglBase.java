@@ -145,7 +145,7 @@ public interface EglBase {
     return 1;
   }
 
-  static short eglContextCount = 0;
+  public static Integer eglContxextCount = 0;
 
   /**
    * Create a new context with the specified config attributes, sharing data with |sharedContext|.
