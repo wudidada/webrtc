@@ -227,6 +227,7 @@ public interface EglBase {
    */
   public static EglBase14 createEgl14(
       android.opengl.EGLContext sharedContext, int[] configAttributes) {
+    Logging.i("EglBase14Tag", "creating context");
     return new EglBase14Impl(sharedContext, configAttributes);
   }
 
