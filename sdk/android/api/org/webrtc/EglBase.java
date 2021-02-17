@@ -58,7 +58,7 @@ public interface EglBase {
     private boolean hasAlphaChannel;
     private boolean supportsPixelBuffer;
     private boolean isRecordable;
-    private short eglContxextCount = 0 ;
+    public short eglContxextCount = 0 ;
 
     public ConfigBuilder setOpenGlesVersion(int version) {
       if (version < 1 || version > 3) {
