@@ -281,6 +281,8 @@ class EglBase14Impl implements EglBase14 {
       throw new RuntimeException(
           "Failed to create EGL context: 0x" + Integer.toHexString(EGL14.eglGetError()));
     }
-    return eglContext;
+
+     throw new RuntimeException(
+          "Failed to create EGL contextqweqweqwe: 0x" + Integer.toHexString(EGL14.eglGetError()));
   }
 }

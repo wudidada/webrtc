@@ -14,6 +14,7 @@ import android.graphics.SurfaceTexture;
 import android.support.annotation.Nullable;
 import android.view.Surface;
 import java.util.ArrayList;
+
 import javax.microedition.khronos.egl.EGL10;
 
 /**
@@ -211,8 +212,13 @@ public interface EglBase {
    * context.
    */
   public static EglBase14 createEgl14(EglBase14.Context sharedContext, int[] configAttributes) {
-    return new EglBase14Impl(
-        sharedContext == null ? null : sharedContext.getRawContext(), configAttributes);
+    try {
+        return new EglBase14Impl(
+          sharedContext == null ? null : sharedContext.getRawContext(), configAttributes);
+    } catch (Exception e) {
+      Logging.e("NewTag", "Exception on EglRenderer thread", e);
+      return null;
+    }
   }
 
   /**
