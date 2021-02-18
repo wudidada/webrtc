@@ -31,7 +31,7 @@ class EglBase10Impl implements EglBase10 {
   // This constant is taken from EGL14.EGL_CONTEXT_CLIENT_VERSION.
   private static final int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
 
-  public static int numberOfEglContextInstances = 0;
+  public static int numberOfEglContextInstances;
 
   private final EGL10 egl;
   private EGLContext eglContext;
