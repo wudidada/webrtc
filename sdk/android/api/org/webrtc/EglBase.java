@@ -34,6 +34,8 @@ public interface EglBase {
     long getNativeEglContext();
   }
 
+  public static final String TAG = "EglBase";
+
   // According to the documentation, EGL can be used from multiple threads at the same time if each
   // thread has its own EGLContext, but in practice it deadlocks on some devices when doing this.
   // Therefore, synchronize on this global lock before calling dangerous EGL functions that might
@@ -203,7 +205,12 @@ public interface EglBase {
 
   /** Explicitly create a root EGl 1.4 context with the specified config attributes. */
   public static EglBase14 createEgl14(int[] configAttributes) {
-    return new EglBase14Impl(/* sharedContext= */ null, configAttributes);
+    try{
+      return new EglBase14Impl(/* sharedContext= */ null, configAttributes);
+    } catch (Exception e) {
+      Logging.e(TAG, "Error creating EglBase14Impl with " + EglBase14Impl.numberOfEglContextInstances + " contexts:", e);
+      throw e;
+    }
   }
 
   /**

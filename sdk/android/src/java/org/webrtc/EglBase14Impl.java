@@ -38,6 +38,8 @@ class EglBase14Impl implements EglBase14 {
   private EGLDisplay eglDisplay;
   private EGLSurface eglSurface = EGL14.EGL_NO_SURFACE;
 
+  public static int numberOfEglContextInstances;
+
   // EGL 1.4 is supported from API 17. But EGLExt that is used for setting presentation
   // time stamp on a surface is supported from 18 so we require 18.
   public static boolean isEGL14Supported() {
@@ -178,6 +180,7 @@ class EglBase14Impl implements EglBase14 {
     eglContext = EGL14.EGL_NO_CONTEXT;
     eglDisplay = EGL14.EGL_NO_DISPLAY;
     eglConfig = null;
+    numberOfEglContextInstances--;
   }
 
   @Override
@@ -276,8 +279,10 @@ class EglBase14Impl implements EglBase14 {
     final EGLContext eglContext;
     synchronized (EglBase.lock) {
       eglContext = EGL14.eglCreateContext(eglDisplay, eglConfig, rootContext, contextAttributes, 0);
+      numberOfEglContextInstances++;
     }
-    if (eglContext == EGL14.EGL_NO_CONTEXT) {
+
+    if (numberOfEglContextInstances > 4) {
       throw new RuntimeException(
           "Failed to create EGL context: 0x" + Integer.toHexString(EGL14.eglGetError()));
     }

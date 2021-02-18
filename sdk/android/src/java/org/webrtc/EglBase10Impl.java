@@ -31,6 +31,8 @@ class EglBase10Impl implements EglBase10 {
   // This constant is taken from EGL14.EGL_CONTEXT_CLIENT_VERSION.
   private static final int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
 
+  public static int numberOfEglContextInstances;
+
   private final EGL10 egl;
   private EGLContext eglContext;
   @Nullable private EGLConfig eglConfig;
@@ -233,6 +235,7 @@ class EglBase10Impl implements EglBase10 {
     eglContext = EGL10.EGL_NO_CONTEXT;
     eglDisplay = EGL10.EGL_NO_DISPLAY;
     eglConfig = null;
+    numberOfEglContextInstances--;
   }
 
   @Override
@@ -322,8 +325,10 @@ class EglBase10Impl implements EglBase10 {
     final EGLContext eglContext;
     synchronized (EglBase.lock) {
       eglContext = egl.eglCreateContext(eglDisplay, eglConfig, rootContext, contextAttributes);
+      numberOfEglContextInstances++;
     }
-    if (eglContext == EGL10.EGL_NO_CONTEXT) {
+
+    if (numberOfEglContextInstances > 4) {
       throw new RuntimeException(
           "Failed to create EGL context: 0x" + Integer.toHexString(egl.eglGetError()));
     }
