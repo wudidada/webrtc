@@ -34,6 +34,8 @@ public interface EglBase {
     long getNativeEglContext();
   }
 
+  public static final String TAG = "EglBase";
+
   // According to the documentation, EGL can be used from multiple threads at the same time if each
   // thread has its own EGLContext, but in practice it deadlocks on some devices when doing this.
   // Therefore, synchronize on this global lock before calling dangerous EGL functions that might
