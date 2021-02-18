@@ -203,7 +203,12 @@ public interface EglBase {
 
   /** Explicitly create a root EGl 1.4 context with the specified config attributes. */
   public static EglBase14 createEgl14(int[] configAttributes) {
-    return new EglBase14Impl(/* sharedContext= */ null, configAttributes);
+    try{
+      return new EglBase14Impl(/* sharedContext= */ null, configAttributes);
+    } catch (Exception e) {
+      Logging.e(TAG, "Error creating EglBase14Impl with " + EglBase14.numberOfEglContextOfInstances + " contexts:", e);
+      throw e;
+    }
   }
 
   /**
