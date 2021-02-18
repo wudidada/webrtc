@@ -208,7 +208,7 @@ public interface EglBase {
     try{
       return new EglBase14Impl(/* sharedContext= */ null, configAttributes);
     } catch (Exception e) {
-      Logging.e(TAG, "Error creating EglBase14Impl with " + EglBase10Impl.numberOfEglContextOfInstances + " contexts:", e);
+      Logging.e(TAG, "Error creating EglBase14Impl with " + EglBase10Impl.numberOfEglContextInstances + " contexts:", e);
       throw e;
     }
   }
