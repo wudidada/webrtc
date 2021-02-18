@@ -236,9 +236,11 @@ public class EglRenderer implements VideoSink {
         if (sharedContext == null) {
           logD("EglBase10.create context");
           eglBase = EglBase.createEgl10(configAttributes);
+          throw new RuntimeException("dasdasdasdasdasdasd");
         } else {
           logD("EglBase.create shared context");
           eglBase = EglBase.create(sharedContext, configAttributes);
+          throw new RuntimeException("poiuytrewewq");
         }
       });
       renderThreadHandler.post(eglSurfaceCreationRunnable);
