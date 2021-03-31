@@ -62,6 +62,7 @@ BufferedFrameDecryptor::FrameDecision BufferedFrameDecryptor::DecryptFrame(
                         "stream. Stashing frame.";
     return FrameDecision::kStash;
   }
+  
   // Retrieve the maximum possible size of the decrypted payload.
   const size_t max_plaintext_byte_size =
       frame_decryptor_->GetMaxPlaintextByteSize(cricket::MEDIA_TYPE_VIDEO,

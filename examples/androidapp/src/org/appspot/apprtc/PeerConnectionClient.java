@@ -61,6 +61,8 @@ import org.webrtc.RtpParameters;
 import org.webrtc.RtpReceiver;
 import org.webrtc.RtpSender;
 import org.webrtc.RtpTransceiver;
+import org.webrtc.GCMFrameDecryptor;
+import org.webrtc.GCMFrameEncryptor;
 import org.webrtc.SdpObserver;
 import org.webrtc.SessionDescription;
 import org.webrtc.SoftwareVideoDecoderFactory;
@@ -166,6 +168,7 @@ public class PeerConnectionClient {
   private VideoTrack remoteVideoTrack;
   @Nullable
   private RtpSender localVideoSender;
+  private List<RtpReceiver> localVideoReceiverList = new ArrayList<>();
   // enableAudio is set to true if audio should be sent.
   private boolean enableAudio = true;
   @Nullable
@@ -622,8 +625,8 @@ public class PeerConnectionClient {
     isInitiator = false;
 
     // Set INFO libjingle logging.
-    // NOTE: this _must_ happen while `factory` is alive!
-    Logging.enableLogToDebugOutput(Logging.Severity.LS_INFO);
+    // NOTE: this _must_ happen while |factory| is alive!
+    Logging.enableLogToDebugOutput(Logging.Severity.LS_VERBOSE);
 
     List<String> mediaStreamLabels = Collections.singletonList("ARDAMS");
     if (isVideoCallEnabled()) {
@@ -921,8 +924,23 @@ public class PeerConnectionClient {
       if (!localVideoSender.setParameters(parameters)) {
         Log.e(TAG, "RtpSender.setParameters failed.");
       }
+
       Log.d(TAG, "Configured max video bitrate to: " + maxBitrateKbps);
     });
+  }
+
+  public void addEncryptor() {
+    for (RtpSender sender : peerConnection.getSenders()) {
+      GCMFrameEncryptor fe1 = new GCMFrameEncryptor();
+      sender.setFrameEncryptor(fe1);
+    }
+
+    Log.d("XXX receivers", "receiver");
+    for (RtpReceiver receiver : localVideoReceiverList) {
+      Log.d("XXX receiver", receiver.toString());
+      GCMFrameDecryptor fd1 = new GCMFrameDecryptor();
+      receiver.setFrameDecryptor(fd1);
+    }
   }
 
   private void reportError(final String errorMessage) {
@@ -1189,7 +1207,7 @@ public class PeerConnectionClient {
   }
 
   public void switchCamera() {
-    executor.execute(this ::switchCameraInternal);
+    addEncryptor();
   }
 
   public void changeCaptureFormat(final int width, final int height, final int framerate) {
@@ -1320,7 +1338,9 @@ public class PeerConnectionClient {
     }
 
     @Override
-    public void onAddTrack(final RtpReceiver receiver, final MediaStream[] mediaStreams) {}
+    public void onAddTrack(final RtpReceiver receiver, final MediaStream[] mediaStreams) {
+       localVideoReceiverList.add(receiver);
+    }
 
     @Override
     public void onRemoveTrack(final RtpReceiver receiver) {}
