@@ -17,6 +17,7 @@ import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.webrtc.Loggable;
+import android.util.Log;
 
 /**
  * Java wrapper for WebRTC logging. Logging defaults to java.util.logging.Logger, but a custom
@@ -153,6 +154,7 @@ public class Logging {
         break;
     }
     fallbackLogger.log(level, tag + ": " + message);
+    Log.d(tag, message);
   }
 
   public static void d(String tag, String message) {
