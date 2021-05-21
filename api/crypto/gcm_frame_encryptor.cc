@@ -81,15 +81,12 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
                                 rtc::ArrayView<uint8_t> encrypted_frame,
                                 size_t* bytes_written) {
  
- RTC_LOG(LS_VERBOSE) << "XXX Encrypting";
- RTC_LOG(LS_VERBOSE) << "XXX Encrypting media type" << media_type;
+ RTC_LOG(LS_VERBOSE) << "XXX Encrypting----------------------";
 
- uint8_t unencrypted_bytes = 4;
+  uint8_t unencrypted_bytes = 4;
 
- RTC_LOG(LS_VERBOSE) << "XXX Encrypting unecrypted" << unencrypted_bytes;
-
-  for (size_t i = 0; i < frame.size(); i++) {
-    encrypted_frame[i] = frame[i];
+  for (uint8_t i = 0; i < frame.size(); i++) {
+       encrypted_frame[i] = i;
   }
 
   /*for (size_t i = unencrypted_bytes; i < frame.size(); i++) {
@@ -98,7 +95,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   *bytes_written = encrypted_frame.size();
   
-  aes_gcm_encrypt();
+ // aes_gcm_encrypt();
 
   return 1;
 }
