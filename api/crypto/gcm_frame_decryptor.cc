@@ -92,10 +92,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       break;
  }*/
 
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
+ // RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
   
   for (size_t i = 0; i < frame.size(); i++) {
-    RTC_LOG(LS_VERBOSE) << "XXX decrypting" << encrypted_frame[i];
+  //  RTC_LOG(LS_VERBOSE) << "XXX decrypting" << encrypted_frame[i];
     frame[i] = encrypted_frame[i];
   }
 
