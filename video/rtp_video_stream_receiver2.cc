@@ -723,7 +723,6 @@ bool RtpVideoStreamReceiver2::IsDecryptable() const {
 
 void RtpVideoStreamReceiver2::OnInsertedPacket(
     video_coding::PacketBuffer::InsertResult result) {
-  RTC_LOG(LS_INFO) << "XXX RtpVideoStreamReceiver2 OnInsertedPacket"; 
   RTC_DCHECK_RUN_ON(&worker_task_checker_);
   video_coding::PacketBuffer::Packet* first_packet = nullptr;
   int max_nack_count;
@@ -795,10 +794,8 @@ void RtpVideoStreamReceiver2::OnInsertedPacket(
 
 void RtpVideoStreamReceiver2::OnAssembledFrame(
     std::unique_ptr<video_coding::RtpFrameObject> frame) {
-    
   RTC_DCHECK_RUN_ON(&worker_task_checker_);
   RTC_DCHECK(frame);
-
 
   const absl::optional<RTPVideoHeader::GenericDescriptorInfo>& descriptor =
       frame->GetRtpVideoHeader().generic;

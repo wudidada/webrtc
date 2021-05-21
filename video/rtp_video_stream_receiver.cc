@@ -503,7 +503,6 @@ void RtpVideoStreamReceiver::OnReceivedPayloadData(
     rtc::CopyOnWriteBuffer codec_payload,
     const RtpPacketReceived& rtp_packet,
     const RTPVideoHeader& video) {
-  RTC_LOG(LS_INFO) << "XXX RtpVideoStreamReceiver OnReceivedPayloadData"; 
   RTC_DCHECK_RUN_ON(&worker_task_checker_);
   auto packet = std::make_unique<video_coding::PacketBuffer::Packet>(
       rtp_packet, video, ntp_estimator_.Estimate(rtp_packet.Timestamp()),
