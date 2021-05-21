@@ -87,6 +87,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   for (uint8_t i = 0; i < frame.size(); i++) {
        encrypted_frame[i] = i;
+       RTC_LOG(LS_VERBOSE) << "XXX Encrypting" << i;
   }
 
   /*for (size_t i = unencrypted_bytes; i < frame.size(); i++) {
