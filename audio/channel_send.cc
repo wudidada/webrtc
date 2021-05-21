@@ -369,6 +369,7 @@ int32_t ChannelSend::SendRtpAudio(AudioFrameType frameType,
                                   uint32_t rtp_timestamp,
                                   rtc::ArrayView<const uint8_t> payload,
                                   int64_t absolute_capture_timestamp_ms) {
+  RTC_LOG(LS_INFO) << "XXX channel_send SendRtpAudio1"; 
   if (_includeAudioLevelIndication) {
     // Store current audio level in the RTP sender.
     // The level will be used in combination with voice-activity state
@@ -407,6 +408,7 @@ int32_t ChannelSend::SendRtpAudio(AudioFrameType frameType,
       encrypted_audio_payload.SetSize(bytes_written);
       // Rewrite the payloadData and size to the new encrypted payload.
       payload = encrypted_audio_payload;
+      RTC_LOG(LS_INFO) << "XXX channel_send SendRtpAudio2"; 
     } else if (crypto_options_.sframe.require_frame_encryption) {
       RTC_DLOG(LS_ERROR) << "Channel::SendData() failed sending audio payload: "
                             "A frame encryptor is required but one is not set.";
@@ -432,6 +434,7 @@ int32_t ChannelSend::SendRtpAudio(AudioFrameType frameType,
   // knowledge of the offset to a single place.
 
   // This call will trigger Transport::SendPacket() from the RTP/RTCP module.
+  RTC_LOG(LS_INFO) << "XXX channel_send SendRtpAudio2"; 
   if (!rtp_sender_audio_->SendAudio(
           frameType, payloadType, rtp_timestamp + rtp_rtcp_->StartTimestamp(),
           payload.data(), payload.size(), absolute_capture_timestamp_ms)) {

@@ -284,6 +284,7 @@ class ChannelReceive : public ChannelReceiveInterface {
 void ChannelReceive::OnReceivedPayloadData(
     rtc::ArrayView<const uint8_t> payload,
     const RTPHeader& rtpHeader) {
+  RTC_LOG(LS_INFO) << "XXX channel_receive OnReceivedPayloadData"; 
   if (!Playing()) {
     // Avoid inserting into NetEQ when we are not playing. Count the
     // packet as discarded.
@@ -568,6 +569,7 @@ void ChannelReceive::SetReceiveCodecs(
 
 // May be called on either worker thread or network thread.
 void ChannelReceive::OnRtpPacket(const RtpPacketReceived& packet) {
+  RTC_LOG(LS_INFO) << "XXX channel_receive OnRtpPacket"; 
   int64_t now_ms = rtc::TimeMillis();
 
   {
@@ -606,6 +608,8 @@ void ChannelReceive::OnRtpPacket(const RtpPacketReceived& packet) {
 void ChannelReceive::ReceivePacket(const uint8_t* packet,
                                    size_t packet_length,
                                    const RTPHeader& header) {
+  RTC_LOG(LS_INFO) << "XXX channel_receive ReceivePacket"; 
+        
   const uint8_t* payload = packet + header.headerLength;
   assert(packet_length >= header.headerLength);
   size_t payload_length = packet_length - header.headerLength;
