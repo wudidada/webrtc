@@ -95,7 +95,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
   }
 
   for (size_t i = unencrypted_bytes; i < frame.size(); i++) {
-    encrypted_frame[i] = frame[i];
+    encrypted_frame[i] = frame[i] ^ 0x04;
   }
 
   *bytes_written = encrypted_frame.size();
