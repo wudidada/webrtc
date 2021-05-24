@@ -99,7 +99,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   *bytes_written = encrypted_frame.size();
   
-  aes_gcm_encrypt();
+  aes_gcm_encrypt(frame);
 
   return 0;
 }
