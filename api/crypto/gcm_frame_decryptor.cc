@@ -17,10 +17,10 @@ static const unsigned char gcm_iv[] = {
     0x99, 0xaa, 0x3e, 0x68, 0xed, 0x81, 0x73, 0xa0, 0xee, 0xd0, 0x66, 0x84
 };
 
-static const unsigned char gcm_pt[] = {
+/*static const unsigned char gcm_pt[] = {
     0xf5, 0x6e, 0x87, 0x05, 0x5b, 0xc3, 0x2d, 0x0e, 0xeb, 0x31, 0xb2, 0xea,
     0xcc, 0x2b, 0xf2, 0xa5
-};
+};*/
 
 static const unsigned char gcm_aad[] = {
     0x4d, 0x23, 0xc3, 0xce, 0xc3, 0x34, 0xb4, 0x9b, 0xdb, 0x37, 0x0c, 0x43,
@@ -46,8 +46,9 @@ static const unsigned char gcm_tag[] = {
     EVP_CIPHER_CTX *ctx;
     int outlen, tmplen, rv;
     unsigned char outbuf[1024];
-    printf("AES GCM Decrypt:\n");
-    printf("Ciphertext:\n");
+    
+    unsigned char gcm_pt[] 
+
     ctx = EVP_CIPHER_CTX_new();
     /* Select cipher */
     EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);

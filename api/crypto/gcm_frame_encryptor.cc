@@ -17,10 +17,10 @@ static const unsigned char gcm_iv[] = {
     0x99, 0xaa, 0x3e, 0x68, 0xed, 0x81, 0x73, 0xa0, 0xee, 0xd0, 0x66, 0x84
 };
 
-static const unsigned char gcm_pt[] = {
+/*static const unsigned char gcm_pt[] = {
     0xf5, 0x6e, 0x87, 0x05, 0x5b, 0xc3, 0x2d, 0x0e, 0xeb, 0x31, 0xb2, 0xea,
     0xcc, 0x2b, 0xf2, 0xa5
-};
+};*/
 
 static const unsigned char gcm_aad[] = {
     0x4d, 0x23, 0xc3, 0xce, 0xc3, 0x34, 0xb4, 0x9b, 0xdb, 0x37, 0x0c, 0x43,
@@ -41,9 +41,13 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
     RTC_LOG(LS_VERBOSE) << "XXX GCMFrameEncryptor";
 }
 
-void aes_gcm_encrypt(void)
+void aes_gcm_encrypt(rtc::ArrayView<const uint8_t> frame)
 {
-    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt1";
+    unsigned char gcm_pt[1024];
+
+    for (size_t i = 0; i < frame; i++) {
+       gcm_pt[i] = frame[i];
+    }
 
     EVP_CIPHER_CTX *ctx;
     int outlen, tmplen;
@@ -85,7 +89,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
  uint8_t unencrypted_bytes = 4;
 
- for (size_t i = 0; i < unencrypted_bytes; i++) {
+  for (size_t i = 0; i < unencrypted_bytes; i++) {
        encrypted_frame[i] = frame[i];
   }
 
@@ -95,7 +99,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   *bytes_written = encrypted_frame.size();
   
- // aes_gcm_encrypt();
+  aes_gcm_encrypt();
 
   return 0;
 }
