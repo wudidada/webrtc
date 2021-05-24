@@ -94,7 +94,13 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
  // RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
   
-  for (size_t i = 0; i < frame.size(); i++) {
+ uint8_t unencrypted_bytes = 4;
+
+ for (size_t i = 0; i < unencrypted_bytes; i++) {
+    frame[i] = encrypted_frame[i];
+  }
+
+  for (size_t i = unencrypted_bytes; i < frame.size(); i++) {
   //  RTC_LOG(LS_VERBOSE) << "XXX decrypting" << encrypted_frame[i];
     frame[i] = encrypted_frame[i] ^ 0x04;
   }
