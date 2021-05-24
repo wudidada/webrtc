@@ -45,7 +45,7 @@ void aes_gcm_encrypt(rtc::ArrayView<const uint8_t> frame)
 {
     unsigned char gcm_pt[1024];
 
-    for (size_t i = 0; i < frame; i++) {
+    for (size_t i = 0; i < frame.size(); i++) {
        gcm_pt[i] = frame[i];
     }
 
