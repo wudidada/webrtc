@@ -46,8 +46,6 @@ static const unsigned char gcm_tag[] = {
     EVP_CIPHER_CTX *ctx;
     int outlen, tmplen, rv;
     unsigned char outbuf[1024];
-    
-    unsigned char gcm_pt[] 
 
     ctx = EVP_CIPHER_CTX_new();
     /* Select cipher */
