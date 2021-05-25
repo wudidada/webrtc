@@ -43,11 +43,14 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
 
  unsigned char* aes_gcm_encrypt(rtc::ArrayView<const uint8_t> frame)
 {
-    /*unsigned char gcm_pt[sizeof(frame)];
+    unsigned char gcm_pt[frame.size()];
 
     for (size_t i = 0; i < frame.size(); i++) {
        gcm_pt[i] = frame[i];
-    }*/
+       RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt11" << frame[i];
+       RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt12" << gcm_pt[i];
+    }
+
 
     EVP_CIPHER_CTX *ctx;
     int outlen, tmplen;
