@@ -41,7 +41,7 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
     RTC_LOG(LS_VERBOSE) << "XXX GCMFrameEncryptor";
 }
 
- unsigned char[] aes_gcm_encrypt(rtc::ArrayView<const uint8_t> frame)
+ unsigned char* aes_gcm_encrypt(rtc::ArrayView<const uint8_t> frame)
 {
     unsigned char gcm_pt[1024];
 
@@ -97,9 +97,9 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   *bytes_written = encrypted_frame.size();
   
-  unsigned char outbuf[] = aes_gcm_encrypt(frame);
+  unsigned char *outbuf = aes_gcm_encrypt(frame);
 
-  for (uint8_t i = 0; i < outbuf.size(); i++) {
+  for (uint8_t i = 0; i < sizeOf(outbuf); i++) {
        encrypted_frame[unencrypted_bytes + i] = frame[i] ^ 0x04;
   }
 
