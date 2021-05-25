@@ -61,7 +61,7 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
     /* Initialise key and IV */
     EVP_EncryptInit_ex(ctx, NULL, NULL, gcm_key, gcm_iv);
     /* Zero or more calls to specify any AAD */
-    EVP_EncryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad));
+    //EVP_EncryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad));
     /* Encrypt plaintext */
     EVP_EncryptUpdate(ctx, outbuf, &outlen, gcm_pt, sizeof(gcm_pt));
     /* Output encrypted block */
@@ -71,7 +71,7 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
     /* Get tag */
     EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, 16, outbuf);
     /* Output tag */
-    printf("Tag:\n");
+
     EVP_CIPHER_CTX_free(ctx);
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt2";
     
@@ -85,6 +85,7 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt frame size" << sizeof(frame);
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt outbuf length" << lenght;
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt outbuf size" << sizeof(outbuf);
+    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt outlen" << outlen;
 
     return outbuf;
 }
