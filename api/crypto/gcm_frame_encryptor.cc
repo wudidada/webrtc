@@ -86,7 +86,7 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt outbuf length" << lenght;
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt outbuf size" << sizeof(outbuf);
 
-    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt3"; 
+    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt31"; 
 
     return outbuf;
 }
@@ -106,8 +106,6 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
   for (size_t i = 0; i < unencrypted_bytes; i++) {
        encrypted_frame[i] = frame[i];
   }
-
-  *bytes_written = encrypted_frame.size();
   
   aes_gcm_encrypt(frame);
 
@@ -118,6 +116,8 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
   }*/
 
    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt5";
+
+  *bytes_written = encrypted_frame.size();
 
   return 0;
 }
