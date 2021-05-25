@@ -102,11 +102,11 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     frame[i] = encrypted_frame[i];
   }
 
-  unsigned char *outbuf = aes_gcm_decrypt(encrypted_frame);
+ /* unsigned char *outbuf = aes_gcm_decrypt(encrypted_frame);
 
   for (size_t i = unencrypted_bytes; i < frame.size(); i++) {
     frame[i + unencrypted_bytes] = encrypted_frame[i];
-  }
+  }*/
 
   return Result(Status::kOk, frame.size());
 }
