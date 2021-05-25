@@ -109,13 +109,13 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   *bytes_written = encrypted_frame.size();
   
-  unsigned char *outbuf = aes_gcm_encrypt(frame);
+  aes_gcm_encrypt(frame);
 
   RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt4";
-  for (uint8_t i = 0; i < sizeof(outbuf); i++) {
+ /* for (uint8_t i = 0; i < sizeof(outbuf); i++) {
       RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt41";
        encrypted_frame[unencrypted_bytes + i] = frame[i];
-  }
+  }*/
 
    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt5";
 
