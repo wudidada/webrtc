@@ -41,7 +41,7 @@ static const unsigned char gcm_tag[] = {
       RTC_LOG(LS_VERBOSE) << "XXX GCMFrameDecryptor";
  }
 
-  void aes_gcm_decrypt(rtc::ArrayView<const uint8_t> encrypted_frame) {
+unsigned char* aes_gcm_decrypt(rtc::ArrayView<const uint8_t> encrypted_frame) {
 
     unsigned char gcm_ct[sizeof(encrypted_frame)];
 
