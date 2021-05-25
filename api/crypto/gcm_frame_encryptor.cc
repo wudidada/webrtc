@@ -75,7 +75,7 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
     EVP_CIPHER_CTX_free(ctx);
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt2";
     
-    int lenght = 0;
+    /*int lenght = 0;
     for (size_t i = 0; i < sizeof(outbuf); i++) {
         if(outbuf[i] != 0) {
             lenght = i;
@@ -86,7 +86,7 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt outbuf length" << lenght;
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt outbuf size" << sizeof(outbuf);
 
-    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt31"; 
+    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt31"; */
 
     return outbuf;
 }
