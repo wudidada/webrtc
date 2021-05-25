@@ -43,7 +43,7 @@ static const unsigned char gcm_tag[] = {
 
 unsigned char* aes_gcm_decrypt(rtc::ArrayView<const uint8_t> encrypted_frame) {
 
-    unsigned char gcm_ct[sizeof(encrypted_frame)];
+    unsigned char gcm_ct[encrypted_frame.size()];
 
     EVP_CIPHER_CTX *ctx;
     int outlen, tmplen, rv;
@@ -75,6 +75,8 @@ unsigned char* aes_gcm_decrypt(rtc::ArrayView<const uint8_t> encrypted_frame) {
 
     EVP_CIPHER_CTX_free(ctx);
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt2" << rv;
+
+    return outbuf;
 }
 
 GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
@@ -102,15 +104,11 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     frame[i] = encrypted_frame[i];
   }
 
-  for (size_t i = unencrypted_bytes; i < frame.size(); i++) {
-    frame[i] = encrypted_frame[i];
-  }
-
-  /*unsigned char *outbuf = aes_gcm_decrypt(encrypted_frame);
+  unsigned char *outbuf = aes_gcm_decrypt(encrypted_frame);
 
   for (size_t i = unencrypted_bytes; i < outbuf.size(); i++) {
     frame[i + unencrypted_bytes] = outbuf[i];
-  }*/
+  }
 
   return Result(Status::kOk, frame.size());
 }
