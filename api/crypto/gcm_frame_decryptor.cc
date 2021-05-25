@@ -27,10 +27,10 @@ static const unsigned char gcm_aad[] = {
     0x7f, 0xec, 0x78, 0xde
 };
 
-static const unsigned char gcm_ct[] = {
+/*static const unsigned char gcm_ct[] = {
     0xf7, 0x26, 0x44, 0x13, 0xa8, 0x4c, 0x0e, 0x7c, 0xd5, 0x36, 0x86, 0x7e,
     0xb9, 0xf2, 0x17, 0x36
-};
+};*/
 
 static const unsigned char gcm_tag[] = {
     0x67, 0xba, 0x05, 0x10, 0x26, 0x2a, 0xe4, 0x87, 0xd7, 0x37, 0xee, 0x62,
@@ -41,8 +41,10 @@ static const unsigned char gcm_tag[] = {
       RTC_LOG(LS_VERBOSE) << "XXX GCMFrameDecryptor";
  }
 
-  void aes_gcm_decrypt(void) {
-    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt1";
+  void aes_gcm_decrypt(rtc::ArrayView<const uint8_t> encrypted_frame) {
+
+    unsigned char gcm_ct[sizeof(encrypted_frame)];
+
     EVP_CIPHER_CTX *ctx;
     int outlen, tmplen, rv;
     unsigned char outbuf[1024];
@@ -70,8 +72,9 @@ static const unsigned char gcm_tag[] = {
      * failed and plaintext is not trustworthy.
      */
     printf("Tag Verify %s\n", rv > 0 ? "Successful!" : "Failed!");
+
     EVP_CIPHER_CTX_free(ctx);
-    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt2";
+    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt2" << rv;
 }
 
 GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
@@ -93,18 +96,17 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
  // RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
   
- uint8_t unencrypted_bytes = 4;
+  uint8_t unencrypted_bytes = 4;
 
- for (size_t i = 0; i < unencrypted_bytes; i++) {
+  for (size_t i = 0; i < unencrypted_bytes; i++) {
     frame[i] = encrypted_frame[i];
   }
 
-  for (size_t i = unencrypted_bytes; i < frame.size(); i++) {
-  //  RTC_LOG(LS_VERBOSE) << "XXX decrypting" << encrypted_frame[i];
-    frame[i] = encrypted_frame[i] ^ 0x04;
-  }
+  unsigned char *outbuf = aes_gcm_decrypt(encrypted_frame);
 
-  //aes_gcm_decrypt();
+  for (size_t i = unencrypted_bytes; i < frame.size(); i++) {
+    frame[i + unencrypted_bytes] = encrypted_frame[i];
+  }
 
   return Result(Status::kOk, frame.size());
 }

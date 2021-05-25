@@ -43,7 +43,7 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
 
  unsigned char* aes_gcm_encrypt(rtc::ArrayView<const uint8_t> frame)
 {
-    unsigned char gcm_pt[1024];
+    unsigned char gcm_pt[sizeof(frame)];
 
     for (size_t i = 0; i < frame.size(); i++) {
        gcm_pt[i] = frame[i];
@@ -52,8 +52,7 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
     EVP_CIPHER_CTX *ctx;
     int outlen, tmplen;
     unsigned char outbuf[1024];
-    printf("AES GCM Encrypt:\n");
-    printf("Plaintext:\n");
+
     ctx = EVP_CIPHER_CTX_new();
     /* Set cipher type and mode */
     EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);
