@@ -74,11 +74,10 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
     printf("Tag:\n");
     EVP_CIPHER_CTX_free(ctx);
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt2";
-    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt frame size" << sizeof(frame);
-    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt outbuf size" << sizeof(outbuf);
 
     int lenght = 0;
     for (size_t i = 0; i < sizeof(outbuf); i++) {
+        RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt2q";
         if(outbuf[i] != 0) {
             lenght = i;
         } 
@@ -87,6 +86,8 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt frame size" << sizeof(frame);
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt outbuf length" << lenght;
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt outbuf size" << sizeof(outbuf);
+
+    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt3";
 
     return outbuf;
 }
