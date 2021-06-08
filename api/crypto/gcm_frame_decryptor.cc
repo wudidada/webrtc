@@ -86,7 +86,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     rtc::ArrayView<const uint8_t> encrypted_frame,
     rtc::ArrayView<uint8_t> frame) {
 
- /*uint8_t unencrypted_bytes = 4;
+ uint8_t unencrypted_bytes = 4;
  switch (media_type) {
     case cricket::MEDIA_TYPE_AUDIO:
       unencrypted_bytes = 3;
@@ -94,11 +94,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     case cricket::MEDIA_TYPE_VIDEO:
       unencrypted_bytes = 4;
       break;
- }*/
-
- // RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
-  
-  uint8_t unencrypted_bytes = 4;
+ }
 
   for (size_t i = 0; i < unencrypted_bytes; i++) {
     frame[i] = encrypted_frame[i];
