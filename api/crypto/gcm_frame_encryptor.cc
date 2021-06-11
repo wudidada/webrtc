@@ -8,9 +8,8 @@
 namespace webrtc {
 
 static const unsigned char gcm_key[] = {
-    0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0
+    [195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
+     67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206]
 };
 
 static const unsigned char gcm_iv[] = {
@@ -101,6 +100,14 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
  RTC_LOG(LS_VERBOSE) << "XXX Encrypting----------------------";
 
  uint8_t unencrypted_bytes = 4;
+ switch (media_type) {
+    case cricket::MEDIA_TYPE_AUDIO:
+      unencrypted_bytes = 3;
+      break;
+    case cricket::MEDIA_TYPE_VIDEO:
+      unencrypted_bytes = 4;
+      break;
+ }
 
   for (size_t i = 0; i < unencrypted_bytes; i++) {
        encrypted_frame[i] = frame[i];
