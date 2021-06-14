@@ -95,7 +95,11 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       break;
  }
 
-  for (size_t i = 0; i < unencrypted_bytes; i++) {
+  for (size_t i = 0; i < frame.size(); i++) {
+    frame[i] = encrypted_frame[i];
+  }
+
+  /*for (size_t i = 0; i < unencrypted_bytes; i++) {
     frame[i] = encrypted_frame[i];
   }
 
@@ -104,7 +108,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   for (size_t i = 0; i < sizeof(outbuf); i++) {
     //frame[i + unencrypted_bytes] = outbuf[i];
     frame[i] = encrypted_frame[i];
-  }
+  }*/
 
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
 
