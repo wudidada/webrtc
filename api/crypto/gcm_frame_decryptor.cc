@@ -110,7 +110,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     frame[i] = encrypted_frame[i];
   }*/
 
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------" << frame.size() << encrypted_frame.size();
 
   return Result(Status::kOk, frame.size());
 }
