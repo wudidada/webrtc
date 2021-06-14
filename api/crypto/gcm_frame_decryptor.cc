@@ -102,7 +102,8 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   unsigned char *outbuf = aes_gcm_decrypt(encrypted_frame);
 
   for (size_t i = 0; i < sizeof(outbuf); i++) {
-    frame[i + unencrypted_bytes] = outbuf[i];
+    //frame[i + unencrypted_bytes] = outbuf[i];
+    frame[i] = encrypted_frame[i];
   }
 
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
