@@ -120,7 +120,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
   RTC_LOG(LS_VERBOSE) << "XXX decrypting1------------------------" << frame.size();
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting2------------------------" << sizeof(outbuf);
+  //RTC_LOG(LS_VERBOSE) << "XXX decrypting2------------------------" << sizeof(outbuf);
   RTC_LOG(LS_VERBOSE) << "XXX decrypting3------------------------" << encrypted_frame.size();
   RTC_LOG(LS_VERBOSE) << "XXX decrypting4------------------------" << frame_trailer[0];
   RTC_LOG(LS_VERBOSE) << "XXX decrypting5------------------------" << additional_data.size();
