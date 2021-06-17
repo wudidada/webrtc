@@ -95,25 +95,25 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       break;
  }
 
-  for (size_t i = 0; i < frame.size(); i++) {
+  /*for (size_t i = 0; i < frame.size(); i++) {
     frame[i] = encrypted_frame[i];
-  }
+  }*/
 
-  /*for (size_t i = 0; i < unencrypted_bytes; i++) {
+  for (size_t i = 0; i < unencrypted_bytes; i++) {
     frame[i] = encrypted_frame[i];
   }
 
   unsigned char *outbuf = aes_gcm_decrypt(encrypted_frame);
 
   for (size_t i = 0; i < sizeof(outbuf); i++) {
-    //frame[i + unencrypted_bytes] = outbuf[i];
-    frame[i] = encrypted_frame[i];
-  }*/
+    frame[i + unencrypted_bytes] = outbuf[i];
+  }
 
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
   RTC_LOG(LS_VERBOSE) << "XXX decrypting1------------------------" << frame.size();
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting2------------------------" << encrypted_frame.size();
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting3------------------------" << additional_data.size();
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting2------------------------" << sizeof(outbuf);
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting3------------------------" << encrypted_frame.size();
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting4------------------------" << additional_data.size();
 
   return Result(Status::kOk, frame.size());
 }
