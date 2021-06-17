@@ -95,17 +95,23 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       break;
  }
 
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
   // Frame header
   for (size_t i = 0; i < unencrypted_bytes; i++) {
     frame[i] = encrypted_frame[i];
   }
   
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------1";
   // Frame trailer
   uint8_t* frame_trailer = new uint8_t[2];
   frame_trailer[0] = encrypted_frame[encrypted_frame.size() - 2]; //IV_LENGHT
   frame_trailer[1] = encrypted_frame[encrypted_frame.size() - 1]; 
 
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------2";
+
   size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + 2);
+
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------3";
 
   // Payload
   for (size_t i = unencrypted_bytes; i < payload_lenght; i++) {
@@ -118,7 +124,6 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     frame[i + unencrypted_bytes] = outbuf[i];
   }*/
 
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
   RTC_LOG(LS_VERBOSE) << "XXX decrypting1------------------------" << frame.size();
   //RTC_LOG(LS_VERBOSE) << "XXX decrypting2------------------------" << sizeof(outbuf);
   RTC_LOG(LS_VERBOSE) << "XXX decrypting3------------------------" << encrypted_frame.size();
