@@ -102,6 +102,13 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   }
   
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------1";
+
+
+  for (size_t i = 0; i < encrypted_frame.size(); i++) {
+     RTC_LOG(LS_VERBOSE) << "XXX decrypting100------------------------" << i << encrypted_frame[i];
+  }
+
+
   // Frame trailer
   uint8_t* frame_trailer = new uint8_t[2];
   frame_trailer[0] = encrypted_frame[encrypted_frame.size() - 2]; //IV_LENGHT
