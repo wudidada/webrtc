@@ -111,6 +111,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   uint8_t iv_lenght = frame_trailer[0];
   size_t iv_start = encrypted_frame.size() - sizeof(frame_trailer) - iv_lenght - 1;
   uint8_t* iv = new uint8_t[iv_lenght];
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting70------------------------" << iv_lenght;
   for (size_t i = 0; i < iv_lenght; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX decrypting7------------------------" << encrypted_frame[iv_start + i];
     iv[i] = encrypted_frame[iv_start + i];
