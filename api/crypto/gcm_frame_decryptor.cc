@@ -111,7 +111,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
   // Frame trailer
   size_t frame_trailer_size = 2;
-  std::vector<uint8_t> frame_trailer = new std::vector<double> (uint8_t);
+  std::vector<uint8_t> frame_trailer = new std::vector<uint8_t> (frame_trailer_size);
   frame_trailer[0] = encrypted_frame[encrypted_frame.size() - 2]; //IV_LENGHT
   frame_trailer[1] = encrypted_frame[encrypted_frame.size() - 1]; 
   
