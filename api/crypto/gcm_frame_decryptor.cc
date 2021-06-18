@@ -51,23 +51,23 @@ unsigned char* aes_gcm_decrypt(uint8_t* encrypted_frame, uint8_t* iv) {
 
     EVP_CIPHER_CTX *ctx;
     int outlen, tmplen, rv;
-    uint8_t outbuf = new uint8_t[1024];
+    unsigned char outbuf[1024];
 
     ctx = EVP_CIPHER_CTX_new();
     /* Select cipher */
     EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);
     /* Set IV length, omit for 96 bits */
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, sizeof(iv), NULL);
+    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, iv_size, NULL);
     /* Specify key and IV */
     EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, iv);
     /* Zero or more calls to specify any AAD */
-    EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad));
+    EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad)/sizeof(unsigned char));
     /* Decrypt plaintext */
-    EVP_DecryptUpdate(ctx, outbuf, &outlen, gcm_ct, sizeof(gcm_ct));
+    EVP_DecryptUpdate(ctx, outbuf, &outlen, gcm_ct, sizeof(gcm_ct)/sizeof(unsigned char));
     /* Output decrypted block */
     printf("Plaintext:\n");
     /* Set expected tag value. */
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, sizeof(gcm_tag),
+    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, sizeof(gcm_tag)/sizeof(unsigned char),
                         (void *)gcm_tag);
     /* Finalise: note get no output for GCM */
     rv = EVP_DecryptFinal_ex(ctx, outbuf, &outlen);
