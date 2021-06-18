@@ -113,12 +113,12 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   size_t frame_trailer_size = 2;
   std::vector<uint8_t> frame_trailer;
   frame_trailer.reserve(frame_trailer_size);
-  frame_trailer[0] = encrypted_frame[encrypted_frame.size() - 2]; //IV_LENGHT
-  frame_trailer[1] = encrypted_frame[encrypted_frame.size() - 1]; 
+  frame_trailer.insert(0, encrypted_frame[encrypted_frame.size() - 2]);//IV_LENGHT
+  frame_trailer.insert(1, encrypted_frame[encrypted_frame.size() - 1]);
   
   // IV
   uint8_t iv_lenght = frame_trailer[0];
-  size_t iv_start = encrypted_frame.size() - frame_trailer_size - iv_lenght - 1;
+  uint8_t iv_start = encrypted_frame.size() - frame_trailer_size - iv_lenght - 1;
   uint8_t* iv = new uint8_t[iv_lenght];
 
  // RTC_LOG(LS_VERBOSE) << "XXX decrypting700------------------------" << iv_lenght;
