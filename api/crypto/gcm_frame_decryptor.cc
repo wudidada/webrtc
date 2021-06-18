@@ -128,7 +128,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     payload[i] = encrypted_frame[unencrypted_bytes + i];
   }
 
-  unsigned char *outbuf = aes_gcm_decrypt(payload);
+  unsigned char *outbuf = aes_gcm_decrypt(payload, iv);
 
   /*for (size_t i = 0; i < sizeof(outbuf); i++) {
     frame[i + unencrypted_bytes] = outbuf[i];
