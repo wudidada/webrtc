@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <openssl/bio.h>
 #include <openssl/evp.h>
+#include <vector>
 #include "rtc_base/logging.h"
 
 namespace webrtc {
@@ -109,19 +110,19 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------1";
 
   // Frame trailer
-  uint8_t* frame_trailer = new uint8_t[2];
+  size_t frame_trailer_size = 2;
+  std::vector<uint8_t> frame_trailer = new std::vector<double> (uint8_t);
   frame_trailer[0] = encrypted_frame[encrypted_frame.size() - 2]; //IV_LENGHT
   frame_trailer[1] = encrypted_frame[encrypted_frame.size() - 1]; 
-
+  
   // IV
   uint8_t iv_lenght = frame_trailer[0];
-  size_t frame_trailer_size = 2;
   size_t iv_start = encrypted_frame.size() - frame_trailer_size - iv_lenght - 1;
   uint8_t* iv = new uint8_t[iv_lenght];
 
  // RTC_LOG(LS_VERBOSE) << "XXX decrypting700------------------------" << iv_lenght;
  // RTC_LOG(LS_VERBOSE) << "XXX decrypting701------------------------" << iv_start;
- // RTC_LOG(LS_VERBOSE) << "XXX decrypting702------------------------" << frame_trailer_size;
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting702------------------------" << frame_trailer.size();
 
   for (size_t i = 0; i < iv_lenght; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX decrypting7------------------------" << encrypted_frame[iv_start + i];
