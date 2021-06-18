@@ -42,11 +42,16 @@ static const unsigned char gcm_tag[] = {
 
 unsigned char* aes_gcm_decrypt(uint8_t* encrypted_frame, uint8_t* iv) {
 
-    unsigned char gcm_ct[sizeof(encrypted_frame)];
+    int encrypted_frame_size = sizeof(encrypted_frame)/sizeof(uint8_t);
+    unsigned char gcm_ct[encrypted_frame_size];
+    int iv_size = sizeof(iv)/sizeof(uint8_t);
+
+    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt encrypted_frame_size------------------------" << encrypted_frame_size;
+    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt iv_size------------------------" << iv_size;
 
     EVP_CIPHER_CTX *ctx;
     int outlen, tmplen, rv;
-    unsigned char outbuf[1024];
+    uint8_t outbuf = new uint8_t[1024];
 
     ctx = EVP_CIPHER_CTX_new();
     /* Select cipher */
@@ -103,12 +108,6 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------1";
 
-
-  for (size_t i = 0; i < encrypted_frame.size(); i++) {
-     RTC_LOG(LS_VERBOSE) << "XXX decrypting100------------------------" << i << encrypted_frame[i];
-  }
-
-
   // Frame trailer
   uint8_t* frame_trailer = new uint8_t[2];
   frame_trailer[0] = encrypted_frame[encrypted_frame.size() - 2]; //IV_LENGHT
@@ -120,9 +119,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   size_t iv_start = encrypted_frame.size() - frame_trailer_size - iv_lenght - 1;
   uint8_t* iv = new uint8_t[iv_lenght];
 
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting700------------------------" << iv_lenght;
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting701------------------------" << iv_start;
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting702------------------------" << frame_trailer_size;
+ // RTC_LOG(LS_VERBOSE) << "XXX decrypting700------------------------" << iv_lenght;
+ // RTC_LOG(LS_VERBOSE) << "XXX decrypting701------------------------" << iv_start;
+ // RTC_LOG(LS_VERBOSE) << "XXX decrypting702------------------------" << frame_trailer_size;
 
   for (size_t i = 0; i < iv_lenght; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX decrypting7------------------------" << encrypted_frame[iv_start + i];
