@@ -109,7 +109,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
   // IV
   uint8_t iv_lenght = frame_trailer[0];
-  size_t frame_trailer_size = sizeof(frame_trailer)/sizeof(uint8_t);
+  size_t frame_trailer_size = 2;
   size_t iv_start = encrypted_frame.size() - frame_trailer_size - iv_lenght - 1;
   uint8_t* iv = new uint8_t[iv_lenght];
 
