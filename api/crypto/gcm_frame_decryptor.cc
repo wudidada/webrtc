@@ -12,9 +12,9 @@ static const unsigned char gcm_key[] = {
                  67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
 };
 
-static const unsigned char gcm_iv[] = {
+/*static const unsigned char gcm_iv[] = {
     0x99, 0xaa, 0x3e, 0x68, 0xed, 0x81, 0x73, 0xa0, 0xee, 0xd0, 0x66, 0x84
-};
+};*/
 
 /*static const unsigned char gcm_pt[] = {
     0xf5, 0x6e, 0x87, 0x05, 0x5b, 0xc3, 0x2d, 0x0e, 0xeb, 0x31, 0xb2, 0xea,
@@ -40,9 +40,9 @@ static const unsigned char gcm_tag[] = {
       RTC_LOG(LS_VERBOSE) << "XXX GCMFrameDecryptor";
  }
 
-unsigned char* aes_gcm_decrypt(rtc::ArrayView<const uint8_t> encrypted_frame) {
+unsigned char* aes_gcm_decrypt(uint8_t* encrypted_frame, uint8_t* iv) {
 
-    unsigned char gcm_ct[encrypted_frame.size()];
+    unsigned char gcm_ct[sizeof(encrypted_frame)];
 
     EVP_CIPHER_CTX *ctx;
     int outlen, tmplen, rv;
@@ -52,9 +52,9 @@ unsigned char* aes_gcm_decrypt(rtc::ArrayView<const uint8_t> encrypted_frame) {
     /* Select cipher */
     EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);
     /* Set IV length, omit for 96 bits */
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, sizeof(gcm_iv), NULL);
+    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, sizeof(iv), NULL);
     /* Specify key and IV */
-    EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, gcm_iv);
+    EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, iv);
     /* Zero or more calls to specify any AAD */
     EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad));
     /* Decrypt plaintext */
@@ -70,10 +70,10 @@ unsigned char* aes_gcm_decrypt(rtc::ArrayView<const uint8_t> encrypted_frame) {
      * Print out return value. If this is not successful authentication
      * failed and plaintext is not trustworthy.
      */
+    RTC_LOG(LS_VERBOSE) << "XXX decrypting success------------------------" << rv;
     printf("Tag Verify %s\n", rv > 0 ? "Successful!" : "Failed!");
 
     EVP_CIPHER_CTX_free(ctx);
-    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt2" << rv;
 
     return outbuf;
 }
@@ -112,33 +112,35 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   size_t iv_start = encrypted_frame.size() - sizeof(frame_trailer) - iv_lenght - 1;
   uint8_t* iv = new uint8_t[iv_lenght];
   for (size_t i = 0; i < iv_lenght; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX decrypting7------------------------" << encrypted_frame[iv_start + i];
     iv[i] = encrypted_frame[iv_start + i];
   }
 
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------2";
 
-  size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + 2);
+  size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + sizeof(frame_trailer));
 
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------3";
 
   // Payload
-  for (size_t i = unencrypted_bytes; i < payload_lenght; i++) {
-    frame[i] = encrypted_frame[i];
+  uint8_t* payload = new uint8_t[iv_lenght];
+  for (size_t i = 0; i < payload_lenght; i++) {
+    payload[i] = encrypted_frame[unencrypted_bytes + i];
   }
 
-  /*unsigned char *outbuf = aes_gcm_decrypt(encrypted_frame);
+  unsigned char *outbuf = aes_gcm_decrypt(payload);
 
-  for (size_t i = 0; i < sizeof(outbuf); i++) {
+  /*for (size_t i = 0; i < sizeof(outbuf); i++) {
     frame[i + unencrypted_bytes] = outbuf[i];
   }*/
 
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting1------------------------" << frame.size();
+ // RTC_LOG(LS_VERBOSE) << "XXX decrypting1------------------------" << frame.size();
  //RTC_LOG(LS_VERBOSE) << "XXX decrypting2------------------------" << sizeof(outbuf);
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting3------------------------" << encrypted_frame.size();
+ // RTC_LOG(LS_VERBOSE) << "XXX decrypting3------------------------" << encrypted_frame.size();
  // RTC_LOG(LS_VERBOSE) << "XXX decrypting4------------------------" << frame_trailer[0];
  // RTC_LOG(LS_VERBOSE) << "XXX decrypting5------------------------" << additional_data.size();
   RTC_LOG(LS_VERBOSE) << "XXX decrypting6------------------------" << payload_lenght;
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting7------------------------" << iv;
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting71------------------------" << iv;
 
   return Result(Status::kOk, frame.size());
 }
