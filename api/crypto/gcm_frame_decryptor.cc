@@ -85,13 +85,13 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     rtc::ArrayView<const uint8_t> encrypted_frame,
     rtc::ArrayView<uint8_t> frame) {
 
- uint8_t unencrypted_bytes = 4;
+ uint8_t unencrypted_bytes = 1;
  switch (media_type) {
     case cricket::MEDIA_TYPE_AUDIO:
-      unencrypted_bytes = 3;
+      unencrypted_bytes = 1;
       break;
     case cricket::MEDIA_TYPE_VIDEO:
-      unencrypted_bytes = 4;
+      unencrypted_bytes = 3;
       break;
  }
 
@@ -109,10 +109,14 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
   // IV
   uint8_t iv_lenght = frame_trailer[0];
-  size_t iv_start = encrypted_frame.size() - sizeof(frame_trailer) - iv_lenght - 1;
+  size_t frame_trailer_size = sizeof(frame_trailer)/sizeof(*frame_trailer);
+  size_t iv_start = encrypted_frame.size() - frame_trailer_size - iv_lenght - 1;
   uint8_t* iv = new uint8_t[iv_lenght];
+
   RTC_LOG(LS_VERBOSE) << "XXX decrypting700------------------------" << iv_lenght;
   RTC_LOG(LS_VERBOSE) << "XXX decrypting701------------------------" << iv_start;
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting702------------------------" << frame_trailer_size;
+
   for (size_t i = 0; i < iv_lenght; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX decrypting7------------------------" << encrypted_frame[iv_start + i];
     iv[i] = encrypted_frame[iv_start + i];
@@ -120,7 +124,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------2";
 
-  size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + sizeof(frame_trailer));
+  size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + frame_trailer_size);
 
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------3";
 
