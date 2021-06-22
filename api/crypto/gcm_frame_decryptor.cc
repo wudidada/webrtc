@@ -49,10 +49,10 @@ std::vector<uint8_t> aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame,
     int iv_size = iv.size();
 
     //RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt encrypted_frame_size------------------------" << encrypted_frame_size;
-   //RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt iv_size------------------------" << iv_size;
+    //RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt iv_size------------------------" << iv_size;
 
     EVP_CIPHER_CTX *ctx;
-    int outlen, tmplen, rv, final_size=0;
+    int outlen, tmplen, rv;
     std::vector<uint8_t> outbuf;
 
     if(!(ctx = EVP_CIPHER_CTX_new())) {
@@ -82,11 +82,8 @@ std::vector<uint8_t> aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame,
       RTC_LOG(LS_VERBOSE) << "XXX decrypting error5------------------------";
     }
     /* Finalise: note get no output for GCM */
-    rv = EVP_DecryptFinal_ex(ctx, &encrypted_frame[outlen], &final_size);
-    /*
-     * Print out return value. If this is not successful authentication
-     * failed and plaintext is not trustworthy.
-     */
+    rv = EVP_DecryptFinal_ex(ctx, &encrypted_frame[outlen], &outlen);
+
     RTC_LOG(LS_VERBOSE) << "XXX decrypting success------------------------" << rv;
     printf("Tag Verify %s\n", rv > 0 ? "Successful!" : "Failed!");
 
