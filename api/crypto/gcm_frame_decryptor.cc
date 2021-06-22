@@ -61,7 +61,7 @@ unsigned char* aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame,
     /* Set IV length, omit for 96 bits */
     EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, iv_size, NULL);
     /* Specify key and IV */
-    EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, iv);
+    EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, iv.data());
     /* Zero or more calls to specify any AAD */
     EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad)/sizeof(unsigned char));
     /* Decrypt plaintext */
