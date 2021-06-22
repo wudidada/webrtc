@@ -55,24 +55,35 @@ std::vector<uint8_t> aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame,
     int outlen, tmplen, rv, final_size=0;
     std::vector<uint8_t> outbuf;
 
-    std::copy( encrypted_frame.begin(),    encrypted_frame.begin()+16, gcm_tag);
+    std::copy( encrypted_frame.begin(), encrypted_frame.begin()+16, gcm_tag);
     std::copy( encrypted_frame.begin()+16, encrypted_frame.begin()+32, iv);
 
-    ctx = EVP_CIPHER_CTX_new();
+    if(!ctx = EVP_CIPHER_CTX_new()) {
+        RTC_LOG(LS_VERBOSE) << "XXX decrypting error1------------------------";
+    }
+
+
     /* Select cipher */
-    EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);
-    /* Set IV length, omit for 96 bits */
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, iv_size, NULL);
+    if(!EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
+       RTC_LOG(LS_VERBOSE) << "XXX decrypting error2------------------------";
+    }
+
     /* Specify key and IV */
-    EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, iv.data());
+    if(!EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, iv.data())) {
+      RTC_LOG(LS_VERBOSE) << "XXX decrypting error3------------------------";
+    }
     /* Zero or more calls to specify any AAD */
    // EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad)/sizeof(unsigned char));
+    
     /* Decrypt plaintext */
-    EVP_DecryptUpdate(ctx, &encrypted_frame[0], &outlen, &encrypted_frame[32], encrypted_frame.size() - 32);
-    /* Output decrypted block */
-    printf("Plaintext:\n");
+    if(!EVP_DecryptUpdate(ctx, &outbuf[0], &outlen, &encrypted_frame[0], encrypted_frame.size())){
+      RTC_LOG(LS_VERBOSE) << "XXX decrypting error4------------------------";
+    }
+
     /* Set expected tag value. */
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, 16,(void *)gcm_tag);
+    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, 16,(void *)gcm_tag)) {
+      RTC_LOG(LS_VERBOSE) << "XXX decrypting error5------------------------";
+    }
     /* Finalise: note get no output for GCM */
     rv = EVP_DecryptFinal_ex(ctx, &encrypted_frame[outlen], &final_size);
     /*
