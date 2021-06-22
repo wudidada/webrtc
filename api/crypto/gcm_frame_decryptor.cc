@@ -41,19 +41,19 @@ static const unsigned char gcm_tag[] = {
       RTC_LOG(LS_VERBOSE) << "XXX GCMFrameDecryptor";
  }
 
-unsigned char* aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame, 
+std::vector<uint8_t> aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame, 
                                std::vector<uint8_t> iv) {
 
-    int encrypted_frame_size = sizeof(encrypted_frame)/sizeof(uint8_t);
+    int encrypted_frame_size = encrypted_frame.size();
     unsigned char gcm_ct[encrypted_frame_size];
-    int iv_size = sizeof(iv)/sizeof(uint8_t);
+    int iv_size = iv.size();
 
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt encrypted_frame_size------------------------" << encrypted_frame_size;
     RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt iv_size------------------------" << iv_size;
 
     EVP_CIPHER_CTX *ctx;
     int outlen, tmplen, rv;
-    unsigned char outbuf[1024];
+    std::vector<uint8_t> outbuf;
 
     ctx = EVP_CIPHER_CTX_new();
     /* Select cipher */
@@ -144,7 +144,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     payload[i] = encrypted_frame[unencrypted_bytes + i];
   }
 
-  unsigned char *outbuf = aes_gcm_decrypt(payload, iv);
+  std::vector<uint8_t> outbuf = aes_gcm_decrypt(payload, iv);
 
   /*for (size_t i = 0; i < sizeof(outbuf); i++) {
     frame[i + unencrypted_bytes] = outbuf[i];
