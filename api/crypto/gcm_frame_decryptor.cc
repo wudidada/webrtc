@@ -72,7 +72,7 @@ std::vector<uint8_t> aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame,
     /* Output decrypted block */
     printf("Plaintext:\n");
     /* Set expected tag value. */
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, 16, &gcm_tag);
+    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, 16,(void *)gcm_tag);
     /* Finalise: note get no output for GCM */
     rv = EVP_DecryptFinal_ex(ctx, &encrypted_frame[outlen], &final_size);
     /*
