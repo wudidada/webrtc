@@ -126,9 +126,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
  // RTC_LOG(LS_VERBOSE) << "XXX decrypting701------------------------" << iv_start;
   RTC_LOG(LS_VERBOSE) << "XXX decrypting702------------------------" << frame_trailer.size();
 
-  for (size_t i = 0; i < iv_lenght; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX decrypting7------------------------" << encrypted_frame[iv_start + i];
-    iv[i] = encrypted_frame[iv_start + i];
+  for (size_t i = iv_start; i < iv_start + iv_lenght; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX decrypting7------------------------" << encrypted_frame[i];
+      iv.push_back(encrypted_frame[i]);
   }
 
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------2";
@@ -140,8 +140,8 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   // Payload
   //uint8_t* payload = new uint8_t[iv_lenght];
   std::vector<uint8_t> payload;
-  for (size_t i = 0; i < payload_lenght; i++) {
-    payload[i] = encrypted_frame[unencrypted_bytes + i];
+  for (size_t i = unencrypted_bytes; i < unencrypted_bytes + payload_lenght; i++) {
+    payload.push_back(encrypted_frame[i]);
   }
 
   std::vector<uint8_t> outbuf = aes_gcm_decrypt(payload, iv);
