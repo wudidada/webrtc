@@ -22,10 +22,10 @@ static const unsigned char gcm_key[] = {
     0xcc, 0x2b, 0xf2, 0xa5
 };*/
 
-static const unsigned char gcm_aad[] = {
+/*static const unsigned char gcm_aad[] = {
     0x4d, 0x23, 0xc3, 0xce, 0xc3, 0x34, 0xb4, 0x9b, 0xdb, 0x37, 0x0c, 0x43,
     0x7f, 0xec, 0x78, 0xde
-};
+};*/
 
 /*static const unsigned char gcm_ct[] = {
     0xf7, 0x26, 0x44, 0x13, 0xa8, 0x4c, 0x0e, 0x7c, 0xd5, 0x36, 0x86, 0x7e,
@@ -48,12 +48,15 @@ std::vector<uint8_t> aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame,
     unsigned char gcm_ct[encrypted_frame_size];
     int iv_size = iv.size();
 
-    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt encrypted_frame_size------------------------" << encrypted_frame_size;
-    RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt iv_size------------------------" << iv_size;
+    //RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt encrypted_frame_size------------------------" << encrypted_frame_size;
+   //RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt iv_size------------------------" << iv_size;
 
     EVP_CIPHER_CTX *ctx;
-    int outlen, tmplen, rv;
+    int outlen, tmplen, rv, final_size=0;
     std::vector<uint8_t> outbuf;
+
+    std::copy( encrypted_frame.begin(),    encrypted_frame.begin()+16, gcm_tag);
+    std::copy( encrypted_frame.begin()+16, encrypted_frame.begin()+32, iv);
 
     ctx = EVP_CIPHER_CTX_new();
     /* Select cipher */
@@ -63,16 +66,15 @@ std::vector<uint8_t> aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame,
     /* Specify key and IV */
     EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, iv.data());
     /* Zero or more calls to specify any AAD */
-    EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad)/sizeof(unsigned char));
+   // EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad)/sizeof(unsigned char));
     /* Decrypt plaintext */
-    EVP_DecryptUpdate(ctx, &outbuf[0], &outlen, gcm_ct, sizeof(gcm_ct)/sizeof(unsigned char));
+    EVP_DecryptUpdate(ctx, &encrypted_frame[0], &outlen, &encrypted_frame[32], encrypted_frame.size() - 32);
     /* Output decrypted block */
     printf("Plaintext:\n");
     /* Set expected tag value. */
-    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, sizeof(gcm_tag)/sizeof(unsigned char),
-                        (void *)gcm_tag);
+    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, 16, &gcm_tag);
     /* Finalise: note get no output for GCM */
-    rv = EVP_DecryptFinal_ex(ctx, &outbuf[0], &outlen);
+    rv = EVP_DecryptFinal_ex(ctx, &encrypted_frame[outlen], &final_size);
     /*
      * Print out return value. If this is not successful authentication
      * failed and plaintext is not trustworthy.
