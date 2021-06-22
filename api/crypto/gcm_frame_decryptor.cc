@@ -243,7 +243,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     payload.push_back(encrypted_frame[i]);
   }
 
-  std::vector<uint8_t> outbuf = aes_gcm_decrypt(payload, iv);
+  //std::vector<uint8_t> outbuf = aes_gcm_decrypt(payload, iv);
 
   /*for (size_t i = 0; i < sizeof(outbuf); i++) {
     frame[i + unencrypted_bytes] = outbuf[i];
@@ -285,13 +285,17 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     int decryptedtext_len, ciphertext_len;
 
+    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
     /* Encrypt the plaintext */
     ciphertext_len = new_encrypt (plaintext, strlen ((char *)plaintext), key, iv1,
                               ciphertext);
 
+    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
+
     /* Decrypt the ciphertext */
     decryptedtext_len = new_decrypt(ciphertext, ciphertext_len, key, iv1,
                                 decryptedtext);
+    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt2------------------------";
 
     /* Add a NULL terminator. We are expecting printable text */
     decryptedtext[decryptedtext_len] = '\0';
