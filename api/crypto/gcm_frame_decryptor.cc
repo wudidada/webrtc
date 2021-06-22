@@ -55,7 +55,7 @@ std::vector<uint8_t> aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame,
     int outlen, tmplen, rv, final_size=0;
     std::vector<uint8_t> outbuf;
 
-    if(!ctx = EVP_CIPHER_CTX_new()) {
+    if(!(ctx = EVP_CIPHER_CTX_new())) {
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error1------------------------";
     }
 
