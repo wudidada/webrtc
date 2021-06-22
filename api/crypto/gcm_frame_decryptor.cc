@@ -65,14 +65,14 @@ std::vector<uint8_t> aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame,
     /* Zero or more calls to specify any AAD */
     EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad)/sizeof(unsigned char));
     /* Decrypt plaintext */
-    EVP_DecryptUpdate(ctx, outbuf, &outlen, gcm_ct, sizeof(gcm_ct)/sizeof(unsigned char));
+    EVP_DecryptUpdate(ctx, &outbuf[0], &outlen, gcm_ct, sizeof(gcm_ct)/sizeof(unsigned char));
     /* Output decrypted block */
     printf("Plaintext:\n");
     /* Set expected tag value. */
     EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, sizeof(gcm_tag)/sizeof(unsigned char),
                         (void *)gcm_tag);
     /* Finalise: note get no output for GCM */
-    rv = EVP_DecryptFinal_ex(ctx, outbuf, &outlen);
+    rv = EVP_DecryptFinal_ex(ctx, &outbuf[0], &outlen);
     /*
      * Print out return value. If this is not successful authentication
      * failed and plaintext is not trustworthy.
