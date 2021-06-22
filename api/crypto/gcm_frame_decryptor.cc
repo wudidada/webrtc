@@ -139,7 +139,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
   // Payload
   //uint8_t* payload = new uint8_t[iv_lenght];
-  std::vector<uint8_t> framepayload_trailer;
+  std::vector<uint8_t> payload;
   for (size_t i = 0; i < payload_lenght; i++) {
     payload[i] = encrypted_frame[unencrypted_bytes + i];
   }
