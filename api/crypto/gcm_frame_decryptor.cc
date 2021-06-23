@@ -265,17 +265,6 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
      * real application? :-)
      */
 
-    /* A 256 bit key */
-    
-    unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
-    unsigned char gcm_key1[] = {
-    195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
-                 67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
-    };
-
-    /* A 128 bit IV */
-    unsigned char *iv1 = (unsigned char *)"0123456789012345";
-
     /* Message to be encrypted */
     unsigned char *plaintext =
         (unsigned char *)"The quick brown fox jumps over the lazy dog";
@@ -294,15 +283,15 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
     /* Encrypt the plaintext */
-    ciphertext_len = new_encrypt (plaintext, strlen ((char *)plaintext), gcm_key1, iv1,
+    /*ciphertext_len = new_encrypt (plaintext, strlen ((char *)plaintext), gcm_key, &iv[0],
                               ciphertext);
 
-    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
+    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";*/
 
     /* Decrypt the ciphertext */
-    decryptedtext_len = new_decrypt(ciphertext, ciphertext_len, gcm_key1, iv1,
+    decryptedtext_len = new_decrypt(&payload[0], Payload, gcm_key, &iv[0],
                                 decryptedtext);
-    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt2------------------------";
+    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt2------------------------" << decryptedtext;
 
     /* Add a NULL terminator. We are expecting printable text */
     decryptedtext[decryptedtext_len] = '\0';
