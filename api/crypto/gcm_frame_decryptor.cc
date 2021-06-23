@@ -288,7 +288,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     ciphertext_len = new_encrypt (payload, payload_lenght, gcm_key, &iv[0],
                               ciphertext);
 
-    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";*/
+    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
 
     unsigned char gcm_key1[] = {
     195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
