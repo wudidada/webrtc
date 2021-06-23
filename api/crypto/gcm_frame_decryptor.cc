@@ -268,8 +268,8 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
      */
 
     /* Message to be encrypted */
-    unsigned char *plaintext =
-        (unsigned char *)"The quick brown fox jumps over the lazy dog";
+    //unsigned char *plaintext = (unsigned char *)"The quick brown fox jumps over the lazy dog";
+     std::vector<char> plaintext = { '7', '5', '16', '8' };
 
     /*
      * Buffer for ciphertext. Ensure the buffer is long enough for the
@@ -291,7 +291,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
     /* Encrypt the plaintext */
    // ciphertext_len = new_encrypt (&payload[0], payload_lenght, gcm_key1, &iv[0], ciphertext);
-    ciphertext_len = new_encrypt (plaintext, strlen ((char *)plaintext), gcm_key1, &iv[0], ciphertext);
+    ciphertext_len = new_encrypt (&plaintext[0], plaintext.size(), gcm_key1, &iv[0], ciphertext);
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
 
