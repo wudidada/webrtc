@@ -287,15 +287,13 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
                  67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
     };
-    
+
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
     /* Encrypt the plaintext */
-    ciphertext_len = new_encrypt (&payload[0], payload_lenght, gcm_key1, &iv[0],
-                              ciphertext);
+   // ciphertext_len = new_encrypt (&payload[0], payload_lenght, gcm_key1, &iv[0],
+   //                           ciphertext);
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
-
-
 
     /* Decrypt the ciphertext */
     decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv[0],
