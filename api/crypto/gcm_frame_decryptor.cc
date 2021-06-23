@@ -269,7 +269,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     /* Message to be encrypted */
     //unsigned char *plaintext = (unsigned char *)"The quick brown fox jumps over the lazy dog";
-     std::vector<char> plaintext = { '7', '5', '16', '8' };
+     std::vector<unsigned char> plaintext = { '7', '5', '16', '8' };
 
     /*
      * Buffer for ciphertext. Ensure the buffer is long enough for the
