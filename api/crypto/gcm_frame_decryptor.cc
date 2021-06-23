@@ -127,7 +127,8 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
      * Finalise the decryption. Further plaintext bytes may be written at
      * this stage.
      */
-    if(1 != EVP_DecryptFinal_ex(ctx, plaintext + len, &len))
+     int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
+    if(1 != rv)
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 24------------------------";
     plaintext_len += len;
 
@@ -135,6 +136,7 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
     EVP_CIPHER_CTX_free(ctx);
 
     RTC_LOG(LS_VERBOSE) << "XXX decrht plaintext_len------------------------" << plaintext_len;
+     RTC_LOG(LS_VERBOSE) << "XXX decrht rv------------------------" << rv;
     return plaintext_len;
 }
 
