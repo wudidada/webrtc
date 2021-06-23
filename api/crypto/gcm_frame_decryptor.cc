@@ -285,7 +285,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
     /* Encrypt the plaintext */
-    ciphertext_len = new_encrypt (payload, payload_lenght, gcm_key, &iv[0],
+    ciphertext_len = new_encrypt (&payload[0], payload_lenght, gcm_key1, &iv[0],
                               ciphertext);
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
