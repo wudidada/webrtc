@@ -175,8 +175,10 @@ int new_encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
      * Finalise the encryption. Further ciphertext bytes may be written at
      * this stage.
      */
-    if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len))
+    if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) {
+         RTC_LOG(LS_VERBOSE) << "EVP_EncryptFinal_ex: OpenSSL error: %s", ERR_error_string(ERR_get_error(), nullptr);
          RTC_LOG(LS_VERBOSE) << "XXX encrypting error 24------------------------";
+    }
     ciphertext_len += len;
 
     /* Clean up */
