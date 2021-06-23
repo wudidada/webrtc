@@ -177,7 +177,7 @@ int new_encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
      * this stage.
      */
     if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) {
-        RTC_LOG(LS_VERBOSE) << "XXX encrypting error 24------------------------";
+           RTC_LOG(LS_VERBOSE) << "XXX encrypting error 24------------------------";
     }
     ciphertext_len += len;
 
@@ -285,10 +285,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
     /* Encrypt the plaintext */
-    ciphertext_len = new_encrypt (payload_lenght, Payload, gcm_key, &iv[0],
+    ciphertext_len = new_encrypt (payload, payload_lenght, gcm_key, &iv[0],
                               ciphertext);
 
-    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
+    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";*/
 
     unsigned char gcm_key1[] = {
     195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
