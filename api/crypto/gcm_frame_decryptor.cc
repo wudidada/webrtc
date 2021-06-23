@@ -127,9 +127,11 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
      * Finalise the decryption. Further plaintext bytes may be written at
      * this stage.
      */
-     int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
-    if(1 != rv)
+    int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
+    if(1 != rv) {
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 24------------------------";
+        RTC_LOG(LS_VERBOSE) << "EVP_EncryptFinal_ex: OpenSSL error: %s", ERR_error_string(ERR_get_error(), nullptr);
+    }
     plaintext_len += len;
 
     /* Clean up */
@@ -276,10 +278,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
      * ciphertext which may be longer than the plaintext, depending on the
      * algorithm and mode.
      */
-    unsigned char ciphertext[128];
+    unsigned char ciphertext[200];
 
     /* Buffer for the decrypted text */
-    unsigned char decryptedtext[128];
+    unsigned char decryptedtext[200];
 
     int decryptedtext_len, ciphertext_len;
 
