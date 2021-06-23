@@ -293,11 +293,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                  67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
     };
 
-
     /* Decrypt the ciphertext */
     decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv[0],
                                 decryptedtext);
-    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt2------------------------" << decryptedtext;
+    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt2------------------------";
 
     /* Add a NULL terminator. We are expecting printable text */
     decryptedtext[decryptedtext_len] = '\0';
