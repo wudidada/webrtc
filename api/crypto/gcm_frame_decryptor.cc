@@ -188,8 +188,7 @@ int new_encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
 
     std::string str;
     for (size_t i =0 ; i < ciphertext_len; i++) {
-      str += ciphertext[i];
-      str += " , ";
+      RTC_LOG(LS_VERBOSE) << "XXX encrypting final------------------------" << i << " " << ciphertext[i];
     }
 
     RTC_LOG(LS_VERBOSE) << "XXX encrypting final------------------------" << str;
