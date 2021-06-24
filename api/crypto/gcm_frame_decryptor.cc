@@ -300,10 +300,12 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                  67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
     };
 
+    std::vector<uint8_t> iv1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
     /* Encrypt the plaintext */
     //ciphertext_len = new_encrypt(&payload[0], payload_lenght, gcm_key1, &iv[0], ciphertext);
-    ciphertext_len = new_encrypt (&plaintext[0], plaintext.size(), gcm_key1, &iv[0], ciphertext);
+    ciphertext_len = new_encrypt (&plaintext[0], plaintext.size(), gcm_key1, &iv1[0], ciphertext);
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
 
