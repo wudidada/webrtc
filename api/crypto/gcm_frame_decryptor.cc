@@ -148,6 +148,14 @@ int new_encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
       RTC_LOG(LS_VERBOSE) << "XXX encrypting initial------------------------" << i << " " << plaintext[i];
     }
 
+    for (size_t i =0 ; i < 12; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX encrypting iv------------------------" << i << " " << iv[i];
+    }
+
+    for (size_t i =0 ; i < 32; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX encrypting keyv------------------------" << i << " " << key[i];
+    }
+
     EVP_CIPHER_CTX *ctx;
 
     int len;
