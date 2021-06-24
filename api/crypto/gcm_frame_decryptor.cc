@@ -144,6 +144,10 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
 int new_encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
             unsigned char *iv, unsigned char *ciphertext)
 {
+    for (size_t i =0 ; i < plaintext_len; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX encrypting initial------------------------" << i << " " << plaintext[i];
+    }
+
     EVP_CIPHER_CTX *ctx;
 
     int len;
