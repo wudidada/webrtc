@@ -137,7 +137,7 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
     EVP_CIPHER_CTX_free(ctx);
 
     RTC_LOG(LS_VERBOSE) << "XXX decrht plaintext_len------------------------" << plaintext_len;
-     RTC_LOG(LS_VERBOSE) << "XXX decrht rv------------------------" << rv;
+    RTC_LOG(LS_VERBOSE) << "XXX decrht rv------------------------" << rv;
     return plaintext_len;
 }
 
@@ -185,6 +185,14 @@ int new_encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
     EVP_CIPHER_CTX_free(ctx);
 
     RTC_LOG(LS_VERBOSE) << "XXX encrypting ciphertext_len------------------------" << ciphertext_len;
+
+    std::string str;
+    for (size_t i =0 ; i < ciphertext_len; i++) {
+      str += ciphertext[i];
+      str += " , ";
+    }
+
+    RTC_LOG(LS_VERBOSE) << "XXX encrypting final------------------------" << str;
     return ciphertext_len;
 }
 
@@ -269,7 +277,12 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     /* Message to be encrypted */
     //unsigned char *plaintext = (unsigned char *)"The quick brown fox jumps over the lazy dog";
-     std::vector<unsigned char> plaintext = { '7', '5', '16', '8' };
+     std::vector<unsigned char> plaintext = { '11' , '230' , '13' , '184' , '29' , '174' , '23' , '248' , 
+'69' , '222' , '241' , '125' , '177' , '255' , '85' , '227' , 
+'24' , '42' , '11' , '0' , '154' , '175' , '23' , '24' , 
+'39' , '223' , '43' , '212' , '81' , '9' , '196' , 
+'177' , '220' , '118' , '13' , '183' , '104' , '222' , 
+'181' , '186' , '3' , '75' , '220' , '236' , '3' , '47' };
 
     /*
      * Buffer for ciphertext. Ensure the buffer is long enough for the
