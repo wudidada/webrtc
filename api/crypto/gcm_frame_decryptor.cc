@@ -138,6 +138,10 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
 
     RTC_LOG(LS_VERBOSE) << "XXX decrht plaintext_len------------------------" << plaintext_len;
     RTC_LOG(LS_VERBOSE) << "XXX decrht rv------------------------" << rv;
+
+    for (size_t i =0 ; i < plaintext_len; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << i << " " << plaintext[i];
+    }
     return plaintext_len;
 }
 
@@ -148,13 +152,13 @@ int new_encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
       RTC_LOG(LS_VERBOSE) << "XXX encrypting initial------------------------" << i << " " << plaintext[i];
     }
 
-    for (size_t i =0 ; i < 12; i++) {
+    /*for (size_t i =0 ; i < 12; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX encrypting iv------------------------" << i << " " << iv[i];
     }
 
     for (size_t i =0 ; i < 32; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX encrypting keyv------------------------" << i << " " << key[i];
-    }
+    }*/
 
     EVP_CIPHER_CTX *ctx;
 
@@ -322,6 +326,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
 
     /* Decrypt the ciphertext */
+    new_decrypt(ciphertext, ciphertext_len, gcm_key1, &iv1[0], decryptedtext);
     /*decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv[0], decryptedtext);
     for(size_t i = 0; i < payload_lenght; i++) {
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
