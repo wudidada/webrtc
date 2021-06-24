@@ -290,16 +290,16 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
     /* Encrypt the plaintext */
-   // ciphertext_len = new_encrypt (&payload[0], payload_lenght, gcm_key1, &iv[0], ciphertext);
+    ciphertext_len = new_encrypt(&payload[0], payload_lenght, gcm_key1, &iv[0], ciphertext);
    // ciphertext_len = new_encrypt (&plaintext[0], plaintext.size(), gcm_key1, &iv[0], ciphertext);
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
 
     /* Decrypt the ciphertext */
-    decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv[0], decryptedtext);
+    /*decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv[0], decryptedtext);
     for(size_t i = 0; i < payload_lenght; i++) {
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
-    }
+    }*/
    
 
     /* Add a NULL terminator. We are expecting printable text */
