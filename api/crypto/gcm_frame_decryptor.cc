@@ -101,6 +101,10 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
 
     int plaintext_len;
 
+    for (size_t i =0 ; i < ciphertext_len; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX decrypting initial------------------------" << i << " " << ciphertext[i];
+    }
+
     /* Create and initialise the context */
     if(!(ctx = EVP_CIPHER_CTX_new()))
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 21------------------------";
