@@ -186,6 +186,8 @@ int new_encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
      */
     if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len))
          RTC_LOG(LS_VERBOSE) << "XXX encrypting error 23------------------------";
+
+    RTC_LOG(LS_VERBOSE) << "XXX encrypting no error 23------------------------" << len;
     ciphertext_len = len;
 
     /*
@@ -195,6 +197,8 @@ int new_encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
     if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) {
            RTC_LOG(LS_VERBOSE) << "XXX encrypting error 24------------------------";
     }
+
+    RTC_LOG(LS_VERBOSE) << "XXX encrypting error 24------------------------" << len;
     ciphertext_len += len;
 
     /* Clean up */
@@ -292,12 +296,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     /* Message to be encrypted */
     //unsigned char *plaintext = (unsigned char *)"The quick brown fox jumps over the lazy dog";
-     std::vector<unsigned char> plaintext = { '11' , '230' , '13' , '184' , '29' , '174' , '23' , '248' , 
-'69' , '222' , '241' , '125' , '177' , '255' , '85' , '227' , 
-'24' , '42' , '11' , '0' , '154' , '175' , '23' , '24' , 
-'39' , '223' , '43' , '212' , '81' , '9' , '196' , 
-'177' , '220' , '118' , '13' , '183' , '104' , '222' , 
-'181' , '186' , '3' , '75' , '220' , '236' , '3' , '47' };
+     std::vector<uint8_t> plaintext = { 
+       11 , 230 , 13 , 184 , 29 , 174, 23 , 248 
+     }
 
     /*
      * Buffer for ciphertext. Ensure the buffer is long enough for the
