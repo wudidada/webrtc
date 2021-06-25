@@ -313,7 +313,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     int decryptedtext_len, ciphertext_len;
 
     unsigned char gcm_key1[] = {
-    195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
+                 195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
                  67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
     };
 
@@ -322,17 +322,16 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
     /* Encrypt the plaintext */
     //ciphertext_len = new_encrypt(&payload[0], payload_lenght, gcm_key1, &iv[0], ciphertext);
-    ciphertext_len = new_encrypt (&plaintext[0], plaintext.size(), gcm_key1, &iv1[0], ciphertext);
+    //ciphertext_len = new_encrypt (&plaintext[0], plaintext.size(), gcm_key1, &iv1[0], ciphertext);
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
 
     /* Decrypt the ciphertext */
-    new_decrypt(ciphertext, ciphertext_len, gcm_key1, &iv1[0], decryptedtext);
-    /*decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv[0], decryptedtext);
-    for(size_t i = 0; i < payload_lenght; i++) {
+    //new_decrypt(ciphertext, ciphertext_len, gcm_key1, &iv1[0], decryptedtext);
+    decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext);
+    /*for(size_t i = 0; i < payload_lenght; i++) {
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
     }*/
-   
 
     /* Add a NULL terminator. We are expecting printable text */
     decryptedtext[decryptedtext_len] = '\0';
