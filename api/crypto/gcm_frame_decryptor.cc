@@ -332,13 +332,17 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     /* Decrypt the ciphertext */
     //new_decrypt(ciphertext, ciphertext_len, gcm_key1, &iv1[0], decryptedtext);
-    decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext);
+    //decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext);
     /*for(size_t i = 0; i < payload_lenght; i++) {
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
     }*/
 
     /* Add a NULL terminator. We are expecting printable text */
     decryptedtext[decryptedtext_len] = '\0';
+
+  for (size_t i = 0; i < payload_lenght; i++) {
+    frame[i + unencrypted_bytes] = encrypted_frame[i + unencrypted_bytes];
+  }
 
   return Result(Status::kOk, frame.size());
 }
