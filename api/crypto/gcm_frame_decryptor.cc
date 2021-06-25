@@ -298,7 +298,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     //unsigned char *plaintext = (unsigned char *)"The quick brown fox jumps over the lazy dog";
      std::vector<uint8_t> plaintext = { 
        11 , 230 , 13 , 184 , 29 , 174, 23 , 248 
-     }
+     };
 
     /*
      * Buffer for ciphertext. Ensure the buffer is long enough for the
