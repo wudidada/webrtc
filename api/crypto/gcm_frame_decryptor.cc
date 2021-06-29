@@ -226,7 +226,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     rtc::ArrayView<const uint8_t> encrypted_frame,
     rtc::ArrayView<uint8_t> frame) {
 
- uint8_t unencrypted_bytes = 1;
+ uint8_t unencrypted_bytes = 10;
  switch (media_type) {
     case cricket::MEDIA_TYPE_AUDIO:
       unencrypted_bytes = 1;
