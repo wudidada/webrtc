@@ -243,117 +243,11 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
  }
 
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
-  // Frame header
-  for (size_t i = 0; i < unencrypted_bytes; i++) {
-    frame[i] = encrypted_frame[i];
-  }
+
+   RTC_LOG(LS_VERBOSE) << "XXX decrypting11------------------------" << unencrypted_bytes;
   
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------1";
 
-  // Frame trailer
-  size_t frame_trailer_size = 2;
-  std::vector<uint8_t> frame_trailer;
-  frame_trailer.reserve(frame_trailer_size);
-  frame_trailer.push_back(encrypted_frame[encrypted_frame.size() - 2]);//IV_LENGHT
-  frame_trailer.push_back(encrypted_frame[encrypted_frame.size() - 1]);
-  
-  // IV
-  uint8_t iv_lenght = frame_trailer[0];
-  uint8_t iv_start = encrypted_frame.size() - frame_trailer_size - iv_lenght - 1;
-  std::vector<uint8_t> iv;
-
- // RTC_LOG(LS_VERBOSE) << "XXX decrypting700------------------------" << iv_lenght;
- // RTC_LOG(LS_VERBOSE) << "XXX decrypting701------------------------" << iv_start;
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting702------------------------" << frame_trailer.size();
-
-  for (size_t i = iv_start; i < iv_start + iv_lenght; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX decrypting7------------------------" << encrypted_frame[i];
-      iv.push_back(encrypted_frame[i]);
-  }
-
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------2";
-
-  size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + frame_trailer_size);
-
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------3";
-
-  // Payload
-  //uint8_t* payload = new uint8_t[iv_lenght];
-  std::vector<uint8_t> payload;
-  for (size_t i = unencrypted_bytes; i < unencrypted_bytes + payload_lenght; i++) {
-    payload.push_back(encrypted_frame[i]);
-  }
-
-  //std::vector<uint8_t> outbuf = aes_gcm_decrypt(payload, iv);
-
-  /*for (size_t i = 0; i < sizeof(outbuf); i++) {
-    frame[i + unencrypted_bytes] = outbuf[i];
-  }*/
-
- // RTC_LOG(LS_VERBOSE) << "XXX decrypting1------------------------" << frame.size();
- //RTC_LOG(LS_VERBOSE) << "XXX decrypting2------------------------" << sizeof(outbuf);
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting3------------------------" << encrypted_frame.size();
- // RTC_LOG(LS_VERBOSE) << "XXX decrypting4------------------------" << frame_trailer[0];
- // RTC_LOG(LS_VERBOSE) << "XXX decrypting5------------------------" << additional_data.size();
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting6------------------------" << payload_lenght;
- // RTC_LOG(LS_VERBOSE) << "XXX decrypting71------------------------" << iv;
-
-
-/*
-     * Set up the key and iv. Do I need to say to not hard code these in a
-     * real application? :-)
-     */
-
-    /* Message to be encrypted */
-    //unsigned char *plaintext = (unsigned char *)"The quick brown fox jumps over the lazy dog";
-     std::vector<uint8_t> plaintext = { 
-       11 , 230 , 13 , 184 , 29 , 174, 23 , 248 
-     };
-
-    /*
-     * Buffer for ciphertext. Ensure the buffer is long enough for the
-     * ciphertext which may be longer than the plaintext, depending on the
-     * algorithm and mode.
-     */
-    unsigned char ciphertext[200];
-
-    /* Buffer for the decrypted text */
-    unsigned char decryptedtext[200];
-    unsigned char tag[200];
-
-    int decryptedtext_len, ciphertext_len;
-
-    unsigned char gcm_key1[] = {
-                 195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
-                 67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
-    };
-
-    std::vector<uint8_t> iv1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-
-    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
-    /* Encrypt the plaintext */
-    //ciphertext_len = new_encrypt(&payload[0], payload_lenght, gcm_key1, &iv[0], ciphertext);
-    //ciphertext_len = new_encrypt (&plaintext[0], plaintext.size(), gcm_key1, &iv1[0], ciphertext);
-
-    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------";
-
-    /* Decrypt the ciphertext */
-    //new_decrypt(ciphertext, ciphertext_len, gcm_key1, &iv1[0], decryptedtext);
-    decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext, tag);
-    /*for(size_t i = 0; i < payload_lenght; i++) {
-        RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
-    }*/
-
-    /* Add a NULL terminator. We are expecting printable text */
-    //decryptedtext[decryptedtext_len] = '\0';
-
-  /*for (size_t i = 0; i < payload_lenght; i++) {
-    frame[i + unencrypted_bytes] = encrypted_frame[i + unencrypted_bytes];
-  }*/
-
-  for (size_t i = 0; i < decryptedtext_len; i++) {
-    frame[i + unencrypted_bytes] = decryptedtext[unencrypted_bytes];
-  }
 
   return Result(Status::kOk, frame.size());
 }
