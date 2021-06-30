@@ -93,7 +93,7 @@ std::vector<uint8_t> aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame,
 }
 
 int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
-            unsigned char *iv, unsigned char *plaintext)
+            unsigned char *iv, unsigned char *plaintext, unsigned char *tag)
 {
     EVP_CIPHER_CTX *ctx;
 
@@ -116,9 +116,11 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
      * IV size for *most* modes is the same as the block size. For AES this
      * is 128 bits
      */
-    if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
+    if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_(), NULL, NULL, NULL))
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 22------------------------";
 
+    if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv))
+        RTC_LOG(LS_VERBOSE) << "XXX decrypting error 221------------------------";
     /*
      * Provide the message to be decrypted, and obtain the plaintext output.
      * EVP_DecryptUpdate can be called multiple times if necessary.
@@ -127,6 +129,10 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
     plaintext_len = len;
 
+
+    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
+        RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
+    }
     /*
      * Finalise the decryption. Further plaintext bytes may be written at
      * this stage.
@@ -313,6 +319,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     /* Buffer for the decrypted text */
     unsigned char decryptedtext[200];
+    unsigned char tag[200];
 
     int decryptedtext_len, ciphertext_len;
 
@@ -332,7 +339,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     /* Decrypt the ciphertext */
     //new_decrypt(ciphertext, ciphertext_len, gcm_key1, &iv1[0], decryptedtext);
-    decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext);
+    decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext, tag);
     /*for(size_t i = 0; i < payload_lenght; i++) {
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
     }*/
