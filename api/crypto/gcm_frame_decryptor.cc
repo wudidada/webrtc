@@ -144,40 +144,12 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       iv.push_back(encrypted_frame[i]);
   }
 
-  // payload
-  size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + frame_trailer_size);
-  std::vector<uint8_t> payload;
-  payload.reserve(payload_lenght);
-  for (size_t i = unencrypted_bytes; i < unencrypted_bytes + payload_lenght; i++) {
-    payload.push_back(encrypted_frame[i]);
-  }
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------1";
 
-  std::vector<uint8_t> plaintext;
 
-    /* Buffer for the decrypted text */
-    unsigned char decryptedtext[200];
-    unsigned char tag[200];
-
-    int decryptedtext_len;
-
-    unsigned char gcm_key1[] = {
-                 195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
-                 67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
-    };
-
-    std::vector<uint8_t> iv1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-
-    RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
-
-    /* Decrypt the ciphertext */
-    decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext, tag);
-    /*for(size_t i = 0; i < payload_lenght; i++) {
-        RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
-    }*/
-
-  for (size_t i = 0; i < decryptedtext_len; i++) {
+  /*for (size_t i = 0; i < decryptedtext_len; i++) {
     frame[i + unencrypted_bytes] = decryptedtext[unencrypted_bytes];
-  }
+  }*/
 
   return Result(Status::kOk, frame.size());
 }
