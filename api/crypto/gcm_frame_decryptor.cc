@@ -111,7 +111,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     rtc::ArrayView<const uint8_t> encrypted_frame,
     rtc::ArrayView<uint8_t> frame) {
 
- uint8_t unencrypted_bytes = 10;
+RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
+
+uint8_t unencrypted_bytes = 10;
  switch (media_type) {
     case cricket::MEDIA_TYPE_AUDIO:
       unencrypted_bytes = 1;
@@ -121,10 +123,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       break;
  }
 
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
+
   RTC_LOG(LS_VERBOSE) << "XXX unencrypted_bytes ------------------------" << unencrypted_bytes;
   // Frame header
-  for (size_t i = 0; i < unencrypted_bytes; i++) {
+ /* for (size_t i = 0; i < unencrypted_bytes; i++) {
     frame[i] = encrypted_frame[i];
   }
 
@@ -152,10 +154,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     payload.push_back(encrypted_frame[i]);
   }
 
-  std::vector<uint8_t> plaintext;
+  std::vector<uint8_t> plaintext;*/
 
     /* Buffer for the decrypted text */
-    unsigned char decryptedtext[200];
+ /*  unsigned char decryptedtext[200];
     unsigned char tag[200];
 
     int decryptedtext_len;
@@ -169,15 +171,15 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
 
-    /* Decrypt the ciphertext */
+    // Decrypt the ciphertext 
     decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext, tag);
     /*for(size_t i = 0; i < payload_lenght; i++) {
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
     }*/
 
-  for (size_t i = 0; i < decryptedtext_len; i++) {
+ /* for (size_t i = 0; i < decryptedtext_len; i++) {
     frame[i + unencrypted_bytes] = decryptedtext[unencrypted_bytes];
-  }
+  }*/
 
   return Result(Status::kOk, frame.size());
 }
