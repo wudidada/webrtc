@@ -41,57 +41,6 @@ static const unsigned char gcm_tag[] = {
       RTC_LOG(LS_VERBOSE) << "XXX GCMFrameDecryptor";
  }
 
-std::vector<uint8_t> aes_gcm_decrypt(std::vector<uint8_t> encrypted_frame, 
-                               std::vector<uint8_t> iv) {
-
-    int encrypted_frame_size = encrypted_frame.size();
-    unsigned char gcm_ct[encrypted_frame_size];
-    int iv_size = iv.size();
-
-    //RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt encrypted_frame_size------------------------" << encrypted_frame_size;
-    //RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_decrypt iv_size------------------------" << iv_size;
-
-    EVP_CIPHER_CTX *ctx;
-    int outlen, tmplen, rv;
-    std::vector<uint8_t> outbuf;
-
-    if(!(ctx = EVP_CIPHER_CTX_new())) {
-        RTC_LOG(LS_VERBOSE) << "XXX decrypting error1------------------------";
-    }
-
-
-    /* Select cipher */
-    if(!EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
-       RTC_LOG(LS_VERBOSE) << "XXX decrypting error2------------------------";
-    }
-
-    /* Specify key and IV */
-    if(!EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, iv.data())) {
-      RTC_LOG(LS_VERBOSE) << "XXX decrypting error3------------------------";
-    }
-    /* Zero or more calls to specify any AAD */
-   // EVP_DecryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad)/sizeof(unsigned char));
-    
-    /* Decrypt plaintext */
-    if(!EVP_DecryptUpdate(ctx, &outbuf[0], &outlen, &encrypted_frame[0], encrypted_frame.size())){
-      RTC_LOG(LS_VERBOSE) << "XXX decrypting error4------------------------";
-    }
-
-    /* Set expected tag value. */
-    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, 16,(void *)gcm_tag)) {
-      RTC_LOG(LS_VERBOSE) << "XXX decrypting error5------------------------";
-    }
-    /* Finalise: note get no output for GCM */
-    rv = EVP_DecryptFinal_ex(ctx, &encrypted_frame[outlen], &outlen);
-
-    RTC_LOG(LS_VERBOSE) << "XXX decrypting success------------------------" << rv;
-    printf("Tag Verify %s\n", rv > 0 ? "Successful!" : "Failed!");
-
-    EVP_CIPHER_CTX_free(ctx);
-
-    return outbuf;
-}
-
 int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
             unsigned char *iv, unsigned char *plaintext, unsigned char *tag)
 {
@@ -153,76 +102,6 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
       RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << i << " " << plaintext[i];
     }
     return plaintext_len;
-}
-
-int new_encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,
-            unsigned char *iv, unsigned char *ciphertext)
-{
-    for (size_t i =0 ; i < plaintext_len; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX encrypting initial------------------------" << i << " " << plaintext[i];
-    }
-
-    /*for (size_t i =0 ; i < 12; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX encrypting iv------------------------" << i << " " << iv[i];
-    }
-
-    for (size_t i =0 ; i < 32; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX encrypting keyv------------------------" << i << " " << key[i];
-    }*/
-
-    EVP_CIPHER_CTX *ctx;
-
-    int len;
-
-    int ciphertext_len;
-
-    /* Create and initialise the context */
-    if(!(ctx = EVP_CIPHER_CTX_new()))
-        RTC_LOG(LS_VERBOSE) << "XXX encrypting error 21------------------------";
-
-    /*
-     * Initialise the encryption operation. IMPORTANT - ensure you use a key
-     * and IV size appropriate for your cipher
-     * In this example we are using 256 bit AES (i.e. a 256 bit key). The
-     * IV size for *most* modes is the same as the block size. For AES this
-     * is 128 bits
-     */
-    if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
-         RTC_LOG(LS_VERBOSE) << "XXX encrypting error 22------------------------";
-
-    /*
-     * Provide the message to be encrypted, and obtain the encrypted output.
-     * EVP_EncryptUpdate can be called multiple times if necessary
-     */
-    if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len))
-         RTC_LOG(LS_VERBOSE) << "XXX encrypting error 23------------------------";
-
-    RTC_LOG(LS_VERBOSE) << "XXX encrypting no error 23------------------------" << len;
-    ciphertext_len = len;
-
-    /*
-     * Finalise the encryption. Further ciphertext bytes may be written at
-     * this stage.
-     */
-    if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) {
-           RTC_LOG(LS_VERBOSE) << "XXX encrypting error 24------------------------";
-    }
-
-    RTC_LOG(LS_VERBOSE) << "XXX encrypting error 24------------------------" << len;
-    ciphertext_len += len;
-
-    /* Clean up */
-    EVP_CIPHER_CTX_free(ctx);
-
-    RTC_LOG(LS_VERBOSE) << "XXX encrypting ciphertext_len------------------------" << ciphertext_len;
-
-    std::string str;
-    for (size_t i =0 ; i < ciphertext_len; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX encrypting final------------------------" << i << " " << ciphertext[i];
-    }
-
-    RTC_LOG(LS_VERBOSE) << "XXX encrypting final------------------------" << str;
-    return ciphertext_len;
 }
 
 GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
