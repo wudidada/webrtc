@@ -183,8 +183,8 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   std::vector<uint8_t> plaintext;
 
     /* Buffer for the decrypted text */
-    unsigned char decryptedtext[200];
-    unsigned char tag[200];
+    unsigned char decryptedtext[400];
+    unsigned char tag[400];
 
     int decryptedtext_len;
 
