@@ -46,12 +46,13 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
 {
     EVP_CIPHER_CTX *ctx;
 
+    int myUniqueId = rand();
     int len;
 
     int plaintext_len;
 
     for (size_t i =0 ; i < ciphertext_len; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX decrypting initial------------------------" << i << " " << ciphertext[i];
+      RTC_LOG(LS_VERBOSE) << "XXX decrypting initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
     }
 
     /* Create and initialise the context */
@@ -99,7 +100,7 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
     RTC_LOG(LS_VERBOSE) << "XXX decrht rv------------------------" << rv;
 
     for (size_t i =0 ; i < plaintext_len; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << i << " " << plaintext[i];
+      RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
     }
     return plaintext_len;
 }
