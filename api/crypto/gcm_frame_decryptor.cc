@@ -41,6 +41,17 @@ static const unsigned char gcm_tag[] = {
       RTC_LOG(LS_VERBOSE) << "XXX GCMFrameDecryptor";
  }
 
+ string getOpenSSLError()
+{
+    BIO *bio = BIO_new(BIO_s_mem());
+    ERR_print_errors(bio);
+    char *buf;
+    size_t len = BIO_get_mem_data(bio, &buf);
+    string ret(buf, len);
+    BIO_free(bio);
+    return ret;
+}
+
 int new_decrypt(unsigned char *ciphertext, 
                 int ciphertext_len, 
                 unsigned char *key,
@@ -101,8 +112,8 @@ int new_decrypt(unsigned char *ciphertext,
      */
     int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
     if(1 != rv) {
-        RTC_LOG(LS_VERBOSE) << "XXX1 decrypting error 24------------------------";
-        ERR_print_errors_fp(stderr);
+        string a = getOpenSSLError();
+        RTC_LOG(LS_VERBOSE) << "XXX1 decrypting error 24------------------------" << a;
     }
     plaintext_len += len;
 
