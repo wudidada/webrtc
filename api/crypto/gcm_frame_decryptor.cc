@@ -41,8 +41,14 @@ static const unsigned char gcm_tag[] = {
       RTC_LOG(LS_VERBOSE) << "XXX GCMFrameDecryptor";
  }
 
-int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
-            unsigned char *iv, unsigned char *plaintext, unsigned char *tag)
+int new_decrypt(unsigned char *ciphertext, 
+                int ciphertext_len, 
+                unsigned char *key,
+                unsigned char *aad, 
+                int aad_len,
+                unsigned char *iv, 
+                unsigned char *plaintext, 
+                unsigned char *tag)
 {
     EVP_CIPHER_CTX *ctx;
 
@@ -71,6 +77,13 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
 
     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv))
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 221------------------------";
+
+    /*
+     * Provide any AAD data. This can be called zero or more times as
+     * required
+     */
+    if(!EVP_DecryptUpdate(ctx, NULL, &len, aad, aad_len))
+         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 222------------------------";
     /*
      * Provide the message to be decrypted, and obtain the plaintext output.
      * EVP_DecryptUpdate can be called multiple times if necessary.
@@ -78,7 +91,6 @@ int new_decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *ke
     if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len))
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
     plaintext_len = len;
-
 
     if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
@@ -125,8 +137,11 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
   RTC_LOG(LS_VERBOSE) << "XXX unencrypted_bytes ------------------------" << unencrypted_bytes;
   // Frame header
+   size_t frame_header_size = unencrypted_bytes;
+  std::vector<uint8_t> frame_header;
   for (size_t i = 0; i < unencrypted_bytes; i++) {
     frame[i] = encrypted_frame[i];
+    frame_header.push_back(encrypted_frame[i]);
   }
 
   // Frame trailer
@@ -171,7 +186,15 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
 
     /* Decrypt the ciphertext */
-    decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext, tag);
+    decryptedtext_len = new_decrypt(
+      &payload[0], 
+      payload_lenght, 
+      gcm_key1, 
+      &frame_header[0],
+      frame_header_size,
+      &iv1[0], 
+      decryptedtext, 
+      tag);
     /*for(size_t i = 0; i < payload_lenght; i++) {
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
     }*/
