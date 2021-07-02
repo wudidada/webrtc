@@ -102,6 +102,7 @@ int new_decrypt(unsigned char *ciphertext,
     int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
     if(1 != rv) {
         RTC_LOG(LS_VERBOSE) << "XXX1 decrypting error 24------------------------";
+        ERR_print_errors_fp(stderr);
     }
     plaintext_len += len;
 
