@@ -270,18 +270,18 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     /* A 128 bit IV */
     unsigned char *iv12 = (unsigned char *)"0123456789012345";
-    unsigned char *plaintext1 =
-        (unsigned char *)"83, 140, 175";
+    std::vector<uint8_t> plaintext1 = { 43, 34, 57};
     unsigned char ciphertext[128];
 
-   /* ciphertext_len = gcm_encrypt(plaintext1, 
-                       strlen ((char *)plaintext1),
+   ciphertext_len = gcm_encrypt(
+                       &plaintext1[0], 
+                       plaintext.size(),
                        key,
                        iv12,
                        12,
                        ciphertext,
                        tag);
-    RTC_LOG(LS_VERBOSE) << "XXX ciphertext_len------------------------" << ciphertext_len;            
+
     new_decrypt(
             ciphertext, 
             ciphertext_len, 
@@ -290,10 +290,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
             frame_header_size,
             &iv1[0], 
             decryptedtext, 
-            tag);*/
+            tag);
 
     /* Decrypt the ciphertext */
-    decryptedtext_len = new_decrypt(
+  /*  decryptedtext_len = new_decrypt(
       &payload[0], 
       payload_lenght, 
       gcm_key1, 
@@ -301,7 +301,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       frame_header_size,
       &iv1[0], 
       decryptedtext, 
-      tag);
+      tag); */
     /*for(size_t i = 0; i < payload_lenght; i++) {
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
     }*/
