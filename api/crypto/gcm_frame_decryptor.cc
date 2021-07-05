@@ -197,12 +197,12 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
 
-    unsigned char *plaintext =
+    unsigned char *ciphertext =
         (unsigned char *)"165, 160, 86, 14, 124, 65, 187, 52, 78, 152, 82, 216, 18, 133, 240, 185, 88, 174, 180";
 
     decrypt(
             ciphertext, 
-            sizeof(plaintext), 
+            sizeof(ciphertext), 
             gcm_key1, 
             &frame_header[0],
             frame_header_size,
