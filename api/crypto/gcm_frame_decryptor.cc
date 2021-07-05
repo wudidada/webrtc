@@ -129,6 +129,74 @@ int new_decrypt(unsigned char *ciphertext,
     return plaintext_len;
 }
 
+int gcm_encrypt(unsigned char *plaintext, 
+                int plaintext_len,
+                unsigned char *key,
+                unsigned char *iv, 
+                int iv_len,
+                unsigned char *ciphertext,
+                unsigned char *tag)
+{
+    EVP_CIPHER_CTX *ctx;
+
+    int len;
+
+    int ciphertext_len;
+
+    int myUniqueId = rand();
+    for (size_t i =0 ; i < plaintext_len; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX encryption initial------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
+    }
+
+    /* Create and initialise the context */
+    if(!(ctx = EVP_CIPHER_CTX_new()))
+        RTC_LOG(LS_VERBOSE) << "XXX encryting error 1------------------------";
+
+    /* Initialise the encryption operation. */
+    if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL))
+       RTC_LOG(LS_VERBOSE) << "XXX encryting error 2------------------------";
+
+    /*
+     * Set IV length if default 12 bytes (96 bits) is not appropriate
+     */
+    if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, iv_len, NULL))
+       RTC_LOG(LS_VERBOSE) << "XXX encryting error 3------------------------";
+
+    /* Initialise key and IV */
+    if(1 != EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv))
+        RTC_LOG(LS_VERBOSE) << "XXX encryting error 4------------------------";
+
+    /*
+     * Provide the message to be encrypted, and obtain the encrypted output.
+     * EVP_EncryptUpdate can be called multiple times if necessary
+     */
+    if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len))
+        RTC_LOG(LS_VERBOSE) << "XXX encryting error 5------------------------";
+    ciphertext_len = len;
+
+    /*
+     * Finalise the encryption. Normally ciphertext bytes may be written at
+     * this stage, but this does not occur in GCM mode
+     */
+    if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len))
+        RTC_LOG(LS_VERBOSE) << "XXX encryting error 6------------------------";
+    ciphertext_len += len;
+
+    /* Get the tag */
+    if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, tag))
+       RTC_LOG(LS_VERBOSE) << "XXX encryting error 7------------------------";
+
+    /* Clean up */
+    EVP_CIPHER_CTX_free(ctx);
+
+    for (size_t i =0 ; i < ciphertext_len; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX encryption final------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
+    }
+
+
+    return ciphertext_len;
+}
+
 GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     cricket::MediaType media_type,
     const std::vector<uint32_t>& csrcs,
@@ -186,7 +254,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     unsigned char decryptedtext[400];
     unsigned char tag[400];
 
-    int decryptedtext_len;
+    int decryptedtext_len, ciphertext_len;
 
     unsigned char gcm_key1[] = {
                  195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
@@ -197,12 +265,26 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
 
-    unsigned char *ciphertext =
-        (unsigned char *)"165, 160, 86, 14, 124, 65, 187, 52, 78, 152, 82, 216, 18, 133, 240, 185, 88, 174, 180";
+    /* A 256 bit key */
+    unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
 
+    /* A 128 bit IV */
+    unsigned char *iv12 = (unsigned char *)"0123456789012345";
+    unsigned char *plaintext1 =
+        (unsigned char *)"83, 140, 175";
+    unsigned char ciphertext[128];
+
+    ciphertext_len = gcm_encrypt(plaintext1, 
+                       strlen ((char *)plaintext1),
+                       key,
+                       iv12,
+                       12,
+                       ciphertext,
+                       tag);
+    RTC_LOG(LS_VERBOSE) << "XXX ciphertext_len------------------------" << ciphertext_len;            
     new_decrypt(
             ciphertext, 
-            sizeof(ciphertext), 
+            ciphertext_len, 
             gcm_key1, 
             &frame_header[0],
             frame_header_size,
