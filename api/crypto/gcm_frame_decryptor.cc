@@ -200,7 +200,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     unsigned char *ciphertext =
         (unsigned char *)"165, 160, 86, 14, 124, 65, 187, 52, 78, 152, 82, 216, 18, 133, 240, 185, 88, 174, 180";
 
-    decrypt(
+    new_decrypt(
             ciphertext, 
             sizeof(ciphertext), 
             gcm_key1, 
