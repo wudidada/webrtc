@@ -274,7 +274,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
         (unsigned char *)"83, 140, 175";
     unsigned char ciphertext[128];
 
-    ciphertext_len = gcm_encrypt(plaintext1, 
+   /* ciphertext_len = gcm_encrypt(plaintext1, 
                        strlen ((char *)plaintext1),
                        key,
                        iv12,
@@ -290,10 +290,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
             frame_header_size,
             &iv1[0], 
             decryptedtext, 
-            tag);
+            tag);*/
 
     /* Decrypt the ciphertext */
-   /* decryptedtext_len = new_decrypt(
+    decryptedtext_len = new_decrypt(
       &payload[0], 
       payload_lenght, 
       gcm_key1, 
@@ -301,7 +301,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       frame_header_size,
       &iv1[0], 
       decryptedtext, 
-      tag);*/
+      tag);
     /*for(size_t i = 0; i < payload_lenght; i++) {
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
     }*/
