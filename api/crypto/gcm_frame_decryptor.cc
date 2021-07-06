@@ -283,9 +283,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
             decryptedtext, 
             tag);*/
 
-    unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
+    unsigned char *key123 = (unsigned char *)"01234567890123456789012345678901";
 
-    unsigned char *iv = (unsigned char *)"0123456789012345";
+    unsigned char *iv123 = (unsigned char *)"0123456789012345";
 unsigned char tag[400];
     /* Message to be encrypted */
     unsigned char *plaintext =
@@ -293,9 +293,9 @@ unsigned char tag[400];
     unsigned char ciphertext[128];
     unsigned char decryptedtext[128];
     int decryptedtext_len, ciphertext_len;
-    ciphertext_len = gcm_encrypt (plaintext, strlen ((char *)plaintext), key, iv,
+    ciphertext_len = gcm_encrypt (plaintext, strlen ((char *)plaintext), key123, iv123,
                               ciphertext, tag);
-    decryptedtext_len = new_decrypt(ciphertext, ciphertext_len, key, iv,
+    decryptedtext_len = new_decrypt(ciphertext, ciphertext_len, key123, iv123,
                                 decryptedtext, tag);
 
     /* Add a NULL terminator. We are expecting printable text */
