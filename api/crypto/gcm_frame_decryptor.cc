@@ -288,15 +288,15 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     unsigned char *iv123 = (unsigned char *)"0123456789012345";
 unsigned char tag[400];
     /* Message to be encrypted */
-    unsigned char *plaintext =
+    unsigned char *plaintext123 =
         (unsigned char *)"The quick brown fox jumps over the lazy dog";
-    unsigned char ciphertext[128];
-    unsigned char decryptedtext[128];
+    unsigned char ciphertext123[128];
+    unsigned char decryptedtext123[128];
     int decryptedtext_len, ciphertext_len;
-    ciphertext_len = gcm_encrypt (plaintext, strlen ((char *)plaintext), key123, iv123,
-                              ciphertext, tag);
-    decryptedtext_len = new_decrypt(ciphertext, ciphertext_len, key123, iv123,
-                                decryptedtext, tag);
+    ciphertext_len = gcm_encrypt (plaintext123, strlen ((char *)plaintext123), key123, iv123,
+                              ciphertext123, tag);
+    decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, key123, iv123,
+                                decryptedtext123, tag);
 
     /* Add a NULL terminator. We are expecting printable text */
     decryptedtext[decryptedtext_len] = '\0';
