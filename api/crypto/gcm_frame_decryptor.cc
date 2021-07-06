@@ -153,6 +153,10 @@ int gcm_encrypt(unsigned char *plaintext,
     if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL))
        RTC_LOG(LS_VERBOSE) << "XXX encryting error 2------------------------";
 
+    if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, 12, NULL)) {
+       RTC_LOG(LS_VERBOSE) << "XXX encryting error 3------------------------";
+    }
+
     /* Initialise key and IV */
     if(1 != EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv))
         RTC_LOG(LS_VERBOSE) << "XXX encryting error 4------------------------";
@@ -287,7 +291,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                  195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
                  67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
     };
-    std::vector<uint8_t> iv1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+    std::vector<uint8_t> iv1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
     unsigned char tag[400];
     /* Message to be encrypted */
