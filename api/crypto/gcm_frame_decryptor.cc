@@ -93,8 +93,8 @@ int new_decrypt(unsigned char *ciphertext,
      * Provide any AAD data. This can be called zero or more times as
      * required
      */
-    if(!EVP_DecryptUpdate(ctx, NULL, &len, aad, aad_len))
-         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 222------------------------";
+   // if(!EVP_DecryptUpdate(ctx, NULL, &len, aad, aad_len))
+   //      RTC_LOG(LS_VERBOSE) << "XXX decrypting error 222------------------------";
     /*
      * Provide the message to be decrypted, and obtain the plaintext output.
      * EVP_DecryptUpdate can be called multiple times if necessary.
