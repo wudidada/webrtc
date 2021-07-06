@@ -289,10 +289,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     };
     std::vector<uint8_t> iv1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
-    unsigned char *iv123 = (unsigned char *)"0123456789012345";
     unsigned char tag[400];
     /* Message to be encrypted */
-   std::vector<uint8_t> plaintext123 = { 43, 34, 57 };
+   std::vector<uint8_t> plaintext123 = { 431, 342, 537, 32 };
     unsigned char ciphertext123[128];
     unsigned char decryptedtext123[128];
     int decryptedtext_len, ciphertext_len;
