@@ -55,8 +55,6 @@ static const unsigned char gcm_tag[] = {
 int new_decrypt(unsigned char *ciphertext, 
                 int ciphertext_len, 
                 unsigned char *key,
-                unsigned char *aad, 
-                int aad_len,
                 unsigned char *iv, 
                 unsigned char *plaintext, 
                 unsigned char *tag)
@@ -242,8 +240,8 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   }
 
   std::vector<uint8_t> plaintext;
-
-    /* Buffer for the decrypted text */
+/*
+    // Buffer for the decrypted text 
     unsigned char decryptedtext[400];
     unsigned char tag[400];
 
@@ -258,10 +256,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt------------------------";
 
-    /* A 256 bit key */
+   //A 256 bit key 
     unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
 
-    /* A 128 bit IV */
+    //A 128 bit IV 
     unsigned char *iv12 = (unsigned char *)"0123456789012345";
     std::vector<uint8_t> plaintext1 = { 43, 34, 57 };
     unsigned char ciphertext[128];
@@ -283,7 +281,25 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
             frame_header_size,
             iv12, 
             decryptedtext, 
-            tag);
+            tag);*/
+
+    unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
+
+    unsigned char *iv = (unsigned char *)"0123456789012345";
+unsigned char tag[400];
+    /* Message to be encrypted */
+    unsigned char *plaintext =
+        (unsigned char *)"The quick brown fox jumps over the lazy dog";
+    unsigned char ciphertext[128];
+    unsigned char decryptedtext[128];
+    int decryptedtext_len, ciphertext_len;
+    ciphertext_len = gcm_encrypt (plaintext, strlen ((char *)plaintext), key, iv,
+                              ciphertext, tag);
+    decryptedtext_len = new_decrypt(ciphertext, ciphertext_len, key, iv,
+                                decryptedtext, tag);
+
+    /* Add a NULL terminator. We are expecting printable text */
+    decryptedtext[decryptedtext_len] = '\0';
 
     /* Decrypt the ciphertext */
   /*  decryptedtext_len = new_decrypt(
