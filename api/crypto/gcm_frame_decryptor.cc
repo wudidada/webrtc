@@ -298,9 +298,6 @@ unsigned char tag[400];
     decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, key123, iv123,
                                 decryptedtext123, tag);
 
-    /* Add a NULL terminator. We are expecting printable text */
-    decryptedtext[decryptedtext_len] = '\0';
-
     /* Decrypt the ciphertext */
   /*  decryptedtext_len = new_decrypt(
       &payload[0], 
