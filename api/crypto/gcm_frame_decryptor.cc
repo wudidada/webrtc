@@ -205,7 +205,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       break;
  }
 
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting------------------------";
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting123 ------------------------";
   RTC_LOG(LS_VERBOSE) << "XXX unencrypted_bytes ------------------------" << unencrypted_bytes;
   // Frame header
    size_t frame_header_size = unencrypted_bytes;
@@ -287,7 +287,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                  195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
                  67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
     };
-    unsigned char *key123 = (unsigned char *)"01234567890123456789012345678901";
+    std::vector<uint8_t> iv1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
     unsigned char *iv123 = (unsigned char *)"0123456789012345";
     unsigned char tag[400];
@@ -297,9 +297,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     unsigned char decryptedtext123[128];
     int decryptedtext_len, ciphertext_len;
     ciphertext_len = gcm_encrypt ( &plaintext123[0], 
-                                    plaintext123.size(), gcm_key1, iv123,
+                                    plaintext123.size(), gcm_key1, iv1,
                               ciphertext123, tag);
-    decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, iv123,
+    decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, iv1,
                                 decryptedtext123, tag);
 
     /* Decrypt the ciphertext */
