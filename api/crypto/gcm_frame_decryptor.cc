@@ -133,7 +133,6 @@ int gcm_encrypt(unsigned char *plaintext,
                 int plaintext_len,
                 unsigned char *key,
                 unsigned char *iv, 
-                int iv_len,
                 unsigned char *ciphertext,
                 unsigned char *tag)
 {
@@ -155,12 +154,6 @@ int gcm_encrypt(unsigned char *plaintext,
     /* Initialise the encryption operation. */
     if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL))
        RTC_LOG(LS_VERBOSE) << "XXX encryting error 2------------------------";
-
-    /*
-     * Set IV length if default 12 bytes (96 bits) is not appropriate
-     */
-    if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, iv_len, NULL))
-       RTC_LOG(LS_VERBOSE) << "XXX encryting error 3------------------------";
 
     /* Initialise key and IV */
     if(1 != EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv))
@@ -279,7 +272,6 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                        plaintext1.size(),
                        key,
                        iv12,
-                       strlen ((char *)iv12),
                        ciphertext,
                        tag);
 
