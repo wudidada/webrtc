@@ -297,9 +297,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     unsigned char decryptedtext123[128];
     int decryptedtext_len, ciphertext_len;
     ciphertext_len = gcm_encrypt ( &plaintext123[0], 
-                                    plaintext123.size(), gcm_key1, iv1,
+                                    plaintext123.size(), gcm_key1, &iv1[0],
                               ciphertext123, tag);
-    decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, iv1,
+    decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0],
                                 decryptedtext123, tag);
 
     /* Decrypt the ciphertext */
