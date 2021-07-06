@@ -144,7 +144,7 @@ int gcm_encrypt(unsigned char *plaintext,
     int ciphertext_len;
 
     int myUniqueId = rand();
-    for (size_t i =0 ; i < plaintext_len; i++) {
+    for (size_t i = 0 ; i < plaintext_len; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX encryption initial------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
     }
 
@@ -270,12 +270,13 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     /* A 128 bit IV */
     unsigned char *iv12 = (unsigned char *)"0123456789012345";
-    std::vector<uint8_t> plaintext1 = { 43, 34, 57};
+    std::vector<uint8_t> plaintext1 = { 43, 34, 57 };
     unsigned char ciphertext[128];
 
+  RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------" << plaintext1.size();
    ciphertext_len = gcm_encrypt(
                        &plaintext1[0], 
-                       plaintext.size(),
+                       plaintext1.size(),
                        key,
                        iv12,
                        12,
