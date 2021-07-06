@@ -273,13 +273,13 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     std::vector<uint8_t> plaintext1 = { 43, 34, 57 };
     unsigned char ciphertext[128];
 
-  RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------" << plaintext1.size();
+   RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1------------------------" << plaintext1.size();
    ciphertext_len = gcm_encrypt(
                        &plaintext1[0], 
                        plaintext1.size(),
                        key,
                        iv12,
-                       12,
+                       strlen ((char *)iv12),
                        ciphertext,
                        tag);
 
@@ -289,7 +289,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
             gcm_key1, 
             &frame_header[0],
             frame_header_size,
-            &iv1[0], 
+            iv12, 
             decryptedtext, 
             tag);
 
