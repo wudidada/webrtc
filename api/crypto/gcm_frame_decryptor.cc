@@ -286,14 +286,14 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     unsigned char *key123 = (unsigned char *)"01234567890123456789012345678901";
 
     unsigned char *iv123 = (unsigned char *)"0123456789012345";
-unsigned char tag[400];
+    unsigned char tag[400];
     /* Message to be encrypted */
-    unsigned char *plaintext123 =
-        (unsigned char *)"The quick brown fox jumps over the lazy dog";
+   std::vector<uint8_t> plaintext123 = { 43, 34, 57 };
     unsigned char ciphertext123[128];
     unsigned char decryptedtext123[128];
     int decryptedtext_len, ciphertext_len;
-    ciphertext_len = gcm_encrypt (plaintext123, strlen ((char *)plaintext123), key123, iv123,
+    ciphertext_len = gcm_encrypt ( &plaintext123[0], 
+                                    plaintext123.size(), key123, iv123,
                               ciphertext123, tag);
     decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, key123, iv123,
                                 decryptedtext123, tag);
