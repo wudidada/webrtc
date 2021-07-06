@@ -283,6 +283,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
             decryptedtext, 
             tag);*/
 
+    unsigned char gcm_key1[] = {
+                 195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
+                 67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
+    };
     unsigned char *key123 = (unsigned char *)"01234567890123456789012345678901";
 
     unsigned char *iv123 = (unsigned char *)"0123456789012345";
@@ -293,9 +297,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     unsigned char decryptedtext123[128];
     int decryptedtext_len, ciphertext_len;
     ciphertext_len = gcm_encrypt ( &plaintext123[0], 
-                                    plaintext123.size(), key123, iv123,
+                                    plaintext123.size(), gcm_key1, iv123,
                               ciphertext123, tag);
-    decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, key123, iv123,
+    decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, iv123,
                                 decryptedtext123, tag);
 
     /* Decrypt the ciphertext */
