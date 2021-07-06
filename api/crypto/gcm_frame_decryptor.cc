@@ -312,9 +312,9 @@ unsigned char tag[400];
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
     }*/
 
-  for (size_t i = 0; i < decryptedtext_len; i++) {
+ /* for (size_t i = 0; i < decryptedtext_len; i++) {
     frame[i + unencrypted_bytes] = decryptedtext[unencrypted_bytes];
-  }
+  }*/
 
   return Result(Status::kOk, frame.size());
 }
