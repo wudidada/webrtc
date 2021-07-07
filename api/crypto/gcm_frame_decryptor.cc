@@ -295,6 +295,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     std::vector<uint8_t> iv1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
     unsigned char tag[400];
+    unsigned char tag1[400];
     /* Message to be encrypted */
     std::vector<uint8_t> plaintext123 = { 112, 72, 142, 222, 166 };
     std::vector<uint8_t> ciphertext1234 = { 134, 100, 119, 170, 113 };
@@ -303,12 +304,12 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     int decryptedtext_len, ciphertext_len;
     ciphertext_len = gcm_encrypt ( &plaintext123[0], 
                                     plaintext123.size(), gcm_key1, &iv1[0],
-                              ciphertext123, tag);
+                              ciphertext123, tag1);
 
     for (size_t i = 0; i < strlen ((char *)tag); i++) 
        RTC_LOG(LS_VERBOSE) << "XXX 1tag" << i << " " << tag[i];
     decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0],
-                                decryptedtext123, tag);
+                                decryptedtext123, tag1);
     for (size_t i = 0; i < strlen ((char *)tag); i++) 
        RTC_LOG(LS_VERBOSE) << "XXX 2tag" << i << " " << tag[i];
 
