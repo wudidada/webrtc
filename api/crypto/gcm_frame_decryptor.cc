@@ -304,8 +304,13 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     ciphertext_len = gcm_encrypt ( &plaintext123[0], 
                                     plaintext123.size(), gcm_key1, &iv1[0],
                               ciphertext123, tag);
+
+    for (size_t i = 0; i < strlen ((char *)tag); i++) 
+       RTC_LOG(LS_VERBOSE) << "XXX 1tag" << i << " " << tag[i];
     decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0],
                                 decryptedtext123, tag);
+    for (size_t i = 0; i < strlen ((char *)tag); i++) 
+       RTC_LOG(LS_VERBOSE) << "XXX 2tag" << i << " " << tag[i];
 
     /* Decrypt the ciphertext */
   /*  decryptedtext_len = new_decrypt(
