@@ -84,6 +84,9 @@ int new_decrypt(unsigned char *ciphertext,
     if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL))
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 22------------------------";
 
+    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, 12, NULL)) 
+        RTC_LOG(LS_VERBOSE) << "XXX decrypting error 220------------------------";
+
     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv))
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 221------------------------";
 
@@ -101,9 +104,9 @@ int new_decrypt(unsigned char *ciphertext,
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
     plaintext_len = len;
 
-    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
+    /*if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
-    }
+    }*/
     /*
      * Finalise the decryption. Further plaintext bytes may be written at
      * this stage.
@@ -236,7 +239,8 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   }
 
   // payload
-  size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + frame_trailer_size);
+ // size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + frame_trailer_size);
+  size_t payload_lenght = 5;
   std::vector<uint8_t> payload;
   payload.reserve(payload_lenght);
   for (size_t i = unencrypted_bytes; i < unencrypted_bytes + payload_lenght; i++) {
@@ -295,7 +299,8 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     unsigned char tag[400];
     /* Message to be encrypted */
-   std::vector<uint8_t> plaintext123 = { 431, 342, 537, 32 };
+    std::vector<uint8_t> plaintext123 = { 112, 72, 142, 222, 166 };
+    std::vector<uint8_t> ciphertext1234 = { 134, 100, 119, 170, 113 };
     unsigned char ciphertext123[128];
     unsigned char decryptedtext123[128];
     int decryptedtext_len, ciphertext_len;
