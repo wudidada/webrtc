@@ -101,9 +101,9 @@ int new_decrypt(unsigned char *ciphertext,
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
     plaintext_len = len;
 
-    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
+   /* if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
-    }
+    }*/
     /*
      * Finalise the decryption. Further plaintext bytes may be written at
      * this stage.
@@ -178,9 +178,9 @@ int gcm_encrypt(unsigned char *plaintext,
     ciphertext_len += len;
 
     /* Get the tag */
-    if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, tag))
+  /*  if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, tag))
        RTC_LOG(LS_VERBOSE) << "XXX encryting error 7------------------------";
-
+*/
     /* Clean up */
     EVP_CIPHER_CTX_free(ctx);
 
