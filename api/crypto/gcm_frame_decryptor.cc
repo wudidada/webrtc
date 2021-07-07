@@ -84,9 +84,6 @@ int new_decrypt(unsigned char *ciphertext,
     if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL))
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 22------------------------";
 
-    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, 12, NULL)) 
-        RTC_LOG(LS_VERBOSE) << "XXX decrypting error 220------------------------";
-
     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv))
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 221------------------------";
 
@@ -104,9 +101,9 @@ int new_decrypt(unsigned char *ciphertext,
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
     plaintext_len = len;
 
-    /*if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
+    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
-    }*/
+    }
     /*
      * Finalise the decryption. Further plaintext bytes may be written at
      * this stage.
