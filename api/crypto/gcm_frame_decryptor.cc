@@ -101,7 +101,7 @@ int new_decrypt(unsigned char *ciphertext,
      * Provide the message to be decrypted, and obtain the plaintext output.
      * EVP_DecryptUpdate can be called multiple times if necessary.
      */
-    if(1 != EVP_DecryptUpdate(ctx, *plaintext, &len, ciphertext, tag_offset))
+    if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, tag_offset))
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
     plaintext_len = len;
 
@@ -109,7 +109,7 @@ int new_decrypt(unsigned char *ciphertext,
      * Finalise the decryption. Further plaintext bytes may be written at
      * this stage.
      */
-    int rv = EVP_DecryptFinal_ex(ctx, *plaintext + len, &len);
+    int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
     if(1 != rv) {
         std::string a = getOpenSSLError();
         RTC_LOG(LS_VERBOSE) << "XXX1 decrypting error 241------------------------" << a;
