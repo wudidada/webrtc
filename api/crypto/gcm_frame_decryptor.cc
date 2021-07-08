@@ -133,7 +133,8 @@ int gcm_encrypt(unsigned char *plaintext,
                 int plaintext_len,
                 unsigned char *key,
                 unsigned char *iv, 
-                unsigned char *ciphertext)
+                unsigned char *ciphertext,
+                unsigned char *tag)
 {
     EVP_CIPHER_CTX *ctx;
 
@@ -178,14 +179,20 @@ int gcm_encrypt(unsigned char *plaintext,
         RTC_LOG(LS_VERBOSE) << "XXX encryting error 6------------------------";
     ciphertext_len += len;
 
+    for (size_t i = 0; i < strlen ((char *)tag); i++) 
+       RTC_LOG(LS_VERBOSE) << "XXX 1tag" << i << " " << tag[i];
+
     /* Get the tag */
-   if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, ciphertext + len))
+   if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, tag))
        RTC_LOG(LS_VERBOSE) << "XXX encryting error 7------------------------";
+
+    for (size_t i = 0; i < strlen ((char *)tag); i++) 
+       RTC_LOG(LS_VERBOSE) << "XXX 2tag" << i << " " << tag[i];
 
     /* Clean up */
     EVP_CIPHER_CTX_free(ctx);
 
-    for (size_t i =0 ; i < ciphertext_len + 16; i++) {
+    for (size_t i =0 ; i < ciphertext_len; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX encryption final------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
     }
 
@@ -305,7 +312,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     int decryptedtext_len, ciphertext_len;
     ciphertext_len = gcm_encrypt ( &plaintext123[0], 
                                     plaintext123.size(), gcm_key1, &iv1[0],
-                              ciphertext123); 
+                              ciphertext123, tag); 
    
      decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0], decryptedtext123);
  //   decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext123);
