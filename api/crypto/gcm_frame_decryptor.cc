@@ -88,9 +88,6 @@ int new_decrypt(unsigned char *ciphertext,
     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv))
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 221------------------------";
 
-    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, ciphertext + tag_offset)) {
-        RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
-    }
     /*
      * Provide any AAD data. This can be called zero or more times as
      * required
@@ -104,6 +101,10 @@ int new_decrypt(unsigned char *ciphertext,
     if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, tag_offset))
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
     plaintext_len = len;
+
+    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, ciphertext + tag_offset)) {
+        RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
+    }
 
     /*
      * Finalise the decryption. Further plaintext bytes may be written at
