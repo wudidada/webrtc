@@ -56,8 +56,7 @@ int new_decrypt(unsigned char *ciphertext,
                 int ciphertext_len, 
                 unsigned char *key,
                 unsigned char *iv, 
-                unsigned char *plaintext, 
-                unsigned char *tag)
+                unsigned char *plaintext)
 {
     EVP_CIPHER_CTX *ctx;
 
@@ -65,6 +64,8 @@ int new_decrypt(unsigned char *ciphertext,
     int len;
 
     int plaintext_len;
+
+     int tag_offset = ciphertext_len-16;
 
     for (size_t i =0 ; i < ciphertext_len; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX decrypting initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
@@ -87,6 +88,9 @@ int new_decrypt(unsigned char *ciphertext,
     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv))
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 221------------------------";
 
+    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, ciphertext + tag_offset)) {
+        RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
+    }
     /*
      * Provide any AAD data. This can be called zero or more times as
      * required
@@ -97,18 +101,15 @@ int new_decrypt(unsigned char *ciphertext,
      * Provide the message to be decrypted, and obtain the plaintext output.
      * EVP_DecryptUpdate can be called multiple times if necessary.
      */
-    if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len))
+    if(1 != EVP_DecryptUpdate(ctx, *plaintext, &len, ciphertext, tag_offset))
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
     plaintext_len = len;
 
-    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
-        RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
-    }
     /*
      * Finalise the decryption. Further plaintext bytes may be written at
      * this stage.
      */
-    int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
+    int rv = EVP_DecryptFinal_ex(ctx, *plaintext + len, &len);
     if(1 != rv) {
         std::string a = getOpenSSLError();
         RTC_LOG(LS_VERBOSE) << "XXX1 decrypting error 241------------------------" << a;
