@@ -56,7 +56,8 @@ int new_decrypt(unsigned char *ciphertext,
                 int ciphertext_len, 
                 unsigned char *key,
                 unsigned char *iv, 
-                unsigned char *plaintext)
+                unsigned char *plaintext,
+                unsigned char *tag)
 {
     EVP_CIPHER_CTX *ctx;
 
@@ -102,7 +103,7 @@ int new_decrypt(unsigned char *ciphertext,
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
     plaintext_len = len;
 
-    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, ciphertext + tag_offset)) {
+    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
     }
 
@@ -314,7 +315,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                                     plaintext123.size(), gcm_key1, &iv1[0],
                               ciphertext123, tag); 
    
-     decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0], decryptedtext123);
+     decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0], decryptedtext123, tag);
  //   decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext123);
 
     /* Decrypt the ciphertext */
