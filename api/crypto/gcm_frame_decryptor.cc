@@ -180,15 +180,12 @@ int gcm_encrypt(unsigned char *plaintext,
         RTC_LOG(LS_VERBOSE) << "XXX encryting error 6------------------------";
     ciphertext_len += len;
 
-    for (size_t i = 0; i < strlen ((char *)tag); i++) 
-       RTC_LOG(LS_VERBOSE) << "XXX 1tag" << i << " " << tag[i];
-
     /* Get the tag */
-   if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, tag))
+   if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, ciphertext + ciphertext_len))
        RTC_LOG(LS_VERBOSE) << "XXX encryting error 7------------------------";
 
-    for (size_t i = 0; i < strlen ((char *)tag); i++) 
-       RTC_LOG(LS_VERBOSE) << "XXX 2tag" << i << " " << tag[i];
+    for (size_t i = 0; i < 16; i++)
+       tag[i] = ciphertext[ciphertext_len + i];
 
     /* Clean up */
     EVP_CIPHER_CTX_free(ctx);
