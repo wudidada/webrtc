@@ -102,12 +102,7 @@ int new_decrypt(unsigned char *ciphertext,
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
     plaintext_len = len;
 
-    unsigned char tag[16];
-    for (size_t i = 0; i < 16; i++)
-       tag[i] = ciphertext[tag_offset + i];
-
-
-    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
+    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, ciphertext + tag_offset)) {
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
     }
 
@@ -215,7 +210,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       break;
  }
 
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting123 ------------------------";
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting ------------------------";
   RTC_LOG(LS_VERBOSE) << "XXX unencrypted_bytes ------------------------" << unencrypted_bytes;
   // Frame header
    size_t frame_header_size = unencrypted_bytes;
