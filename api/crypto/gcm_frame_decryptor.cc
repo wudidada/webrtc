@@ -314,7 +314,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     }
 
     decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0],
-                                decryptedtext123, newTag);
+                                decryptedtext123);
 
     /* Decrypt the ciphertext */
   /*  decryptedtext_len = new_decrypt(
