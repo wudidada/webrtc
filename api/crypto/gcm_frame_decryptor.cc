@@ -8,35 +8,6 @@
 
 namespace webrtc {
 
-static const unsigned char gcm_key[] = {
-    195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
-                 67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
-};
-
-/*static const unsigned char gcm_iv[] = {
-    0x99, 0xaa, 0x3e, 0x68, 0xed, 0x81, 0x73, 0xa0, 0xee, 0xd0, 0x66, 0x84
-};*/
-
-/*static const unsigned char gcm_pt[] = {
-    0xf5, 0x6e, 0x87, 0x05, 0x5b, 0xc3, 0x2d, 0x0e, 0xeb, 0x31, 0xb2, 0xea,
-    0xcc, 0x2b, 0xf2, 0xa5
-};*/
-
-/*static const unsigned char gcm_aad[] = {
-    0x4d, 0x23, 0xc3, 0xce, 0xc3, 0x34, 0xb4, 0x9b, 0xdb, 0x37, 0x0c, 0x43,
-    0x7f, 0xec, 0x78, 0xde
-};*/
-
-/*static const unsigned char gcm_ct[] = {
-    0xf7, 0x26, 0x44, 0x13, 0xa8, 0x4c, 0x0e, 0x7c, 0xd5, 0x36, 0x86, 0x7e,
-    0xb9, 0xf2, 0x17, 0x36
-};*/
-
-static const unsigned char gcm_tag[] = {
-    0x67, 0xba, 0x05, 0x10, 0x26, 0x2a, 0xe4, 0x87, 0xd7, 0x37, 0xee, 0x62,
-    0x98, 0xf7, 0x7e, 0x0c
-};
-
  GCMFrameDecryptor::GCMFrameDecryptor() {
       RTC_LOG(LS_VERBOSE) << "XXX GCMFrameDecryptor";
  }
@@ -82,7 +53,7 @@ int new_decrypt(unsigned char *ciphertext,
      * IV size for *most* modes is the same as the block size. For AES this
      * is 128 bits
      */
-    if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL))
+    if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_128_gcm(), NULL, NULL, NULL))
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 22------------------------";
 
     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv))
@@ -143,7 +114,16 @@ int gcm_encrypt(unsigned char *plaintext,
 
     int myUniqueId = rand();
     for (size_t i = 0 ; i < plaintext_len; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX encryption initial------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
+      RTC_LOG(LS_VERBOSE) << "XXX encryption initial1------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
+    }
+
+    for (size_t i = 0; i < strlen ((char *)key); i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX encryption key1------------------------" << key[i];
+    }
+
+    RTC_LOG(LS_VERBOSE) << "XXX decrypting iv lenght------------------------" << strlen ((char *)iv);
+    for (size_t i = 0; i < strlen ((char *)iv); i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX encryption iv------------------------" << iv[i];
     }
 
     /* Create and initialise the context */
@@ -185,7 +165,7 @@ int gcm_encrypt(unsigned char *plaintext,
     /* Clean up */
     EVP_CIPHER_CTX_free(ctx);
 
-    for (size_t i =0 ; i < ciphertext_len; i++) {
+    for (size_t i =0 ; i < ciphertext_len + 16; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX encryption final------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
     }
 
@@ -293,23 +273,59 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                  195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
                  67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
     };
-    std::vector<uint8_t> iv1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+     unsigned char fixed_web_key[] = {
+                  9,55,60,
+ 38,
+ -76, 120,
+ -44,
+ -117,
+-117,
+ -62,
+-40,
+-107,
+ -88,
+ 105,
+ -47,
+ 32
+    };
+    fixed_web_key[16] = '\0';
+
+    //unsigned char iv123[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    unsigned char iv123[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+    iv123[12] = '\0';
+
+    std::vector<uint8_t> salt = { 74, 70, 114, 97, 109, 101, 69, 110, 99, 114, 121, 112, 116, 105, 111, 110, 75, 101, 121 };
+
+    unsigned char derivedKey[EVP_MAX_KEY_LENGTH], derivedIV[EVP_MAX_IV_LENGTH];
+
+    int lenght = EVP_BytesToKey(EVP_aes_128_gcm(), EVP_sha256(), &salt[0],
+                          &gcm_key1[0], 32, 1, derivedKey, derivedIV);
+
+
+    for (size_t i =0 ; i < lenght; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX derived kwy final------------------------" << derivedKey[i];
+    }
+    
+     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1 lenght" << lenght;  
 
     unsigned char tag[400];
     unsigned char tag1[400];
     /* Message to be encrypted */
-    std::vector<uint8_t> plaintext123 = { 112, 72, 142, 222, 166 };
-    std::vector<uint8_t> ciphertext1234 = { 134, 100, 119, 170, 113 };
+    std::vector<uint8_t> plaintext123 = { 15, 130, 222, 121, 98 };
+    std::vector<uint8_t> ciphertext1234 = {249, 174, 39, 13, 181, 232, 122, 136, 159, 91, 162, 71, 179, 139, 174, 17, 58, 71, 87, 242, 132};
+
     unsigned char ciphertext123[128];
     unsigned char decryptedtext123[128];
     int decryptedtext_len, ciphertext_len;
    /* ciphertext_len = gcm_encrypt ( &plaintext123[0], 
-                                    plaintext123.size(), gcm_key1, &iv1[0],
-                              ciphertext123); */
+                                    plaintext123.size(), 
+                                    fixed_web_key, 
+                                    iv123,
+                                  ciphertext123); */
    
-  //   decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0], decryptedtext123);
-  decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext123);
-
+  //decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0], decryptedtext123);
+  //decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext123);
+  decryptedtext_len = new_decrypt(&ciphertext1234[0], ciphertext1234.size(), fixed_web_key, iv123, decryptedtext123);
     /* Decrypt the ciphertext */
   /*  decryptedtext_len = new_decrypt(
       &payload[0], 
