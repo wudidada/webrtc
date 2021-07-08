@@ -56,8 +56,7 @@ int new_decrypt(unsigned char *ciphertext,
                 int ciphertext_len, 
                 unsigned char *key,
                 unsigned char *iv, 
-                unsigned char *plaintext,
-                unsigned char *tag)
+                unsigned char *plaintext)
 {
     EVP_CIPHER_CTX *ctx;
 
@@ -103,6 +102,11 @@ int new_decrypt(unsigned char *ciphertext,
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
     plaintext_len = len;
 
+    unsigned char tag[16];
+    for (size_t i = 0; i < 16; i++)
+       tag[i] = ciphertext[tag_offset + i];
+
+
     if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag)) {
         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
     }
@@ -134,8 +138,7 @@ int gcm_encrypt(unsigned char *plaintext,
                 int plaintext_len,
                 unsigned char *key,
                 unsigned char *iv, 
-                unsigned char *ciphertext,
-                unsigned char *tag)
+                unsigned char *ciphertext)
 {
     EVP_CIPHER_CTX *ctx;
 
@@ -183,9 +186,6 @@ int gcm_encrypt(unsigned char *plaintext,
     /* Get the tag */
    if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, ciphertext + ciphertext_len))
        RTC_LOG(LS_VERBOSE) << "XXX encryting error 7------------------------";
-
-    for (size_t i = 0; i < 16; i++)
-       tag[i] = ciphertext[ciphertext_len + i];
 
     /* Clean up */
     EVP_CIPHER_CTX_free(ctx);
@@ -310,9 +310,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     int decryptedtext_len, ciphertext_len;
     ciphertext_len = gcm_encrypt ( &plaintext123[0], 
                                     plaintext123.size(), gcm_key1, &iv1[0],
-                              ciphertext123, tag); 
+                              ciphertext123); 
    
-     decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0], decryptedtext123, tag);
+     decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0], decryptedtext123);
  //   decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext123);
 
     /* Decrypt the ciphertext */
