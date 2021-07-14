@@ -323,7 +323,6 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     int lenght = EVP_BytesToKey(EVP_aes_128_gcm(), EVP_sha256(), &salt[0],
                           &gcm_key1[0], 32, 1, derivedKey, derivedIV);
 
-
     for (size_t i =0 ; i < lenght; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX derived kwy final------------------------" << derivedKey[i];
     }
@@ -334,7 +333,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     unsigned char tag1[400];
     /* Message to be encrypted */
     std::vector<uint8_t> plaintext123 = { 15, 130, 222, 121, 98 };
-    std::vector<uint8_t> ciphertext1234 = {249, 174, 39, 13, 181, 232, 122, 136, 159, 91, 162, 71, 179, 139, 174, 17, 58, 71, 87, 242, 132};
+    std::vector<uint8_t> ciphertext1234 = {132, 69, 30, 42, 212, 255, 0, 155, 253, 98, 72, 49, 219, 187, 9, 10, 241, 105, 102, 252, 37};
 
     unsigned char ciphertext123[128];
     unsigned char decryptedtext123[128];
