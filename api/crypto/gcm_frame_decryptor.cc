@@ -340,6 +340,24 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     std::vector<uint8_t> plaintext123 = { 15, 130, 222, 121, 98 };
     std::vector<uint8_t> ciphertext1234 = {132, 69, 30, 42, 212, 255, 0, 155, 253, 98, 72, 49, 219, 187, 9, 10, 241, 105, 102, 252, 37};
 
+
+  // decoding the samples -------------------------------------------------------------
+    const char hexstring[] = "f5a2b27c74355872eb3ef6c5feafaa740e6ae990d9d48c3bd9bb8235e589f010", *pos = hexstring;
+    unsigned char val[12];
+
+     /* WARNING: no sanitization or error-checking whatsoever */
+    for (size_t count = 0; count < sizeof val/sizeof *val; count++) {
+        sscanf(pos, "%2hhx", &val[count]);
+        pos += 2;
+    }
+
+   // printf("0x");
+    for(size_t count = 0; count < sizeof val/sizeof *val; count++)
+        RTC_LOG(LS_VERBOSE) << "XXX deduced key final------------------------" << count << " " << val[count];
+   // printf("\n");
+
+  // -----------------------------------------------------------------------------------
+
     unsigned char ciphertext123[128];
     unsigned char decryptedtext123[128];
     int decryptedtext_len, ciphertext_len;
