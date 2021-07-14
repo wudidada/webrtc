@@ -38,6 +38,10 @@ int new_decrypt(unsigned char *ciphertext,
 
      int tag_offset = ciphertext_len-16;
 
+    for (size_t i =0 ; i < strlen ((char *)key); i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX derived kwy final------------------------" << key[i];
+    }
+
     for (size_t i =0 ; i < ciphertext_len; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX decrypting initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
     }
@@ -320,7 +324,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
     unsigned char derivedKey[EVP_MAX_KEY_LENGTH], derivedIV[EVP_MAX_IV_LENGTH];
 
-    int lenght = EVP_BytesToKey(EVP_aes_128_gcm(), EVP_sha256(), &salt[0],
+    int lenght = EVP_BytesToKey(EVP_aes_256_gcm(), EVP_sha256(), &salt[0],
                           &gcm_key1[0], 32, 1, derivedKey, derivedIV);
 
     for (size_t i =0 ; i < lenght; i++) {
