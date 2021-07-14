@@ -39,7 +39,7 @@ int new_decrypt(unsigned char *ciphertext,
      int tag_offset = ciphertext_len-16;
 
     for (size_t i =0 ; i < strlen ((char *)key); i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX derived kwy final------------------------" << key[i];
+      RTC_LOG(LS_VERBOSE) << "XXX imported key------------------------" << key[i];
     }
 
     for (size_t i =0 ; i < ciphertext_len; i++) {
@@ -312,6 +312,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       169,
       206 };
 
+    imported_web_key.push_back('\0');
 
      unsigned char fixed_web_key[] = {9,55,60,38,-76, 120,-44,-117,-117,-62,-40,-107,-88,105,-47,32};
     fixed_web_key[16] = '\0';
