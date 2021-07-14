@@ -57,7 +57,7 @@ int new_decrypt(unsigned char *ciphertext,
      * IV size for *most* modes is the same as the block size. For AES this
      * is 128 bits
      */
-    if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_128_gcm(), NULL, NULL, NULL))
+    if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL))
          RTC_LOG(LS_VERBOSE) << "XXX decrypting error 22------------------------";
 
     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv))
