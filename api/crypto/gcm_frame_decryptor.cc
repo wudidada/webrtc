@@ -273,6 +273,42 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                  195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 
                  67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
     };
+
+    std::vector<uint8_t> imported_web_key = {  
+      195, 
+      130,
+      222,
+      164,
+      47,
+      57,
+      241,
+      245,
+      151,
+      138,
+      25,
+      165,
+      95,
+      71,
+      146,
+      67,
+      189,
+      29,
+      194,
+      5,
+      9,
+      22,
+      33,
+      224,
+      139,
+      35,
+      60,
+      122,
+      146,
+      97,
+      169,
+      206 };
+
+
      unsigned char fixed_web_key[] = {9,55,60,38,-76, 120,-44,-117,-117,-62,-40,-107,-88,105,-47,32};
     fixed_web_key[16] = '\0';
 
@@ -311,7 +347,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
    
   //decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0], decryptedtext123);
   //decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext123);
-  decryptedtext_len = new_decrypt(&ciphertext1234[0], ciphertext1234.size(), fixed_web_key, iv123, decryptedtext123);
+  decryptedtext_len = new_decrypt(&ciphertext1234[0], ciphertext1234.size(), &imported_web_key[0], iv123, decryptedtext123);
     /* Decrypt the ciphertext */
   /*  decryptedtext_len = new_decrypt(
       &payload[0], 
