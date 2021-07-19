@@ -171,7 +171,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   RTC_LOG(LS_VERBOSE) << "XXX unencrypted_bytes ------------------------" << unencrypted_bytes;
 
   for (size_t i = 0; i < encrypted_frame.size(); i++) {
-     RTC_LOG(LS_VERBOSE) << "XXX frame ------------------------ " << i << encrypted_frame[i];
+     RTC_LOG(LS_VERBOSE) << "XXX frame ------------------------ " << i <<" "<< encrypted_frame[i];
   }
 
   // Frame header
@@ -191,7 +191,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   
   // IV
   uint8_t iv_lenght = frame_trailer[0];
-  uint8_t iv_start = encrypted_frame.size() - frame_trailer_size - iv_lenght - 1;
+  uint8_t iv_start = encrypted_frame.size() - frame_trailer_size - iv_lenght;
   std::vector<uint8_t> iv;
   iv.reserve(iv_lenght);
   for (size_t i = iv_start; i < iv_start + iv_lenght; i++) {
