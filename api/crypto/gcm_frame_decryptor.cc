@@ -12,17 +12,6 @@ namespace webrtc {
       RTC_LOG(LS_VERBOSE) << "XXX GCMFrameDecryptor";
  }
 
- std::string getOpenSSLError()
-{
-    BIO *bio = BIO_new(BIO_s_mem());
-    ERR_print_errors(bio);
-    char *buf;
-    size_t len = BIO_get_mem_data(bio, &buf);
-    std::string ret(buf, len);
-    BIO_free(bio);
-    return ret;
-}
-
 int new_decrypt(unsigned char *ciphertext, 
                 int ciphertext_len, 
                 unsigned char *key,
@@ -31,77 +20,86 @@ int new_decrypt(unsigned char *ciphertext,
 {
     EVP_CIPHER_CTX *ctx;
 
-    int myUniqueId = rand();
     int len;
 
     int plaintext_len;
 
-     int tag_offset = ciphertext_len-16;
+    int tag_offset = ciphertext_len-16;
 
-    for (size_t i =0 ; i < strlen ((char *)key); i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX imported key------------------------" << key[i];
+    int myUniqueId = rand();
+
+    for (size_t i = 0 ; i < 32; i++) {
+        printf("XXX imported key %d %d \n", i, (unsigned int)key[i]);
     }
 
-    for (size_t i =0 ; i < ciphertext_len; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX decrypting initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
+    for (size_t i = 0 ; i < ciphertext_len; i++) {
+        printf("XXX decrypting initial %d %d\n", i, (unsigned int)ciphertext[i]);
     }
 
-    /* Create and initialise the context */
-    if(!(ctx = EVP_CIPHER_CTX_new()))
-        RTC_LOG(LS_VERBOSE) << "XXX decrypting error 21------------------------";
-
-    /*
-     * Initialise the decryption operation. IMPORTANT - ensure you use a key
-     * and IV size appropriate for your cipher
-     * In this example we are using 256 bit AES (i.e. a 256 bit key). The
-     * IV size for *most* modes is the same as the block size. For AES this
-     * is 128 bits
-     */
-    if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL))
-         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 22------------------------";
-
-    if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv))
-        RTC_LOG(LS_VERBOSE) << "XXX decrypting error 221------------------------";
-
-    /*
-     * Provide any AAD data. This can be called zero or more times as
-     * required
-     */
-   // if(!EVP_DecryptUpdate(ctx, NULL, &len, aad, aad_len))
-   //      RTC_LOG(LS_VERBOSE) << "XXX decrypting error 222------------------------";
-    /*
-     * Provide the message to be decrypted, and obtain the plaintext output.
-     * EVP_DecryptUpdate can be called multiple times if necessary.
-     */
-    if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, tag_offset))
-         RTC_LOG(LS_VERBOSE) << "XXX decrypting error 23------------------------";
-    plaintext_len = len;
-
-    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, ciphertext + tag_offset)) {
-        RTC_LOG(LS_VERBOSE) << "XXX decrypting error 231------------------------";
+    printf("We did it 0\n");
+    
+    for (size_t i = 0 ; i < 12; i++) {
+        printf("XXX decrypting iv %d %d\n", i, (unsigned int)iv[i]);
     }
 
-    /*
-     * Finalise the decryption. Further plaintext bytes may be written at
-     * this stage.
-     */
-    int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
-    if(1 != rv) {
-        std::string a = getOpenSSLError();
-        RTC_LOG(LS_VERBOSE) << "XXX1 decrypting error 241------------------------" << a;
+    printf("We did it 1\n");
+
+     if(!(ctx = EVP_CIPHER_CTX_new())) {
+	     handleErrors();
+     	 printf("Failed at new.\n");
+     }
+
+     printf("We did it %d\n", 2);
+
+
+     if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
+	     handleErrors();
+         printf("Failed at init 1 \n");
+     }
+     
+     printf("We did it %d\n", 3);
+
+
+     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv)) {
+	     handleErrors();
+    	printf("Failed at setting key.\n");
+     }
+ 
+     printf("We did it %d\n", 4);
+
+     if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, tag_offset)) {
+	     handleErrors();
+    	printf("Failed at updating.\n");
+     }
+
+     printf("We did it %d\n", 5);
+
+     plaintext_len = len;
+ 
+     printf("We did it %d\n", 6);
+
+
+     if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, ciphertext + tag_offset)) {
+	     handleErrors();
+    	printf("Failed at setting tag.\n");
+     }
+
+     printf("We did it %d\n", 7);
+
+     int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
+     if(1 != rv) {
+	     handleErrors();
+	printf("Failed at final.\n");
+        fprintf(stderr, "sadasd\n");
+     }
+
+     printf("We did it %d\n", plaintext_len);
+
+     for (size_t i = 0 ; i < plaintext_len; i++) {
+         RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
     }
-    plaintext_len += len;
 
-    /* Clean up */
-    EVP_CIPHER_CTX_free(ctx);
-
-    RTC_LOG(LS_VERBOSE) << "XXX decrht plaintext_len------------------------" << plaintext_len;
-    RTC_LOG(LS_VERBOSE) << "XXX decrht rv------------------------" << rv;
-
-    for (size_t i =0 ; i < plaintext_len; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
-    }
-    return plaintext_len;
+     return plaintext_len;
 }
 
 int gcm_encrypt(unsigned char *plaintext, 
@@ -278,39 +276,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                  67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
     };
 
-    std::vector<uint8_t> imported_web_key = {  
-      195, 
-      130,
-      222,
-      164,
-      47,
-      57,
-      241,
-      245,
-      151,
-      138,
-      25,
-      165,
-      95,
-      71,
-      146,
-      67,
-      189,
-      29,
-      194,
-      5,
-      9,
-      22,
-      33,
-      224,
-      139,
-      35,
-      60,
-      122,
-      146,
-      97,
-      169,
-      206 };
+    std::vector<uint8_t> imported_web_key = { 195, 130, 222, 164, 47, 57, 241, 245, 151, 138, 25, 165, 95, 71, 146, 67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206 };
 
     imported_web_key.push_back('\0');
 
@@ -340,24 +306,6 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     std::vector<uint8_t> plaintext123 = { 15, 130, 222, 121, 98 };
     std::vector<uint8_t> ciphertext1234 = {132, 69, 30, 42, 212, 255, 0, 155, 253, 98, 72, 49, 219, 187, 9, 10, 241, 105, 102, 252, 37};
 
-
-  // decoding the samples -------------------------------------------------------------
-    const char hexstring[] = "f5a2b27c74355872eb3ef6c5feafaa740e6ae990d9d48c3bd9bb8235e589f010", *pos = hexstring;
-    unsigned char val[12];
-
-     /* WARNING: no sanitization or error-checking whatsoever */
-    for (size_t count = 0; count < sizeof val/sizeof *val; count++) {
-        sscanf(pos, "%2hhx", &val[count]);
-        pos += 2;
-    }
-
-   // printf("0x");
-    for(size_t count = 0; count < sizeof val/sizeof *val; count++)
-        RTC_LOG(LS_VERBOSE) << "XXX deduced key final------------------------" << count << " " << val[count];
-   // printf("\n");
-
-  // -----------------------------------------------------------------------------------
-
     unsigned char ciphertext123[128];
     unsigned char decryptedtext123[128];
     int decryptedtext_len, ciphertext_len;
@@ -367,9 +315,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                                     iv123,
                                   ciphertext123); */
    
+     std::vector<uint8_t> imported_web_key = {97, 145, 133, 203, 63, 197, 49, 232, 87, 159, 169, 200, 59, 195, 77, 75, 150, 173, 189, 232, 44, 39, 8, 149, 250, 6, 238, 170, 255, 17, 110, 107};
   //decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0], decryptedtext123);
-  //decryptedtext_len = new_decrypt(&payload[0], payload_lenght, gcm_key1, &iv1[0], decryptedtext123);
-  decryptedtext_len = new_decrypt(&ciphertext1234[0], ciphertext1234.size(), &imported_web_key[0], iv123, decryptedtext123);
+  decryptedtext_len = new_decrypt(&payload[0], payload_lenght, &imported_web_key[0], &iv123[0], decryptedtext123);
+  //decryptedtext_len = new_decrypt(&ciphertext1234[0], ciphertext1234.size(), &imported_web_key[0], iv123, decryptedtext123);
     /* Decrypt the ciphertext */
   /*  decryptedtext_len = new_decrypt(
       &payload[0], 
