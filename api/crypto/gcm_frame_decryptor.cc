@@ -29,57 +29,35 @@ int new_decrypt(unsigned char *ciphertext,
     int myUniqueId = rand();
 
     for (size_t i = 0 ; i < 32; i++) {
-        printf("XXX imported key %d %d \n", i, (unsigned int)key[i]);
+      
     }
 
     for (size_t i = 0 ; i < ciphertext_len; i++) {
-        printf("XXX decrypting initial %d %d\n", i, (unsigned int)ciphertext[i]);
+        
     }
 
-    printf("We did it 0\n");
-    
-    for (size_t i = 0 ; i < 12; i++) {
-        printf("XXX decrypting iv %d %d\n", i, (unsigned int)iv[i]);
-    }
-
-    printf("We did it 1\n");
 
      if(!(ctx = EVP_CIPHER_CTX_new())) {
-     	 printf("Failed at new.\n");
      }
-
-     printf("We did it %d\n", 2);
 
 
      if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
-         printf("Failed at init 1 \n");
+        
      }
      
-     printf("We did it %d\n", 3);
-
-
      if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv)) {
-    	printf("Failed at setting key.\n");
+    	
      }
- 
-     printf("We did it %d\n", 4);
 
      if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, tag_offset)) {
-    	printf("Failed at updating.\n");
+    
      }
-
-     printf("We did it %d\n", 5);
 
      plaintext_len = len;
- 
-     printf("We did it %d\n", 6);
-
 
      if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, ciphertext + tag_offset)) {
-    	printf("Failed at setting tag.\n");
+    	
      }
-
-     printf("We did it %d\n", 7);
 
      int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
      if(1 != rv) {
@@ -304,7 +282,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                                     iv123,
                                   ciphertext123); */
    
-     std::vector<uint8_t> imported_web_key = {97, 145, 133, 203, 63, 197, 49, 232, 87, 159, 169, 200, 59, 195, 77, 75, 150, 173, 189, 232, 44, 39, 8, 149, 250, 6, 238, 170, 255, 17, 110, 107};
+  std::vector<uint8_t> imported_web_key = {97, 145, 133, 203, 63, 197, 49, 232, 87, 159, 169, 200, 59, 195, 77, 75, 150, 173, 189, 232, 44, 39, 8, 149, 250, 6, 238, 170, 255, 17, 110, 107};
   //decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0], decryptedtext123);
   decryptedtext_len = new_decrypt(&payload[0], payload_lenght, &imported_web_key[0], &iv123[0], decryptedtext123);
   //decryptedtext_len = new_decrypt(&ciphertext1234[0], ciphertext1234.size(), &imported_web_key[0], iv123, decryptedtext123);
