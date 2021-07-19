@@ -276,8 +276,6 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
                  67, 189, 29, 194, 5, 9, 22, 33, 224, 139, 35, 60, 122, 146, 97, 169, 206
     };
 
-    imported_web_key.push_back('\0');
-
      unsigned char fixed_web_key[] = {9,55,60,38,-76, 120,-44,-117,-117,-62,-40,-107,-88,105,-47,32};
     fixed_web_key[16] = '\0';
 
