@@ -206,12 +206,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   for (size_t i = unencrypted_bytes; i < unencrypted_bytes + payload_lenght; i++) {
     payload.push_back(encrypted_frame[i]);
   }
-    unsigned char iv123[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-    iv123[12] = '\0';
 
-    std::vector<uint8_t> salt = { 74, 70, 114, 97, 109, 101, 69, 110, 99, 114, 121, 112, 116, 105, 111, 110, 75, 101, 121 };
+    //std::vector<uint8_t> salt = { 74, 70, 114, 97, 109, 101, 69, 110, 99, 114, 121, 112, 116, 105, 111, 110, 75, 101, 121 };
 
-    unsigned char derivedKey[EVP_MAX_KEY_LENGTH], derivedIV[EVP_MAX_IV_LENGTH];
+    //unsigned char derivedKey[EVP_MAX_KEY_LENGTH], derivedIV[EVP_MAX_IV_LENGTH];
 
    /* int lenght = EVP_BytesToKey(EVP_aes_256_gcm(), EVP_sha256(), &salt[0],
                           &gcm_key1[0], 32, 1, derivedKey, derivedIV);
@@ -222,7 +220,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     
      RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1 lenght" << lenght;  */
 
-    unsigned char decryptedtext123[128];
+    unsigned char decryptedtext123[encrypted_frame.size()];
     int decryptedtext_len, ciphertext_len;
    /* ciphertext_len = gcm_encrypt ( &plaintext123[0], 
                                     plaintext123.size(), 
@@ -257,7 +255,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
 size_t GCMFrameDecryptor::GetMaxPlaintextByteSize(
     cricket::MediaType media_type,
-    size_t encrypted_frame_size) {
+    size_t enc) {
  return encrypted_frame_size;
 }
 
