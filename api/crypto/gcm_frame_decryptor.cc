@@ -32,6 +32,10 @@ int new_decrypt(unsigned char *ciphertext,
       
     }
 
+    for (size_t i = 0 ; i < 12; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX decryption iv------------------------" << myUniqueId<< " " << i << " " << iv[i];
+    }
+
     for (size_t i = 0 ; i < ciphertext_len; i++) {
         
     }
@@ -197,9 +201,6 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   for (size_t i = unencrypted_bytes; i < unencrypted_bytes + payload_lenght; i++) {
     payload.push_back(encrypted_frame[i]);
   }
-
-  std::vector<uint8_t> plaintext;
-
     unsigned char iv123[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
     iv123[12] = '\0';
 
