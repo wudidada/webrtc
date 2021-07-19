@@ -169,6 +169,11 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
   RTC_LOG(LS_VERBOSE) << "XXX decrypting ------------------------";
   RTC_LOG(LS_VERBOSE) << "XXX unencrypted_bytes ------------------------" << unencrypted_bytes;
+
+  for (size_t i = 0; i < encrypted_frame.size(); i++) {
+     RTC_LOG(LS_VERBOSE) << "XXX frame ------------------------ " << i << encrypted_frame[i];
+  }
+
   // Frame header
    size_t frame_header_size = unencrypted_bytes;
   std::vector<uint8_t> frame_header;
