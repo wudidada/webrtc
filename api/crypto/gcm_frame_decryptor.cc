@@ -45,7 +45,6 @@ int new_decrypt(unsigned char *ciphertext,
     printf("We did it 1\n");
 
      if(!(ctx = EVP_CIPHER_CTX_new())) {
-	     handleErrors();
      	 printf("Failed at new.\n");
      }
 
@@ -53,7 +52,6 @@ int new_decrypt(unsigned char *ciphertext,
 
 
      if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
-	     handleErrors();
          printf("Failed at init 1 \n");
      }
      
@@ -61,14 +59,12 @@ int new_decrypt(unsigned char *ciphertext,
 
 
      if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv)) {
-	     handleErrors();
     	printf("Failed at setting key.\n");
      }
  
      printf("We did it %d\n", 4);
 
      if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, tag_offset)) {
-	     handleErrors();
     	printf("Failed at updating.\n");
      }
 
@@ -80,7 +76,6 @@ int new_decrypt(unsigned char *ciphertext,
 
 
      if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, ciphertext + tag_offset)) {
-	     handleErrors();
     	printf("Failed at setting tag.\n");
      }
 
@@ -88,9 +83,7 @@ int new_decrypt(unsigned char *ciphertext,
 
      int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
      if(1 != rv) {
-	     handleErrors();
-	printf("Failed at final.\n");
-        fprintf(stderr, "sadasd\n");
+	      RTC_LOG(LS_VERBOSE) << "XXX decryption final error------------------------" << myUniqueId;
      }
 
      printf("We did it %d\n", plaintext_len);
