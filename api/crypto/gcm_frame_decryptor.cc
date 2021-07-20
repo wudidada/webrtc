@@ -262,7 +262,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 size_t GCMFrameDecryptor::GetMaxPlaintextByteSize(
     cricket::MediaType media_type,
     size_t encrypted_frame_size) {
- return encrypted_frame_size;
+ return encrypted_frame_size - 12;
 }
 
 }
