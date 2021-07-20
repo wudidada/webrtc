@@ -33,7 +33,7 @@ int new_decrypt(unsigned char *ciphertext,
     }
 
     for (size_t i = 0 ; i < 12; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX decryption iv------------------------" << myUniqueId<< " " << i << " " << iv[i];
+     // RTC_LOG(LS_VERBOSE) << "XXX decryption iv------------------------" << myUniqueId<< " " << i << " " << iv[i];
     }
 
     for (size_t i = 0 ; i < ciphertext_len; i++) {
@@ -71,7 +71,7 @@ int new_decrypt(unsigned char *ciphertext,
      printf("We did it %d\n", plaintext_len);
 
      for (size_t i = 0 ; i < plaintext_len; i++) {
-         RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
+       //  RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
     }
 
      return plaintext_len;
@@ -171,7 +171,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   RTC_LOG(LS_VERBOSE) << "XXX unencrypted_bytes ------------------------" << unencrypted_bytes;
 
   for (size_t i = 0; i < encrypted_frame.size(); i++) {
-     RTC_LOG(LS_VERBOSE) << "XXX frame ------------------------ " << i <<" "<< encrypted_frame[i];
+     //RTC_LOG(LS_VERBOSE) << "XXX frame ------------------------ " << i <<" "<< encrypted_frame[i];
   }
 
   // Frame header
@@ -246,9 +246,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
     }*/
 
- /* for (size_t i = 0; i < decryptedtext_len; i++) {
+  for (size_t i = 0; i < decryptedtext_len; i++) {
     frame[i + unencrypted_bytes] = decryptedtext[unencrypted_bytes];
-  }*/
+  }
 
   return Result(Status::kOk, frame.size());
 }
