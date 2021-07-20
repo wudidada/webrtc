@@ -37,7 +37,7 @@ int new_decrypt(unsigned char *ciphertext,
     }
 
     for (size_t i = 0 ; i < ciphertext_len; i++) {
-        
+        RTC_LOG(LS_VERBOSE) << "XXX decryption initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
     }
 
 
@@ -66,12 +66,14 @@ int new_decrypt(unsigned char *ciphertext,
      int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
      if(1 != rv) {
 	      RTC_LOG(LS_VERBOSE) << "XXX decryption final error------------------------" << myUniqueId;
+     } else {
+       RTC_LOG(LS_VERBOSE) << "XXX decryption final success------------------------";
      }
 
      printf("We did it %d\n", plaintext_len);
 
      for (size_t i = 0 ; i < plaintext_len; i++) {
-       //  RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
+         RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
     }
 
      return plaintext_len;
@@ -91,7 +93,7 @@ int gcm_encrypt(unsigned char *plaintext,
 
     int myUniqueId = rand();
     for (size_t i = 0 ; i < plaintext_len; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX encryption initial1------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
+      RTC_LOG(LS_VERBOSE) << "XXX encryption initial1------------------------------------------------------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
     }
 
     for (size_t i = 0; i < strlen ((char *)key); i++) {
@@ -167,7 +169,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       break;
  }
 
-  RTC_LOG(LS_VERBOSE) << "XXX decrypting ------------------------";
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting ------------------------------------------------------------------------";
   RTC_LOG(LS_VERBOSE) << "XXX unencrypted_bytes ------------------------" << unencrypted_bytes;
 
   for (size_t i = 0; i < encrypted_frame.size(); i++) {
