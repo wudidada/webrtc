@@ -252,7 +252,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     frame[i + unencrypted_bytes] = decryptedtext123[i];
   }
 
-  for (size_t i = 0; i < decryptedtext_len; i++) {
+  for (size_t i = 0; i < frame.size(); i++) {
     RTC_LOG(LS_VERBOSE) << "XXX encryption final------------------------" << " " << i << " " << frame[i];
   }
 
