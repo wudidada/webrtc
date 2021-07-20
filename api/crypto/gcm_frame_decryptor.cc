@@ -247,7 +247,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     }*/
 
   for (size_t i = 0; i < decryptedtext_len; i++) {
-    frame[i + unencrypted_bytes] = decryptedtext[unencrypted_bytes];
+    frame[i + unencrypted_bytes] = decryptedtext123[unencrypted_bytes];
   }
 
   return Result(Status::kOk, frame.size());
