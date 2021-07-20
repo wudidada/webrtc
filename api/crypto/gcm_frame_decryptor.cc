@@ -37,7 +37,7 @@ int new_decrypt(unsigned char *ciphertext,
     }
 
     for (size_t i = 0 ; i < ciphertext_len; i++) {
-        RTC_LOG(LS_VERBOSE) << "XXX decryption initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
+      //  RTC_LOG(LS_VERBOSE) << "XXX decryption initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
     }
 
 
@@ -72,9 +72,9 @@ int new_decrypt(unsigned char *ciphertext,
 
      printf("We did it %d\n", plaintext_len);
 
-     for (size_t i = 0 ; i < plaintext_len; i++) {
+     /*for (size_t i = 0 ; i < plaintext_len; i++) {
          RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
-    }
+     }*/
 
      return plaintext_len;
 }
@@ -144,9 +144,9 @@ int gcm_encrypt(unsigned char *plaintext,
     /* Clean up */
     EVP_CIPHER_CTX_free(ctx);
 
-    for (size_t i =0 ; i < ciphertext_len + 16; i++) {
+    /*for (size_t i =0 ; i < ciphertext_len + 16; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX encryption final------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
-    }
+    }*/
 
 
     return ciphertext_len + 16;
@@ -250,6 +250,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
   for (size_t i = 0; i < decryptedtext_len; i++) {
     frame[i + unencrypted_bytes] = decryptedtext123[i];
+  }
+
+  for (size_t i = 0; i < decryptedtext_len; i++) {
+    RTC_LOG(LS_VERBOSE) << "XXX encryption final------------------------" << " " << i << " " << frame[i];
   }
 
   return Result(Status::kOk, frame.size());
