@@ -162,10 +162,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
  uint8_t unencrypted_bytes = 10;
  switch (media_type) {
     case cricket::MEDIA_TYPE_AUDIO:
-      unencrypted_bytes = 1;
+      unencrypted_bytes = 10;
       break;
     case cricket::MEDIA_TYPE_VIDEO:
-      unencrypted_bytes = 3;
+      unencrypted_bytes = 10;
       break;
  }
 
@@ -256,13 +256,13 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     RTC_LOG(LS_VERBOSE) << "XXX encryption final------------------------" << " " << i << " " << frame[i];
   }
 
-  return Result(Status::kOk, frame.size());
+  return Result(Status::kOk, decryptedtext_len + unencrypted_bytes);
 }
 
 size_t GCMFrameDecryptor::GetMaxPlaintextByteSize(
     cricket::MediaType media_type,
     size_t encrypted_frame_size) {
- return encrypted_frame_size - 12;
+ return encrypted_frame_size;
 }
 
 }
