@@ -66,6 +66,7 @@ int new_decrypt(unsigned char *ciphertext,
      int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
      if(1 != rv) {
 	      RTC_LOG(LS_VERBOSE) << "XXX decryption final error------------------------" << myUniqueId;
+        plaintext_len = -1;
      } else {
        RTC_LOG(LS_VERBOSE) << "XXX decryption final success------------------------";
      }
@@ -248,12 +249,18 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
         RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
     }*/
 
-  for (size_t i = 0; i < decryptedtext_len; i++) {
-    frame[i + unencrypted_bytes] = decryptedtext123[i];
-  }
+  if(decryptedtext_len > 0) {
+      for (size_t i = 0; i < decryptedtext_len; i++) {
+        frame[i + unencrypted_bytes] = decryptedtext123[i];
+      }
 
-  for (size_t i = 0; i < frame.size(); i++) {
-    RTC_LOG(LS_VERBOSE) << "XXX encryption final------------------------" << " " << i << " " << frame[i];
+      for (size_t i = 0; i < frame.size(); i++) {
+        RTC_LOG(LS_VERBOSE) << "XXX encryption final------------------------" << " " << i << " " << frame[i];
+      }
+  } else {
+    for (size_t i = 0; i < encrypted_frame.size(); i++) {
+        frame[i] = encrypted_frame[i];
+      }
   }
 
   return Result(Status::kOk, decryptedtext_len + unencrypted_bytes);
