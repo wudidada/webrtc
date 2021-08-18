@@ -63,6 +63,10 @@ BufferedFrameDecryptor::FrameDecision BufferedFrameDecryptor::DecryptFrame(
     return FrameDecision::kStash;
   }
   // When using encryption we expect the frame to have the generic descriptor.
+  if (frame->GetRtpVideoHeader().generic == absl::nullopt) {
+    RTC_LOG(LS_ERROR) << "No generic frame descriptor found dropping frame.";
+    return FrameDecision::kDrop;
+  }
   // Retrieve the maximum possible size of the decrypted payload.
   const size_t max_plaintext_byte_size =
       frame_decryptor_->GetMaxPlaintextByteSize(cricket::MEDIA_TYPE_VIDEO,
