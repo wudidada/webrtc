@@ -10,10 +10,44 @@ import("../../webrtc.gni")
 
 group("crypto") {
   deps = [
-    ":frame_decryptor_interface",
-    ":frame_encryptor_interface",
+    ":gcm_frame_decryptor",
+    ":gcm_frame_encryptor",
     ":options",
   ]
+}
+
+rtc_library("gcm_frame_encryptor") {
+  visibility = [ "*" ]
+  sources = [
+    "gcm_frame_encryptor.cc",
+    "gcm_frame_encryptor.h",
+  ]
+  deps = [
+   ":frame_encryptor_interface",
+  ]
+
+  if (rtc_build_ssl) {
+    deps += [ "//third_party/boringssl" ]
+  } else {
+    configs += [ ":external_ssl_library" ]
+  }
+}
+
+rtc_library("gcm_frame_decryptor") {
+  visibility = [ "*" ]
+  sources = [
+    "gcm_frame_decryptor.cc",
+    "gcm_frame_decryptor.h",
+  ]
+  deps = [
+   ":frame_decryptor_interface",
+  ]
+
+  if (rtc_build_ssl) {
+    deps += [ "//third_party/boringssl" ]
+  } else {
+    configs += [ ":external_ssl_library" ]
+  }
 }
 
 rtc_library("options") {
