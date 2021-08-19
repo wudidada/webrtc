@@ -80,7 +80,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       unencrypted_bytes = 1;
       break;
     case cricket::MEDIA_TYPE_VIDEO:
-      unencrypted_bytes = 3;
+      unencrypted_bytes = 10;
       break;
  }
 
