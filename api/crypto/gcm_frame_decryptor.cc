@@ -30,30 +30,35 @@ int new_decrypt(unsigned char *ciphertext,
     int myUniqueId = rand();
 
     if(!(ctx = EVP_CIPHER_CTX_new())) {
+      RTC_LOG(LS_VERBOSE) << "XXX decryption error1";
     }
 
 
     if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
-        
+         RTC_LOG(LS_VERBOSE) << "XXX decryption error2";
     }
      
     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv)) {
-    	
+    	 RTC_LOG(LS_VERBOSE) << "XXX decryption error3";
      }
 
      if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, tag_offset)) {
-    
+     RTC_LOG(LS_VERBOSE) << "XXX decryption error4";
      }
 
      plaintext_len = len;
 
      if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, ciphertext + tag_offset)) {
-    	
+    	 RTC_LOG(LS_VERBOSE) << "XXX decryption error5";
      }
 
      int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
      if(1 != rv) {
         RTC_LOG(LS_VERBOSE) << "XXX decryption final error------------------------" << myUniqueId << " " << media_type;
+        for (size_t i = 0 ; i < ciphertext_len; i++) {
+        RTC_LOG(LS_VERBOSE) << "XXX decryption initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
+    }
+
         plaintext_len = -1;
      } else {
        RTC_LOG(LS_VERBOSE) << "XXX decryption final success------------------------";
