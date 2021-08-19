@@ -16,7 +16,8 @@ int new_decrypt(unsigned char *ciphertext,
                 int ciphertext_len, 
                 unsigned char *key,
                 unsigned char *iv, 
-                unsigned char *plaintext)
+                unsigned char *plaintext,
+                cricket::MediaType media_type)
 {
     EVP_CIPHER_CTX *ctx;
 
@@ -52,86 +53,13 @@ int new_decrypt(unsigned char *ciphertext,
 
      int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
      if(1 != rv) {
-	      RTC_LOG(LS_VERBOSE) << "XXX decryption final error------------------------" << myUniqueId;
+        RTC_LOG(LS_VERBOSE) << "XXX decryption final error------------------------" << myUniqueId << " " << media_type;
         plaintext_len = -1;
      } else {
        RTC_LOG(LS_VERBOSE) << "XXX decryption final success------------------------";
      }
 
      return plaintext_len;
-}
-
-int gcm_encrypt(unsigned char *plaintext, 
-                int plaintext_len,
-                unsigned char *key,
-                unsigned char *iv, 
-                unsigned char *ciphertext)
-{
-    EVP_CIPHER_CTX *ctx;
-
-    int len;
-
-    int ciphertext_len;
-
-    int myUniqueId = rand();
-    for (size_t i = 0 ; i < plaintext_len; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX encryption initial1------------------------------------------------------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
-    }
-
-    for (size_t i = 0; i < strlen ((char *)key); i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX encryption key1------------------------" << key[i];
-    }
-
-    RTC_LOG(LS_VERBOSE) << "XXX decrypting iv lenght------------------------" << strlen ((char *)iv);
-    for (size_t i = 0; i < strlen ((char *)iv); i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX encryption iv------------------------" << iv[i];
-    }
-
-    /* Create and initialise the context */
-    if(!(ctx = EVP_CIPHER_CTX_new()))
-        RTC_LOG(LS_VERBOSE) << "XXX encryting error 1------------------------";
-
-    /* Initialise the encryption operation. */
-    if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL))
-       RTC_LOG(LS_VERBOSE) << "XXX encryting error 2------------------------";
-
-    if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, 12, NULL)) {
-       RTC_LOG(LS_VERBOSE) << "XXX encryting error 3------------------------";
-    }
-
-    /* Initialise key and IV */
-    if(1 != EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv))
-        RTC_LOG(LS_VERBOSE) << "XXX encryting error 4------------------------";
-
-    /*
-     * Provide the message to be encrypted, and obtain the encrypted output.
-     * EVP_EncryptUpdate can be called multiple times if necessary
-     */
-    if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len))
-        RTC_LOG(LS_VERBOSE) << "XXX encryting error 5------------------------";
-    ciphertext_len = len;
-
-    /*
-     * Finalise the encryption. Normally ciphertext bytes may be written at
-     * this stage, but this does not occur in GCM mode
-     */
-    if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len))
-        RTC_LOG(LS_VERBOSE) << "XXX encryting error 6------------------------";
-    ciphertext_len += len;
-
-    /* Get the tag */
-   if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, ciphertext + ciphertext_len))
-       RTC_LOG(LS_VERBOSE) << "XXX encryting error 7------------------------";
-
-    /* Clean up */
-    EVP_CIPHER_CTX_free(ctx);
-
-    /*for (size_t i =0 ; i < ciphertext_len + 16; i++) {
-      RTC_LOG(LS_VERBOSE) << "XXX encryption final------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
-    }*/
-
-
-    return ciphertext_len + 16;
 }
 
 GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
@@ -186,7 +114,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
     int decryptedtext_len, ciphertext_len;
    
   std::vector<uint8_t> imported_web_key = {97, 145, 133, 203, 63, 197, 49, 232, 87, 159, 169, 200, 59, 195, 77, 75, 150, 173, 189, 232, 44, 39, 8, 149, 250, 6, 238, 170, 255, 17, 110, 107};
-  decryptedtext_len = new_decrypt(&payload[0], payload_lenght, &imported_web_key[0], &iv[0], decryptedtext123);
+  decryptedtext_len = new_decrypt(&payload[0], payload_lenght, &imported_web_key[0], &iv[0], decryptedtext123, media_type);
 
   if(decryptedtext_len > 0) {
       for (size_t i = 0; i < decryptedtext_len; i++) {
