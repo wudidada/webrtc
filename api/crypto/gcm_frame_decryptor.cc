@@ -28,15 +28,28 @@ int new_decrypt(unsigned char *ciphertext,
 
     int myUniqueId = rand();
 
-    if(!(ctx = EVP_CIPHER_CTX_new())) {
+    for (size_t i = 0 ; i < 32; i++) {
+      
+    }
+
+    for (size_t i = 0 ; i < 12; i++) {
+     // RTC_LOG(LS_VERBOSE) << "XXX decryption iv------------------------" << myUniqueId<< " " << i << " " << iv[i];
+    }
+
+    for (size_t i = 0 ; i < ciphertext_len; i++) {
+        RTC_LOG(LS_VERBOSE) << "XXX decryption initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
     }
 
 
-    if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
+     if(!(ctx = EVP_CIPHER_CTX_new())) {
+     }
+
+
+     if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
         
-    }
+     }
      
-    if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv)) {
+     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv)) {
     	
      }
 
@@ -57,6 +70,12 @@ int new_decrypt(unsigned char *ciphertext,
      } else {
        RTC_LOG(LS_VERBOSE) << "XXX decryption final success------------------------";
      }
+
+     printf("We did it %d\n", plaintext_len);
+
+     /*for (size_t i = 0 ; i < plaintext_len; i++) {
+         RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
+     }*/
 
      return plaintext_len;
 }
@@ -151,8 +170,15 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       break;
  }
 
+  RTC_LOG(LS_VERBOSE) << "XXX decrypting ------------------------------------------------------------------------";
+  RTC_LOG(LS_VERBOSE) << "XXX unencrypted_bytes ------------------------" << unencrypted_bytes;
+
+  for (size_t i = 0; i < encrypted_frame.size(); i++) {
+     //RTC_LOG(LS_VERBOSE) << "XXX frame ------------------------ " << i <<" "<< encrypted_frame[i];
+  }
+
   // Frame header
-  size_t frame_header_size = unencrypted_bytes;
+   size_t frame_header_size = unencrypted_bytes;
   std::vector<uint8_t> frame_header;
   for (size_t i = 0; i < unencrypted_bytes; i++) {
     frame[i] = encrypted_frame[i];
@@ -177,20 +203,59 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
 
   // payload
   size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + frame_trailer_size);
+ // size_t payload_lenght = 5;
   std::vector<uint8_t> payload;
   payload.reserve(payload_lenght);
   for (size_t i = unencrypted_bytes; i < unencrypted_bytes + payload_lenght; i++) {
     payload.push_back(encrypted_frame[i]);
   }
+
+    //std::vector<uint8_t> salt = { 74, 70, 114, 97, 109, 101, 69, 110, 99, 114, 121, 112, 116, 105, 111, 110, 75, 101, 121 };
+
+    //unsigned char derivedKey[EVP_MAX_KEY_LENGTH], derivedIV[EVP_MAX_IV_LENGTH];
+
+   /* int lenght = EVP_BytesToKey(EVP_aes_256_gcm(), EVP_sha256(), &salt[0],
+                          &gcm_key1[0], 32, 1, derivedKey, derivedIV);
+
+    for (size_t i =0 ; i < lenght; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX derived kwy final------------------------" << derivedKey[i];
+    }
+    
+     RTC_LOG(LS_VERBOSE) << "XXX newEncrypt1 lenght" << lenght;  */
+
     unsigned char decryptedtext123[encrypted_frame.size()];
     int decryptedtext_len, ciphertext_len;
+   /* ciphertext_len = gcm_encrypt ( &plaintext123[0], 
+                                    plaintext123.size(), 
+                                    fixed_web_key, 
+                                    iv123,
+                                  ciphertext123); */
    
   std::vector<uint8_t> imported_web_key = {97, 145, 133, 203, 63, 197, 49, 232, 87, 159, 169, 200, 59, 195, 77, 75, 150, 173, 189, 232, 44, 39, 8, 149, 250, 6, 238, 170, 255, 17, 110, 107};
+  //decryptedtext_len = new_decrypt(ciphertext123, ciphertext_len, gcm_key1, &iv1[0], decryptedtext123);
   decryptedtext_len = new_decrypt(&payload[0], payload_lenght, &imported_web_key[0], &iv[0], decryptedtext123);
+  //decryptedtext_len = new_decrypt(&ciphertext1234[0], ciphertext1234.size(), &imported_web_key[0], iv123, decryptedtext123);
+    /* Decrypt the ciphertext */
+  /*  decryptedtext_len = new_decrypt(
+      &payload[0], 
+      payload_lenght, 
+      gcm_key1, 
+      &frame_header[0],
+      frame_header_size,
+      &iv1[0], 
+      decryptedtext, 
+      tag); */
+    /*for(size_t i = 0; i < payload_lenght; i++) {
+        RTC_LOG(LS_VERBOSE) << "XXX payload" << i << " " << payload[i];
+    }*/
 
   if(decryptedtext_len > 0) {
       for (size_t i = 0; i < decryptedtext_len; i++) {
         frame[i + unencrypted_bytes] = decryptedtext123[i];
+      }
+
+      for (size_t i = 0; i < frame.size(); i++) {
+        RTC_LOG(LS_VERBOSE) << "XXX encryption final------------------------" << " " << i << " " << frame[i];
       }
 
       return Result(Status::kOk, decryptedtext_len + unencrypted_bytes);
