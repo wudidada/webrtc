@@ -52,7 +52,7 @@ int new_decrypt(unsigned char *ciphertext,
     	 RTC_LOG(LS_VERBOSE) << "XXX decryption error5";
      }
 
-     RTC_LOG(LS_VERBOSE) << "XXX decryption lenght------------------------" << myUniqueId<< " " << ciphertext_len;
+     RTC_LOG(LS_VERBOSE) << "XXX decryption lenght------------------------" << myUniqueId<< " " << ciphertext_len << " " << media_type;
      int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
      if(1 != rv) {
         RTC_LOG(LS_VERBOSE) << "XXX decryption final error------------------------" << myUniqueId << " " << media_type;
