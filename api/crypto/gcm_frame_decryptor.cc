@@ -123,7 +123,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   for (size_t i = iv_start; i < iv_start + iv_lenght; i++) {
       iv.push_back(encrypted_frame[i]);
   }
-
+  RTC_LOG(LS_VERBOSE) << "XXX decryption iv compute------------------------" << myUniqueId << " " << encrypted_frame.size() << " " << frame_trailer_size << " " << iv_lenght;
   RTC_LOG(LS_VERBOSE) << "XXX decryption iv size------------------------" << myUniqueId << " " << iv_start << " " << iv_lenght;
 
   // payload
