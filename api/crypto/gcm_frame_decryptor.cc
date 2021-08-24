@@ -29,9 +29,9 @@ int new_decrypt(unsigned char *ciphertext,
 
     int myUniqueId = rand();
 
-    for (size_t i = 0 ; i < 32; i++) {
+    /*for (size_t i = 0 ; i < 32; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX imported key------------------------" << myUniqueId<< " " << i << " " << key[i] << ",";
-    }
+    }*/
 
    for (size_t i = 0 ; i < 12; i++) {
       RTC_LOG(LS_VERBOSE) << "XXX iv------------------------" << myUniqueId<< " " << i << " " << iv[i] << ",";
@@ -63,15 +63,15 @@ int new_decrypt(unsigned char *ciphertext,
      int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
      if(1 != rv) {
         RTC_LOG(LS_VERBOSE) << "XXX decryption final error------------------------" << myUniqueId << " " << media_type;
-        for (size_t i = 0 ; i < ciphertext_len; i++) {
+        /*for (size_t i = 0 ; i < ciphertext_len; i++) {
              RTC_LOG(LS_VERBOSE) << "XXX decryption initial error------------------------" << myUniqueId<< " " << i << " " << ciphertext[i] << ",";
-        }
+        }*/
 
         plaintext_len = -1;
      } else {
-       for (size_t i = 0 ; i < ciphertext_len; i++) {
+       /*for (size_t i = 0 ; i < ciphertext_len; i++) {
              RTC_LOG(LS_VERBOSE) << "XXX decryption initial success------------------------" << myUniqueId<< " " << i << " " << ciphertext[i] << ",";
-        }
+        }*/
        RTC_LOG(LS_VERBOSE) << "XXX decryption final success------------------------";
      }
 
@@ -110,6 +110,11 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   frame_trailer.push_back(encrypted_frame[encrypted_frame.size() - 2]);//IV_LENGHT
   frame_trailer.push_back(encrypted_frame[encrypted_frame.size() - 1]);
   
+  int myUniqueId = rand();
+  for (size_t i = iv_start; i < encrypted_frame.size(); i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX decryption initial frame------------------------" << myUniqueId << " " << i << " " << encrypted_frame[i] << ",";
+  }
+
   // IV
   uint8_t iv_lenght = frame_trailer[0];
   uint8_t iv_start = encrypted_frame.size() - frame_trailer_size - iv_lenght;
@@ -118,6 +123,8 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   for (size_t i = iv_start; i < iv_start + iv_lenght; i++) {
       iv.push_back(encrypted_frame[i]);
   }
+
+  RTC_LOG(LS_VERBOSE) << "XXX decryption iv size------------------------" << myUniqueId << " " << iv_start << " " << iv_lenght;
 
   // payload
   size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + frame_trailer_size);
@@ -141,7 +148,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   } else {
     for (size_t i = 0; i < encrypted_frame.size(); i++) {
         frame[i] = encrypted_frame[i];
-      }
+    }
       return Result(Status::kOk, encrypted_frame.size());
   }
 }
