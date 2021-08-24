@@ -111,7 +111,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   frame_trailer.push_back(encrypted_frame[encrypted_frame.size() - 1]);
   
   int myUniqueId = rand();
-  for (size_t i = iv_start; i < encrypted_frame.size(); i++) {
+  for (size_t i = 0; i < encrypted_frame.size(); i++) {
       RTC_LOG(LS_VERBOSE) << "XXX decryption initial frame------------------------" << myUniqueId << " " << i << " " << encrypted_frame[i] << ",";
   }
 
