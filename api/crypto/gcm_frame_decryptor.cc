@@ -56,9 +56,9 @@ int new_decrypt(unsigned char *ciphertext,
      int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
      if(1 != rv) {
         RTC_LOG(LS_VERBOSE) << "XXX decryption final error------------------------" << myUniqueId << " " << media_type;
-       // for (size_t i = 0 ; i < ciphertext_len; i++) {
-       // RTC_LOG(LS_VERBOSE) << "XXX decryption initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
-      //}
+        for (size_t i = 0 ; i < ciphertext_len; i++) {
+             RTC_LOG(LS_VERBOSE) << "XXX decryption initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
+        }
 
         plaintext_len = -1;
      } else {
