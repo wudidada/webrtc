@@ -126,7 +126,9 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   RTC_LOG(LS_VERBOSE) << "XXX decryption iv compute------------------------" << myUniqueId << " " << encrypted_frame.size() << " " << frame_trailer_size << " " << iv_lenght;
   RTC_LOG(LS_VERBOSE) << "XXX decryption iv size------------------------" << myUniqueId << " " << iv_start << " " << iv_lenght;
   RTC_LOG(LS_VERBOSE) << "XXX decryption iv size1------------------------" << encrypted_frame.size() - frame_trailer_size - iv_lenght;
-
+  size_t a = encrypted_frame.size() - frame_trailer_size - iv_lenght;
+  RTC_LOG(LS_VERBOSE) << "XXX decryption iv size2------------------------" << a;
+ 
   // payload
   size_t payload_lenght = encrypted_frame.size() - (unencrypted_bytes + frame_trailer[0] + frame_trailer_size);
   std::vector<uint8_t> payload;
