@@ -57,11 +57,14 @@ int new_decrypt(unsigned char *ciphertext,
      if(1 != rv) {
         RTC_LOG(LS_VERBOSE) << "XXX decryption final error------------------------" << myUniqueId << " " << media_type;
         for (size_t i = 0 ; i < ciphertext_len; i++) {
-             RTC_LOG(LS_VERBOSE) << "XXX decryption initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i] << ",";
+             RTC_LOG(LS_VERBOSE) << "XXX decryption initial error------------------------" << myUniqueId<< " " << i << " " << ciphertext[i] << ",";
         }
 
         plaintext_len = -1;
      } else {
+       for (size_t i = 0 ; i < ciphertext_len; i++) {
+             RTC_LOG(LS_VERBOSE) << "XXX decryption initial success------------------------" << myUniqueId<< " " << i << " " << ciphertext[i] << ",";
+        }
        RTC_LOG(LS_VERBOSE) << "XXX decryption final success------------------------";
      }
 
