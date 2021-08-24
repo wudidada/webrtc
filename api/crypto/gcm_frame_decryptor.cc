@@ -29,10 +29,17 @@ int new_decrypt(unsigned char *ciphertext,
 
     int myUniqueId = rand();
 
+    for (size_t i = 0 ; i < 32; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX imported key------------------------" << myUniqueId<< " " << i << " " << key[i] << ",";
+    }
+
+   for (size_t i = 0 ; i < 12; i++) {
+      RTC_LOG(LS_VERBOSE) << "XXX iv------------------------" << myUniqueId<< " " << i << " " << iv[i] << ",";
+    }
+
     if(!(ctx = EVP_CIPHER_CTX_new())) {
       RTC_LOG(LS_VERBOSE) << "XXX decryption error1";
     }
-
 
     if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
          RTC_LOG(LS_VERBOSE) << "XXX decryption error2";
