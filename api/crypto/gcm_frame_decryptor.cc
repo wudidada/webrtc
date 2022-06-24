@@ -38,7 +38,7 @@ int new_decrypt(unsigned char *ciphertext,
     }
 
     for (int i = 0 ; i < ciphertext_len; i++) {
-        RTC_LOG(LS_VERBOSE) << "XXX decryption initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
+       // RTC_LOG(LS_VERBOSE) << "XXX decryption initial------------------------" << myUniqueId<< " " << i << " " << ciphertext[i];
     }
 
 
