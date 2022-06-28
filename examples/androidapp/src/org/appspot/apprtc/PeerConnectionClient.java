@@ -938,7 +938,14 @@ public class PeerConnectionClient {
     Log.d("XXX receivers", "receiver");
     for (RtpReceiver receiver : localVideoReceiverList) {
       Log.d("XXX receiver", receiver.toString());
-      GCMFrameDecryptor fd1 = new GCMFrameDecryptor();
+      List<Integer> list = new ArrayList<>();
+      list.add(12);
+      list.add(122);
+      list.add(32);
+
+      int[] myIntArray = {12, 234, 443};
+
+      GCMFrameDecryptor fd1 = new GCMFrameDecryptor(myIntArray);
       receiver.setFrameDecryptor(fd1);
     }
   }
