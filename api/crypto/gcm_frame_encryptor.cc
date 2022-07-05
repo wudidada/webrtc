@@ -121,7 +121,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
        encrypted_frame[unencrypted_bytes + i] = outbuf[i];
   }
 
-  std::vector<uint8_t> new_iv = { 74, 70, 114, 97, 109, 101, 69, 110, 99, 114, 121, 112 };
+  std::vector<uint8_t> iv = { 74, 70, 114, 97, 109, 101, 69, 110, 99, 114, 121, 112 };
   
   size_t iv_start = unencrypted_bytes + sizeof(outbuf);
 
