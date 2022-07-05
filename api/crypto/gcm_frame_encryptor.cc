@@ -97,15 +97,13 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
                                 rtc::ArrayView<uint8_t> encrypted_frame,
                                 size_t* bytes_written) {
  
- RTC_LOG(LS_VERBOSE) << "XXX Encrypting----------------------";
-
- uint8_t unencrypted_bytes = 4;
+ uint8_t unencrypted_bytes = 1;
  switch (media_type) {
     case cricket::MEDIA_TYPE_AUDIO:
-      unencrypted_bytes = 3;
+      unencrypted_bytes = 1;
       break;
     case cricket::MEDIA_TYPE_VIDEO:
-      unencrypted_bytes = 4;
+      unencrypted_bytes = 10;
       break;
     case cricket::MEDIA_TYPE_DATA:
       break;
@@ -119,13 +117,19 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
   
   unsigned char *outbuf = aes_gcm_encrypt(frame);
 
-  RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt4";
-
-  for (uint8_t i = 0; i < sizeof(outbuf); i++) {
+  for (size_t i = 0; i < sizeof(outbuf); i++) {
        encrypted_frame[unencrypted_bytes + i] = outbuf[i];
-   }
+  }
 
-   RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt5";
+  std::vector<uint8_t> new_iv = { 74, 70, 114, 97, 109, 101, 69, 110, 99, 114, 121, 112 };
+  
+  size_t iv_start = unencrypted_bytes + sizeof(outbuf);
+
+  for (size_t i = 0; i < iv.size(); i++) {
+    encrypted_frame[iv_start + i] = iv[i];
+  }
+
+  encrypted_frame[iv_start + iv.size()] = iv.size();
 
   *bytes_written = encrypted_frame.size();
 
