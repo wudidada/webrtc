@@ -22,6 +22,7 @@ int new_decrypt(unsigned char *ciphertext,
                 unsigned char *key,
                 unsigned char *iv,
                 unsigned char *aad,
+                int aad_len,
                 unsigned char *plaintext)
 {
     EVP_CIPHER_CTX *ctx;
@@ -58,7 +59,7 @@ int new_decrypt(unsigned char *ciphertext,
     	
      }
 
-     if(1 != EVP_DecryptUpdate(ctx, NULL, &len, aad, 10)) {
+     if(1 != EVP_DecryptUpdate(ctx, NULL, &len, aad, aad_len)) {
           RTC_LOG(LS_VERBOSE) << "XXX decryption aad error------------------------" << myUniqueId;
      }
 
@@ -173,7 +174,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   }*/
 
   //std::vector<uint8_t> new_iv = { 74, 70, 114, 97, 109, 101, 69, 110, 99, 114, 121, 112 };
-  decryptedtext_len = new_decrypt(&payload[0], payload_lenght, &this->key_bytes[0], &iv[0], &frame_header[0], decryptedtext123);
+  decryptedtext_len = new_decrypt(&payload[0], payload_lenght, &this->key_bytes[0], &iv[0], &frame_header[0], unencrypted_bytes, decryptedtext123);
   //decryptedtext_len = new_decrypt(&ciphertext1234[0], ciphertext1234.size(), &imported_web_key[0], iv123, decryptedtext123);
     /* Decrypt the ciphertext */
   /*  decryptedtext_len = new_decrypt(
