@@ -20,7 +20,8 @@ namespace webrtc {
 int new_decrypt(unsigned char *ciphertext, 
                 int ciphertext_len, 
                 unsigned char *key,
-                unsigned char *iv, 
+                unsigned char *iv,
+                unsigned char *aad,
                 unsigned char *plaintext)
 {
     EVP_CIPHER_CTX *ctx;
@@ -49,13 +50,16 @@ int new_decrypt(unsigned char *ciphertext,
      if(!(ctx = EVP_CIPHER_CTX_new())) {
      }
 
-
      if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
         
      }
      
      if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv)) {
     	
+     }
+
+     if(1 != EVP_DecryptUpdate(ctx, NULL, &len, aad, 10)) {
+          RTC_LOG(LS_VERBOSE) << "XXX decryption aad error------------------------" << myUniqueId;
      }
 
      if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, tag_offset)) {
@@ -106,12 +110,10 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
       break; 
  }
 
-  //RTC_LOG(LS_VERBOSE) << "XXX decrypting ------------------------------------------------------------------------";
-  //RTC_LOG(LS_VERBOSE) << "XXX unencrypted_bytes ------------------------" << unencrypted_bytes;
-
-  // Unencrypted
+  std::vector<uint8_t> frame_header;
   for (size_t i = 0; i < unencrypted_bytes; i++) {
     frame[i] = encrypted_frame[i];
+    frame_header.push_back(encrypted_frame[i]);
   }
 
   // Frame trailer
@@ -124,10 +126,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   // IV
   size_t iv_lenght = frame_trailer[0];
   size_t iv_start = encrypted_frame.size() - frame_trailer_size - iv_lenght;
- // RTC_LOG(LS_VERBOSE) << "XXX frame size ------------------------" <<  encrypted_frame.size();
- // RTC_LOG(LS_VERBOSE) << "XXX frame_trailer_size ------------------------" <<  frame_trailer_size;
- // RTC_LOG(LS_VERBOSE) << "XXX iv_lenght ------------------------" <<  iv_lenght;
-//  RTC_LOG(LS_VERBOSE) << "XXX iv_start1 ------------------------" <<  iv_start;
+
 
   std::vector<uint8_t> iv;
   iv.reserve(iv_lenght);
@@ -174,7 +173,7 @@ GCMFrameDecryptor::Result GCMFrameDecryptor::Decrypt(
   }*/
 
   //std::vector<uint8_t> new_iv = { 74, 70, 114, 97, 109, 101, 69, 110, 99, 114, 121, 112 };
-  decryptedtext_len = new_decrypt(&payload[0], payload_lenght, &this->key_bytes[0], &iv[0], decryptedtext123);
+  decryptedtext_len = new_decrypt(&payload[0], payload_lenght, &this->key_bytes[0], &iv[0], &frame_header[0], decryptedtext123);
   //decryptedtext_len = new_decrypt(&ciphertext1234[0], ciphertext1234.size(), &imported_web_key[0], iv123, decryptedtext123);
     /* Decrypt the ciphertext */
   /*  decryptedtext_len = new_decrypt(
