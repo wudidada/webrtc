@@ -1,6 +1,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <vector>
+
 #include "api/array_view.h"
 #include "api/crypto/frame_encryptor_interface.h"
 #include "api/media_types.h"
