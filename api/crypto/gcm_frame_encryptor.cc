@@ -6,7 +6,8 @@
 
 namespace webrtc {
 
-GCMFrameEncryptor::GCMFrameEncryptor();
+GCMFrameEncryptor::GCMFrameEncryptor() {
+}
 
 unsigned char* encrypt(unsigned char* gcm_pt,
                        size_t plaintext_len,
