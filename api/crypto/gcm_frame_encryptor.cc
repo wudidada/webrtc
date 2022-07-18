@@ -6,10 +6,10 @@
 
 namespace webrtc {
 
-GCMFrameEncryptor::GCMFrameEncryptor() {
-}
+GCMFrameEncryptor::GCMFrameEncryptor() {}
 
-unsigned char* encrypt(unsigned char* gcm_pt,
+unsigned char* encrypt(unsigned char* key,
+                       unsigned char* gcm_pt,
                        size_t plaintext_len,
                        unsigned char* iv,
                        unsigned char* aad,
@@ -31,7 +31,7 @@ unsigned char* encrypt(unsigned char* gcm_pt,
   }
 
   /* Initialise key and IV */
-  if (1 != EVP_EncryptInit_ex(ctx, NULL, NULL, this->key_bytes, iv)) {
+  if (1 != EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv)) {
   }
 
   /* Zero or more calls to specify any AAD */
@@ -100,8 +100,8 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   size_t ciphertext_len;
   unsigned char* ciphertext =
-      encrypt(gcm_pt, frame.size() - unencrypted_bytes, &iv[0],
-              &frame_header[0], unencrypted_bytes, ciphertext_len);
+      encrypt(&this->key_bytes[0], gcm_pt, frame.size() - unencrypted_bytes,
+              &iv[0], &frame_header[0], unencrypted_bytes, ciphertext_len);
 
   for (size_t i = 0; i < ciphertext_len; i++) {
     encrypted_frame[unencrypted_bytes + i] = ciphertext[i];
