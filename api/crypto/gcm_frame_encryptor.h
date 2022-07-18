@@ -21,5 +21,6 @@ class GCMFrameEncryptor
 
    size_t GetMaxCiphertextByteSize(cricket::MediaType media_type,
                                   size_t frame_size) override;
+   void SetKey(std::vector<uint8_t> key_bytes);
 };
 }
