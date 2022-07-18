@@ -6,8 +6,6 @@
 
 namespace webrtc {
 
-std::vector<uint8_t> key_bytes;
-
 GCMFrameEncryptor::GCMFrameEncryptor();
 
 unsigned char* encrypt(unsigned char* gcm_pt,
