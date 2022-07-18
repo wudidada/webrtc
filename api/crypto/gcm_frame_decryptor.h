@@ -12,7 +12,7 @@ namespace webrtc {
 class GCMFrameDecryptor final
     : public rtc::RefCountedObject<FrameDecryptorInterface> {
  public:
-  explicit GCMFrameDecryptor(std::vector<uint8_t>);
+  explicit GCMFrameDecryptor();
 
   Result Decrypt(cricket::MediaType media_type,
                  const std::vector<uint32_t>& csrcs,
@@ -21,8 +21,9 @@ class GCMFrameDecryptor final
                  rtc::ArrayView<uint8_t> frame) override;
   size_t GetMaxPlaintextByteSize(cricket::MediaType media_type,
                                  size_t encrypted_frame_size) override;
+  void SetKey(std::vector<uint8_t> key_bytes);
 
-private:
- std::vector<uint8_t> key_bytes;
+ private:
+  std::vector<uint8_t> key_bytes;
 };
-}
+}  // namespace webrtc
