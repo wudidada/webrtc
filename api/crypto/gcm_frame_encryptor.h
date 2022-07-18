@@ -19,8 +19,11 @@ class GCMFrameEncryptor
               rtc::ArrayView<uint8_t> encrypted_frame,
               size_t* bytes_written) override;
 
-   size_t GetMaxCiphertextByteSize(cricket::MediaType media_type,
+  size_t GetMaxCiphertextByteSize(cricket::MediaType media_type,
                                   size_t frame_size) override;
-   void SetKey(std::vector<uint8_t> key_bytes);
+  void SetKey(std::vector<uint8_t> key_bytes);
+
+ private:
+  std::vector<uint8_t> key_bytes;
 };
-}
+}  // namespace webrtc

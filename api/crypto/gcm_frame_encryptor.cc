@@ -10,12 +10,12 @@ std::vector<uint8_t> key_bytes;
 
 GCMFrameEncryptor::GCMFrameEncryptor();
 
-unsigned char* aes_gcm_encrypt(unsigned char* gcm_pt,
-                               size_t plaintext_len,
-                               unsigned char* iv,
-                               unsigned char* aad,
-                               int aad_len,
-                               size_t& ciphertext_len) {
+unsigned char* encrypt(unsigned char* gcm_pt,
+                       size_t plaintext_len,
+                       unsigned char* iv,
+                       unsigned char* aad,
+                       int aad_len,
+                       size_t& ciphertext_len) {
   int len;
 
   unsigned char* tag = (unsigned char*)malloc(3024 * sizeof(unsigned char));
