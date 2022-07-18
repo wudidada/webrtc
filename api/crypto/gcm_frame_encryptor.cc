@@ -31,7 +31,7 @@ unsigned char* encrypt(unsigned char* gcm_pt,
   }
 
   /* Initialise key and IV */
-  if (1 != EVP_EncryptInit_ex(ctx, NULL, NULL, key_bytes, iv)) {
+  if (1 != EVP_EncryptInit_ex(ctx, NULL, NULL, this->key_bytes, iv)) {
   }
 
   /* Zero or more calls to specify any AAD */
