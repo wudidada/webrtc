@@ -108,6 +108,8 @@ int new_decrypt(unsigned char *ciphertext,
  unsigned char* aes_gcm_encrypt(unsigned char *gcm_pt,
                                 size_t plaintext_len,
                                 unsigned char *iv,
+                                unsigned char *aad,
+                                int aad_len,
                                 size_t &ciphertext_len)
 {
    int myUniqueId = rand();
@@ -145,7 +147,7 @@ int new_decrypt(unsigned char *ciphertext,
     }
 
     /* Zero or more calls to specify any AAD */
-    //EVP_EncryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad));
+  EVP_EncryptUpdate(ctx, NULL, &len, aad, aad_len);
 
   RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt7";
     /* Encrypt plaintext */
@@ -221,8 +223,10 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
       break; 
  }
 
+  std::vector<uint8_t> frame_header;
   for (size_t i = 0; i < unencrypted_bytes; i++) {
        encrypted_frame[i] = frame[i];
+       frame_header.push_back(encrypted_frame[i]);
   }
   
   std::vector<uint8_t> iv = { 74, 70, 114, 97, 109, 101, 69, 110, 99, 114, 121, 112 };
@@ -237,14 +241,13 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
   }
 
   size_t ciphertext_len;
-  unsigned char *outbuf = aes_gcm_encrypt(gcm_pt, frame.size() - unencrypted_bytes, &iv[0], ciphertext_len);
+  unsigned char *outbuf = aes_gcm_encrypt(gcm_pt, frame.size() - unencrypted_bytes, &iv[0], &frame_header[0], unencrypted_bytes, ciphertext_len);
 
   //unsigned char decryptedtext123[encrypted_frame.size()];
   //new_decrypt(outbuf, ciphertext_len, &iv[0], decryptedtext123);
 
   for (size_t i = 0; i < ciphertext_len; i++) {
       encrypted_frame[unencrypted_bytes + i] = outbuf[i];
-     // encrypted_frame[unencrypted_bytes + i] = i;
   }
   
   size_t iv_start = unencrypted_bytes + ciphertext_len;
@@ -271,20 +274,6 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 size_t GCMFrameEncryptor::GetMaxCiphertextByteSize(
     cricket::MediaType media_type,
     size_t frame_size) {
-
- /*uint8_t unencrypted_bytes = 1;
- switch (media_type) {
-    case cricket::MEDIA_TYPE_AUDIO:
-      unencrypted_bytes = 1;
-      break;
-    case cricket::MEDIA_TYPE_VIDEO:
-      unencrypted_bytes = 10;
-      break;
-    case cricket::MEDIA_TYPE_DATA:
-      break;
-    case cricket::MEDIA_TYPE_UNSUPPORTED:
-      break; 
- }*/
 
   return frame_size + 30;
 }
