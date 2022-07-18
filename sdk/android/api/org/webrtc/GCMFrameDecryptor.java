@@ -2,15 +2,18 @@ package org.webrtc;
 
 public class GCMFrameDecryptor implements FrameDecryptor {
 
-    private final int[] list;
+    private final long nativeDecryptor;
 
-    public GCMFrameDecryptor(int[] list) {
-        this.list = list;
+    public GCMFrameDecryptor() {
+        nativeDecryptor = nativeGetGCMFrameDecryptor();
     }
 
     @Override
     public long getNativeFrameDecryptor() {
-        return nativeGetGCMFrameDecryptor();
+        return nativeDecryptor;
+    }
+
+    public setKey(int[] key) {
     }
 
     private static native long nativeGetGCMFrameDecryptor();

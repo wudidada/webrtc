@@ -10,5 +10,9 @@ static jlong JNI_GCMFrameEncryptor_GetGCMFrameEncryptor(
   return jlongFromPointer(new GCMFrameEncryptor());
 }
 
+static void JNI_GCMFrameEncryptor_SetKey( JNIEnv* jni, jobject thiz) {
+  
+}
+
 }  // namespace jni
 }  // namespace webrtc
