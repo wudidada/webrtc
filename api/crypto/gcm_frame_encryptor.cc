@@ -4,6 +4,8 @@
 #include <openssl/evp.h>
 #include <stdio.h>
 
+#include "rtc_base/logging.h"
+
 namespace webrtc {
 
 unsigned char* encrypt(unsigned char* key,
@@ -126,5 +128,7 @@ size_t GCMFrameEncryptor::GetMaxCiphertextByteSize(
 
 void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
   this->key_bytes = key_bytes;
+        RTC_LOG(LS_VERBOSE) << "XXX settingKey";
+
 }
 }  // namespace webrtc
