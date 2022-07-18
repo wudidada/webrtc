@@ -9,10 +9,6 @@
 
 namespace webrtc {
 
-GCMFrameDecryptor::GCMFrameDecryptor(std::vector<uint8_t> key_bytes) {
-  this->key_bytes = key_bytes;
-}
-
 int decrypt(unsigned char* key,
             unsigned char* ciphertext,
             int ciphertext_len,
@@ -136,7 +132,7 @@ size_t GCMFrameDecryptor::GetMaxPlaintextByteSize(cricket::MediaType media_type,
   return encrypted_frame_size;
 }
 
-void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
+void GCMFrameDecryptor::SetKey(std::vector<uint8_t> key_bytes) {
   this->key_bytes = key_bytes;
 }
 }  // namespace webrtc

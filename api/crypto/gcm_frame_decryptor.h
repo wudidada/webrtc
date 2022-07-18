@@ -12,7 +12,7 @@ namespace webrtc {
 class GCMFrameDecryptor final
     : public rtc::RefCountedObject<FrameDecryptorInterface> {
  public:
-  explicit GCMFrameDecryptor(std::vector<uint8_t>);
+  explicit GCMFrameDecryptor();
 
   Result Decrypt(cricket::MediaType media_type,
                  const std::vector<uint32_t>& csrcs,

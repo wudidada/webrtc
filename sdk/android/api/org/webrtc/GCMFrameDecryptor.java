@@ -10,8 +10,8 @@ public class GCMFrameDecryptor implements FrameDecryptor {
 
     @Override
     public long getNativeFrameDecryptor() {
-        return nativeGetGCMFrameDecryptor(list);
+        return nativeGetGCMFrameDecryptor();
     }
 
-    private static native long nativeGetGCMFrameDecryptor(int[] myList);
+    private static native long nativeGetGCMFrameDecryptor();
 }
