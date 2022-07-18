@@ -11,107 +11,21 @@ static const unsigned char gcm_key[] = {
     97, 145, 133, 203, 63, 197, 49, 232, 87, 159, 169, 200, 59, 195, 77, 75, 150, 173, 189, 232, 44, 39, 8, 149, 250, 6, 238, 170, 255, 17, 110, 107
 };
 
-/*static const unsigned char gcm_pt[] = {
-    0xf5, 0x6e, 0x87, 0x05, 0x5b, 0xc3, 0x2d, 0x0e, 0xeb, 0x31, 0xb2, 0xea,
-    0xcc, 0x2b, 0xf2, 0xa5
-};*/
+private:
+  std::vector<uint8_t> key_bytes;
 
-/*static const unsigned char gcm_aad[] = {
-    0x4d, 0x23, 0xc3, 0xce, 0xc3, 0x34, 0xb4, 0x9b, 0xdb, 0x37, 0x0c, 0x43,
-    0x7f, 0xec, 0x78, 0xde
-};
-
-static const unsigned char gcm_ct[] = {
-    0xf7, 0x26, 0x44, 0x13, 0xa8, 0x4c, 0x0e, 0x7c, 0xd5, 0x36, 0x86, 0x7e,
-    0xb9, 0xf2, 0x17, 0x36
-};
-
-static const unsigned char gcm_tag[] = {
-    0x67, 0xba, 0x05, 0x10, 0x26, 0x2a, 0xe4, 0x87, 0xd7, 0x37, 0xee, 0x62,
-    0x98, 0xf7, 0x7e, 0x0c
-};*/
-
+public:
 GCMFrameEncryptor::GCMFrameEncryptor() {
     RTC_LOG(LS_VERBOSE) << "XXX GCMFrameEncryptor";
 }
 
-
-
-
-
-
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-int new_decrypt(unsigned char *ciphertext, 
-                int ciphertext_len, 
-                unsigned char *iv,
-                unsigned char *plaintext)
-{
-    EVP_CIPHER_CTX *ctx;
-
-    int len;
-
-    int plaintext_len;
-
-    int tag_offset = ciphertext_len-16;
-
-    int myUniqueId = rand();
-
-     if(!(ctx = EVP_CIPHER_CTX_new())) {
-     }
-
-     if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
-        
-     }
-     
-     if(!EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, iv)) {
-    	
-     }
-
-     /*if(1 != EVP_DecryptUpdate(ctx, NULL, &len, aad, aad_len)) {
-          RTC_LOG(LS_VERBOSE) << "XXX decryption aad error------------------------" << myUniqueId;
-     }*/
-
-     if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, tag_offset)) {
-    
-     }
-
-     plaintext_len = len;
-
-     if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, ciphertext + tag_offset)) {
-    	
-     }
-
-     int rv = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
-     if(1 != rv) {
-	      RTC_LOG(LS_VERBOSE) << "XXX decryption final error------------------------" << myUniqueId;
-        plaintext_len = -1;
-     } else {
-       RTC_LOG(LS_VERBOSE) << "XXX decryption final success------------------------";
-     }
-
-     printf("We did it %d\n", plaintext_len);
-
-     /*for (size_t i = 0 ; i < plaintext_len; i++) {
-         RTC_LOG(LS_VERBOSE) << "XXX decryption final------------------------" << myUniqueId<< " " << i << " " << plaintext[i];
-     }*/
-
-     return plaintext_len;
-}
-
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
- unsigned char* aes_gcm_encrypt(unsigned char *gcm_pt,
+private:
+unsigned char* aes_gcm_encrypt(unsigned char *gcm_pt,
                                 size_t plaintext_len,
                                 unsigned char *iv,
                                 unsigned char *aad,
                                 int aad_len,
-                                size_t &ciphertext_len)
-{
+                                size_t &ciphertext_len) {
    int myUniqueId = rand();
 
    // RTC_LOG(LS_VERBOSE) << "XXX aes_gcm_encrypt1 " << frame.size();
@@ -201,7 +115,7 @@ int new_decrypt(unsigned char *ciphertext,
     return outbuf;
 }
 
-// FrameEncryptorInterface implementation
+public:
 int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
                                 uint32_t ssrc,
                                 rtc::ArrayView<const uint8_t> additional_data,
@@ -230,7 +144,6 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
   }
   
   std::vector<uint8_t> iv = { 74, 70, 114, 97, 109, 101, 69, 110, 99, 114, 121, 112 };
-
 
   unsigned char gcm_pt[frame.size() - unencrypted_bytes];
 

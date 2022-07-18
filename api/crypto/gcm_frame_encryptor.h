@@ -22,5 +22,4 @@ class GCMFrameEncryptor
    size_t GetMaxCiphertextByteSize(cricket::MediaType media_type,
                                   size_t frame_size) override;
 };
-
 }
