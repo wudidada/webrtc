@@ -9,7 +9,7 @@ namespace webrtc {
 GCMFrameEncryptor::GCMFrameEncryptor() {}
 
 unsigned char* encrypt(unsigned char* key,
-                       unsigned char* gcm_pt,
+                       unsigned char* plaintext,
                        size_t plaintext_len,
                        unsigned char* iv,
                        unsigned char* aad,
@@ -38,7 +38,7 @@ unsigned char* encrypt(unsigned char* key,
   EVP_EncryptUpdate(ctx, NULL, &len, aad, aad_len);
 
   /* Encrypt plaintext */
-  if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, gcm_pt, plaintext_len)) {
+  if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len)) {
   }
 
   ciphertext_len = len;
@@ -92,15 +92,15 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
   std::vector<uint8_t> iv = {74, 70,  114, 97,  109, 101,
                              69, 110, 99,  114, 121, 112};
 
-  unsigned char gcm_pt[frame.size() - unencrypted_bytes];
+  unsigned char plaintext[frame.size() - unencrypted_bytes];
 
   for (size_t i = 0; i < frame.size() - unencrypted_bytes; i++) {
-    gcm_pt[i] = frame[i + unencrypted_bytes];
+    plaintext[i] = frame[i + unencrypted_bytes];
   }
 
   size_t ciphertext_len;
   unsigned char* ciphertext =
-      encrypt(&this->key_bytes[0], gcm_pt, frame.size() - unencrypted_bytes,
+      encrypt(&this->key_bytes[0], plaintext, frame.size() - unencrypted_bytes,
               &iv[0], &frame_header[0], unencrypted_bytes, ciphertext_len);
 
   for (size_t i = 0; i < ciphertext_len; i++) {
