@@ -126,7 +126,7 @@ size_t GCMFrameEncryptor::GetMaxCiphertextByteSize(
   return frame_size + 30;
 }
 
-void SetKey(std::vector<uint8_t> key_bytes) {
+void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
   this->key_bytes = key_bytes;
 }
 }  // namespace webrtc
