@@ -8,6 +8,9 @@
 
 namespace webrtc {
 
+public:
+GCMFrameEncryptor::GCMFrameEncryptor() {}
+
 unsigned char* encrypt(unsigned char* key,
                        unsigned char* plaintext,
                        size_t plaintext_len,
@@ -128,7 +131,6 @@ size_t GCMFrameEncryptor::GetMaxCiphertextByteSize(
 
 void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
   this->key_bytes = key_bytes;
-        RTC_LOG(LS_VERBOSE) << "XXX settingKey";
-
+  RTC_LOG(LS_VERBOSE) << "XXX settingKey";
 }
 }  // namespace webrtc
