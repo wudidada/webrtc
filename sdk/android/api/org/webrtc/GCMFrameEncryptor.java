@@ -18,5 +18,5 @@ public class GCMFrameEncryptor implements FrameEncryptor {
 
     private static native long nativeGetGCMFrameEncryptor();
 
-    private static native void nativeSetKey(int[] key);
+    private native void nativeSetKey(int[] key);
 }

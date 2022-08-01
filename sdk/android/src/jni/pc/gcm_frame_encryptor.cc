@@ -12,8 +12,9 @@ static jlong JNI_GCMFrameEncryptor_GetGCMFrameEncryptor(JNIEnv* jni) {
   return jlongFromPointer(new GCMFrameEncryptor());
 }
 
-static void JNI_GCMFrameEncryptor_SetKey(
+void JNI_GCMFrameEncryptor_SetKey(
     JNIEnv* jni,
+    jobject thiz,
     const base::android::JavaParamRef<jintArray>& key_bytes) {
   jintArray key_bytes_array = key_bytes.obj();
   jsize size = jni->GetArrayLength(key_bytes_array);
