@@ -9,7 +9,6 @@
 
 namespace webrtc {
 
-public:
 GCMFrameDecryptor::GCMFrameDecryptor() {}
 
 int decrypt(unsigned char* key,

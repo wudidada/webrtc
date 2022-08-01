@@ -8,7 +8,6 @@
 
 namespace webrtc {
 
-public:
 GCMFrameEncryptor::GCMFrameEncryptor() {}
 
 unsigned char* encrypt(unsigned char* key,
