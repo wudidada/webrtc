@@ -13,7 +13,7 @@ public class GCMFrameDecryptor implements FrameDecryptor {
         return nativeDecryptor;
     }
 
-    public setKey(int[] key) {
+    public void setKey(int[] key) {
     }
 
     private static native long nativeGetGCMFrameDecryptor();
