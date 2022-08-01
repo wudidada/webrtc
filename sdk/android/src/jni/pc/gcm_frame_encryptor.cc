@@ -21,7 +21,8 @@ static void JNI_GCMFrameEncryptor_SetKey(
   jint* key_bytes_ptr = jni->GetIntArrayElements(key_bytes_array, 0);
   std::vector<uint8_t> key_bytes_vector(key_bytes_ptr, key_bytes_ptr + size);
 
-  GCMFrameEncryptor* encryptor = reinterpret_cast<GCMFrameEncryptor*>(thiz.obj());
+  GCMFrameEncryptor* encryptor =
+      reinterpret_cast<GCMFrameEncryptor*>(thiz.obj());
   encryptor->SetKey(key_bytes_vector);
 }
 
