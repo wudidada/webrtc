@@ -9,7 +9,9 @@
 namespace webrtc {
 
 GCMFrameEncryptor::GCMFrameEncryptor() {
-  this->key_bytes = { 97, 145, 133, 203, 63, 197, 49, 232, 87, 159, 169, 200, 59, 195, 77, 75, 150, 173, 189, 232, 44, 39, 8, 149, 250, 6, 238, 170, 255, 17, 110, 107 };
+  this->key_bytes = {97,  145, 133, 203, 63,  197, 49,  232, 87,  159, 169,
+                     200, 59,  195, 77,  75,  150, 173, 189, 232, 44,  39,
+                     8,   149, 250, 6,   238, 170, 255, 17,  110, 107};
 }
 
 unsigned char* encrypt(unsigned char* key,
@@ -73,7 +75,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
                                rtc::ArrayView<const uint8_t> frame,
                                rtc::ArrayView<uint8_t> encrypted_frame,
                                size_t* bytes_written) {
-    RTC_LOG(LS_VERBOSE) << "XXX encrypting";                              
+  RTC_LOG(LS_VERBOSE) << "XXX encrypting";
   uint8_t unencrypted_bytes = 1;
   switch (media_type) {
     case cricket::MEDIA_TYPE_AUDIO:
@@ -103,7 +105,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
     plaintext[i] = frame[i + unencrypted_bytes];
   }
 
-*size_t ciphertext_len;
+  size_t ciphertext_len;
   unsigned char* ciphertext =
       encrypt(&this->key_bytes[0], plaintext, frame.size() - unencrypted_bytes,
               &iv[0], &frame_header[0], unencrypted_bytes, ciphertext_len);
@@ -121,7 +123,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
   encrypted_frame[iv_start + iv.size()] = iv.size();
 
   *bytes_written = encrypted_frame.size();
- 
+
   return 0;
 }
 
