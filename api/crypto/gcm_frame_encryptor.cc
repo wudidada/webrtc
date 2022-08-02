@@ -28,29 +28,29 @@ unsigned char* encrypt(unsigned char* key,
   if (!(ctx = EVP_CIPHER_CTX_new())) {
   }
 
-  /* Set cipher type and mode 
+   Set cipher type and mode 
   if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
   }
 
-  /* Initialise key and IV 
+  Initialise key and IV 
   if (1 != EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv)) {
   }
 
-  /* Zero or more calls to specify any AAD 
+   Zero or more calls to specify any AAD 
   EVP_EncryptUpdate(ctx, NULL, &len, aad, aad_len);
 
-  /* Encrypt plaintext 
+   Encrypt plaintext 
   if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len)) {
   }
 
   ciphertext_len = len;
 
-  /* Output encrypted block 
-  /* Finalise: note get no output for GCM 
+   Output encrypted block 
+   Finalise: note get no output for GCM 
   if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) {
   }
 
-  /* Get tag 
+   Get tag 
   if (1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, 16, tag)) {
   }
 
