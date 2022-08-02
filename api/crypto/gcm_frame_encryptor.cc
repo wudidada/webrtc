@@ -119,15 +119,14 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
   encrypted_frame[iv_start + iv.size()] = iv.size();
 
   *bytes_written = encrypted_frame.size();
-
+ */
   return 0;
 }
 
 size_t GCMFrameEncryptor::GetMaxCiphertextByteSize(
     cricket::MediaType media_type,
     size_t frame_size) {
-  return frame_size + 30;*/
-  return 0;
+  return frame_size + 30;
 }
 
 void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
