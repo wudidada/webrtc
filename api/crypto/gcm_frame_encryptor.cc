@@ -103,7 +103,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   size_t ciphertext_len;
   unsigned char* ciphertext =
-      encrypt(&this->key_bytes, plaintext, frame.size() - unencrypted_bytes,
+      encrypt(this->key_bytes, plaintext, frame.size() - unencrypted_bytes,
               &iv[0], &frame_header[0], unencrypted_bytes, ciphertext_len);
 
   for (size_t i = 0; i < ciphertext_len; i++) {
