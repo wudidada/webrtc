@@ -17,41 +17,40 @@ unsigned char* encrypt(unsigned char* key,
                        unsigned char* aad,
                        int aad_len,
                        size_t& ciphertext_len) {
-  unsigned char* ciphertext =
-      (unsigned char*)malloc(3024 * sizeof(unsigned char));
-  /*int len;
+  int len;
 
   unsigned char* tag = (unsigned char*)malloc(3024 * sizeof(unsigned char));
 
   EVP_CIPHER_CTX* ctx;
-
+  unsigned char* ciphertext =
+      (unsigned char*)malloc(3024 * sizeof(unsigned char));
 
   if (!(ctx = EVP_CIPHER_CTX_new())) {
   }
 
-   Set cipher type and mode 
+  /* Set cipher type and mode */
   if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
   }
 
-  Initialise key and IV 
+  /* Initialise key and IV */
   if (1 != EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv)) {
   }
 
-   Zero or more calls to specify any AAD 
+  /* Zero or more calls to specify any AAD */
   EVP_EncryptUpdate(ctx, NULL, &len, aad, aad_len);
 
-   Encrypt plaintext 
+  /* Encrypt plaintext */
   if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len)) {
   }
 
   ciphertext_len = len;
 
-   Output encrypted block 
-   Finalise: note get no output for GCM 
+  /* Output encrypted block */
+  /* Finalise: note get no output for GCM */
   if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) {
   }
 
-   Get tag 
+  /* Get tag */
   if (1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, 16, tag)) {
   }
 
@@ -59,7 +58,7 @@ unsigned char* encrypt(unsigned char* key,
 
   for (size_t i = 0; i < 16; i++) {
     ciphertext[ciphertext_len + i] = tag[i];
-  }*/
+  }
 
   ciphertext_len += 16;
 
@@ -102,7 +101,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
     plaintext[i] = frame[i + unencrypted_bytes];
   }
 
-  size_t ciphertext_len;
+  /*size_t ciphertext_len;
   unsigned char* ciphertext =
       encrypt(&this->key_bytes[0], plaintext, frame.size() - unencrypted_bytes,
               &iv[0], &frame_header[0], unencrypted_bytes, ciphertext_len);
@@ -119,7 +118,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   encrypted_frame[iv_start + iv.size()] = iv.size();
 
-  *bytes_written = encrypted_frame.size();
+  *bytes_written = encrypted_frame.size();*/
  
   return 0;
 }
