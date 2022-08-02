@@ -17,13 +17,14 @@ unsigned char* encrypt(unsigned char* key,
                        unsigned char* aad,
                        int aad_len,
                        size_t& ciphertext_len) {
+  unsigned char* ciphertext =
+      (unsigned char*)malloc(3024 * sizeof(unsigned char));
   /*int len;
 
   unsigned char* tag = (unsigned char*)malloc(3024 * sizeof(unsigned char));
 
   EVP_CIPHER_CTX* ctx;
-  unsigned char* ciphertext =
-      (unsigned char*)malloc(3024 * sizeof(unsigned char));
+
 
   if (!(ctx = EVP_CIPHER_CTX_new())) {
   }
