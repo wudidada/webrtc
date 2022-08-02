@@ -25,7 +25,7 @@ static void JNI_GCMFrameEncryptor_SetKey(
   RTC_LOG(LS_VERBOSE) << "XXX JNI_GCMFrameEncryptor_SetKey1";
   GCMFrameEncryptor* encryptor =
       reinterpret_cast<GCMFrameEncryptor*>(thiz.obj());
-  RTC_LOG(LS_VERBOSE) << "XXX JNI_GCMFrameEncryptor_SetKey2";
+  RTC_LOG(LS_VERBOSE) << "XXX JNI_GCMFrameEncryptor_SetKey2" << encryptor;
   encryptor->SetKey(key_bytes_vector);
   RTC_LOG(LS_VERBOSE) << "XXX JNI_GCMFrameEncryptor_SetKey3";
 }
