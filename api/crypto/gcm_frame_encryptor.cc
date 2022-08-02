@@ -134,7 +134,8 @@ size_t GCMFrameEncryptor::GetMaxCiphertextByteSize(
 }
 
 void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
-  RTC_LOG(LS_VERBOSE) << "XXX settingKey1";
+  RTC_LOG(LS_VERBOSE) << "XXX settingKey1" << key_bytes;
+   RTC_LOG(LS_VERBOSE) << "XXX settingKey12" << this->key_bytes;
   this->key_bytes = key_bytes;
   RTC_LOG(LS_VERBOSE) << "XXX settingKey2";
 }
