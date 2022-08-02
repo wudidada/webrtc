@@ -71,7 +71,8 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
                                rtc::ArrayView<const uint8_t> frame,
                                rtc::ArrayView<uint8_t> encrypted_frame,
                                size_t* bytes_written) {
-  uint8_t unencrypted_bytes = 1;
+    RTC_LOG(LS_VERBOSE) << "XXX encrypting";                              
+  /*uint8_t unencrypted_bytes = 1;
   switch (media_type) {
     case cricket::MEDIA_TYPE_AUDIO:
       unencrypted_bytes = 1;
@@ -125,7 +126,8 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 size_t GCMFrameEncryptor::GetMaxCiphertextByteSize(
     cricket::MediaType media_type,
     size_t frame_size) {
-  return frame_size + 30;
+  return frame_size + 30;*/
+  return 0;
 }
 
 void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
