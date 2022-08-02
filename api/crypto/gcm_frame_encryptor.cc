@@ -121,7 +121,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
     encrypted_frame[iv_start + iv.size()] = iv.size();
 
     *bytes_written = encrypted_frame.size();
-  } catch () {
+  } catch (int myNum) {
     RTC_LOG(LS_VERBOSE) << "XXX encrypting exception";
   }
 
