@@ -141,7 +141,7 @@ void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
   it = key_bytes.begin();
   this->key_bytes.assign(it, key_bytes.end());
 
-  RTC_LOG(LS_VERBOSE) << "XXX settingKey13 " << key_bytes;
+  RTC_LOG(LS_VERBOSE) << "XXX settingKey13 " << this->key_bytes.size();
   RTC_LOG(LS_VERBOSE) << "XXX settingKey2";
 }
 }  // namespace webrtc
