@@ -71,55 +71,60 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
                                rtc::ArrayView<const uint8_t> frame,
                                rtc::ArrayView<uint8_t> encrypted_frame,
                                size_t* bytes_written) {
-    RTC_LOG(LS_VERBOSE) << "XXX encrypting";                              
-  /*uint8_t unencrypted_bytes = 1;
-  switch (media_type) {
-    case cricket::MEDIA_TYPE_AUDIO:
-      unencrypted_bytes = 1;
-      break;
-    case cricket::MEDIA_TYPE_VIDEO:
-      unencrypted_bytes = 10;
-      break;
-    case cricket::MEDIA_TYPE_DATA:
-      break;
-    case cricket::MEDIA_TYPE_UNSUPPORTED:
-      break;
+  RTC_LOG(LS_VERBOSE) << "XXX encrypting";
+
+  try {
+    uint8_t unencrypted_bytes = 1;
+    switch (media_type) {
+      case cricket::MEDIA_TYPE_AUDIO:
+        unencrypted_bytes = 1;
+        break;
+      case cricket::MEDIA_TYPE_VIDEO:
+        unencrypted_bytes = 10;
+        break;
+      case cricket::MEDIA_TYPE_DATA:
+        break;
+      case cricket::MEDIA_TYPE_UNSUPPORTED:
+        break;
+    }
+
+    std::vector<uint8_t> frame_header;
+    for (size_t i = 0; i < unencrypted_bytes; i++) {
+      encrypted_frame[i] = frame[i];
+      frame_header.push_back(encrypted_frame[i]);
+    }
+
+    std::vector<uint8_t> iv = {74, 70,  114, 97,  109, 101,
+                               69, 110, 99,  114, 121, 112};
+
+    unsigned char plaintext[frame.size() - unencrypted_bytes];
+
+    for (size_t i = 0; i < frame.size() - unencrypted_bytes; i++) {
+      plaintext[i] = frame[i + unencrypted_bytes];
+    }
+
+    size_t ciphertext_len;
+    unsigned char* ciphertext = encrypt(
+        &this->key_bytes[0], plaintext, frame.size() - unencrypted_bytes,
+        &iv[0], &frame_header[0], unencrypted_bytes, ciphertext_len);
+
+    for (size_t i = 0; i < ciphertext_len; i++) {
+      encrypted_frame[unencrypted_bytes + i] = ciphertext[i];
+    }
+
+    size_t iv_start = unencrypted_bytes + ciphertext_len;
+
+    for (size_t i = 0; i < iv.size(); i++) {
+      encrypted_frame[iv_start + i] = iv[i];
+    }
+
+    encrypted_frame[iv_start + iv.size()] = iv.size();
+
+    *bytes_written = encrypted_frame.size();
+  } catch () {
+    RTC_LOG(LS_VERBOSE) << "XXX encrypting exception";
   }
 
-  std::vector<uint8_t> frame_header;
-  for (size_t i = 0; i < unencrypted_bytes; i++) {
-    encrypted_frame[i] = frame[i];
-    frame_header.push_back(encrypted_frame[i]);
-  }
-
-  std::vector<uint8_t> iv = {74, 70,  114, 97,  109, 101,
-                             69, 110, 99,  114, 121, 112};
-
-  unsigned char plaintext[frame.size() - unencrypted_bytes];
-
-  for (size_t i = 0; i < frame.size() - unencrypted_bytes; i++) {
-    plaintext[i] = frame[i + unencrypted_bytes];
-  }
-
-  size_t ciphertext_len;
-  unsigned char* ciphertext =
-      encrypt(&this->key_bytes[0], plaintext, frame.size() - unencrypted_bytes,
-              &iv[0], &frame_header[0], unencrypted_bytes, ciphertext_len);
-
-  for (size_t i = 0; i < ciphertext_len; i++) {
-    encrypted_frame[unencrypted_bytes + i] = ciphertext[i];
-  }
-
-  size_t iv_start = unencrypted_bytes + ciphertext_len;
-
-  for (size_t i = 0; i < iv.size(); i++) {
-    encrypted_frame[iv_start + i] = iv[i];
-  }
-
-  encrypted_frame[iv_start + iv.size()] = iv.size();
-
-  *bytes_written = encrypted_frame.size();
- */
   return 0;
 }
 
