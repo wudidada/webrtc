@@ -8,7 +8,11 @@
 
 namespace webrtc {
 
-GCMFrameEncryptor::GCMFrameEncryptor() {}
+GCMFrameEncryptor::GCMFrameEncryptor() {
+  this->key_bytes = { 97,  145, 133, 203, 63,  197, 49,  232, 87,  159, 169,
+                     200, 59,  195, 77,  75,  150, 173, 189, 232, 44,  39,
+                     8,   149, 250, 6,   238, 170, 255, 17,  110, 107 };
+}
 
 unsigned char* encrypt(unsigned char* key,
                        unsigned char* plaintext,
@@ -103,7 +107,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   size_t ciphertext_len;
   unsigned char* ciphertext =
-      encrypt(this->key_bytes, plaintext, frame.size() - unencrypted_bytes,
+      encrypt(&this->key_bytes[0], plaintext, frame.size() - unencrypted_bytes,
               &iv[0], &frame_header[0], unencrypted_bytes, ciphertext_len);
 
   for (size_t i = 0; i < ciphertext_len; i++) {
@@ -131,7 +135,9 @@ size_t GCMFrameEncryptor::GetMaxCiphertextByteSize(
 
 void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
   RTC_LOG(LS_VERBOSE) << "XXX settingKey1 " << key_bytes.size();
-  this->key_bytes = &key_bytes[0];
+  RTC_LOG(LS_VERBOSE) << "XXX settingKey12 " << this->key_bytes.size();
+  this->key_bytes.assign(key_bytes, key_bytes.end());
+  RTC_LOG(LS_VERBOSE) << "XXX settingKey13 " << key_bytes;
   RTC_LOG(LS_VERBOSE) << "XXX settingKey2";
 }
 }  // namespace webrtc

@@ -26,6 +26,6 @@ class GCMFrameEncryptor
   void SetKey(std::vector<uint8_t> key_bytes);
 
  private:
-  unsigned char* key_bytes;
+  std::vector<uint8_t> key_bytes;
 };
 }  // namespace webrtc
