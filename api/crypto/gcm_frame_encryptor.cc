@@ -105,6 +105,10 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
     plaintext[i] = frame[i + unencrypted_bytes];
   }
 
+for(size_t i = 0; i < this->key_bytes.size();i++) {
+  RTC_LOG(LS_VERBOSE) << "XXX key " << i <<  " " << key_bytes[i];
+}
+
   size_t ciphertext_len;
   unsigned char* ciphertext =
       encrypt(&this->key_bytes[0], plaintext, frame.size() - unencrypted_bytes,
