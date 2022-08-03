@@ -13,6 +13,7 @@ GCMFrameEncryptor::GCMFrameEncryptor() {
   this->key_bytes = { 97,  145, 133, 203, 63,  197, 49,  232, 87,  159, 169,
                      200, 59,  195, 77,  75,  150, 173, 189, 232, 44,  39,
                      8,   149, 250, 6,   238, 170, 255, 17,  110, 107 };
+   
 }
 
 unsigned char* encrypt(unsigned char* key,
@@ -142,6 +143,9 @@ void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
   RTC_LOG(LS_VERBOSE) << "XXX settingKey1 " << key_bytes.size();
   RTC_LOG(LS_VERBOSE) << "XXX settingKey12 " << this->key_bytes.size();
 
+  this->key_bytes.clear();
+
+  RTC_LOG(LS_VERBOSE) << "XXX settingKey122 " << this->key_bytes.size();
   std::vector<uint8_t>::iterator it;
   it = key_bytes.begin();
   this->key_bytes.assign(it, key_bytes.end());
