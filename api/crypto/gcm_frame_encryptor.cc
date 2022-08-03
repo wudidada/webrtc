@@ -10,9 +10,11 @@ namespace webrtc {
 
 GCMFrameEncryptor::GCMFrameEncryptor() {
   this->key_bytes.clear();
-  this->key_bytes = { 97,  145, 133, 203, 63,  197, 49,  232, 87,  159, 169,
+  this->key_bytes.reserve(16);
+  RTC_LOG(LS_VERBOSE) << "XXX GCMFrameEncryptor " << this->key_bytes.size();
+  /*this->key_bytes = { 97,  145, 133, 203, 63,  197, 49,  232, 87,  159, 169,
                      200, 59,  195, 77,  75,  150, 173, 189, 232, 44,  39,
-                     8,   149, 250, 6,   238, 170, 255, 17,  110, 107 };
+                     8,   149, 250, 6,   238, 170, 255, 17,  110, 107 };*/
    
 }
 
