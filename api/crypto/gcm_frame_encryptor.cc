@@ -145,7 +145,7 @@ void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
 
   this->key_bytes.clear();
 
-  for (size_t i = ; i < key_bytes; i++) {
+  for (size_t i = 0; i < key_bytes; i++) {
     this->key_bytes.push_back(key_bytes[i]);
   }
   /*RTC_LOG(LS_VERBOSE) << "XXX settingKey122 " << this->key_bytes.size();
