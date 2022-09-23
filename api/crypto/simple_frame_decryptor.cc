@@ -5,6 +5,8 @@
 
 #include <vector>
 
+#include "rtc_base/logging.h"
+
 namespace webrtc {
 
 SimpleFrameDecryptor::SimpleFrameDecryptor() {}
