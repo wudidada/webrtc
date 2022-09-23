@@ -39,7 +39,7 @@ int SimpleFrameEncryptor::Encrypt(cricket::MediaType media_type,
     encrypted_frame[i] = frame[i];
   }
 
-  for (size_t i = unencrypted_bytes; i < frame.size()) {
+  for (size_t i = unencrypted_bytes; i < frame.size(); i++) {
     encrypted_frame[i] = ~frame[i];
   }
 

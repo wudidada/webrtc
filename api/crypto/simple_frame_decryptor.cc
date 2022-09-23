@@ -33,7 +33,7 @@ SimpleFrameDecryptor::Result SimpleFrameDecryptor::Decrypt(
     frame[i] = encrypted_frame[i];
   }
 
-  for (size_t i = unencrypted_bytes; i < frame.size()) {
+  for (size_t i = unencrypted_bytes; i < frame.size(); i++) {
     frame[i] = ~encrypted_frame[i];
   }
 
