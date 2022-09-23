@@ -12,7 +12,31 @@ group("crypto") {
   deps = [
     ":gcm_frame_decryptor",
     ":gcm_frame_encryptor",
+    ":simple_frame_decryptor",
+    ":simple_frame_encryptor",
     ":options",
+  ]
+}
+
+rtc_library("simple_frame_encryptor") {
+  visibility = [ "*" ]
+  sources = [
+    "simple_frame_encryptor.cc",
+    "simple_frame_encryptor.h",
+  ]
+  deps = [
+   ":frame_encryptor_interface",
+  ]
+}
+
+rtc_library("simple_frame_decryptor") {
+  visibility = [ "*" ]
+  sources = [
+    "simple_frame_decryptor.cc",
+    "simple_frame_decryptor.h",
+  ]
+  deps = [
+   ":frame_decryptor_interface",
   ]
 }
 
