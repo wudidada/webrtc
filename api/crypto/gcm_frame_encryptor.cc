@@ -8,6 +8,16 @@
 
 namespace webrtc {
 
+GCMFrameEncryptor::GCMFrameEncryptor() {
+  this->key_bytes.clear();
+  this->key_bytes.reserve(16);
+  RTC_LOG(LS_VERBOSE) << "XXX GCMFrameEncryptor " << this->key_bytes.size();
+  /*this->key_bytes = { 97,  145, 133, 203, 63,  197, 49,  232, 87,  159, 169,
+                     200, 59,  195, 77,  75,  150, 173, 189, 232, 44,  39,
+                     8,   149, 250, 6,   238, 170, 255, 17,  110, 107 };*/
+   
+}
+
 unsigned char* encrypt(unsigned char* key,
                        unsigned char* plaintext,
                        size_t plaintext_len,
@@ -26,29 +36,29 @@ unsigned char* encrypt(unsigned char* key,
   if (!(ctx = EVP_CIPHER_CTX_new())) {
   }
 
-  /* Set cipher type and mode */
+  // Set cipher type and mode 
   if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL)) {
   }
 
-  /* Initialise key and IV */
+  // Initialise key and IV 
   if (1 != EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv)) {
   }
 
-  /* Zero or more calls to specify any AAD */
+  // Zero or more calls to specify any AAD
   EVP_EncryptUpdate(ctx, NULL, &len, aad, aad_len);
 
-  /* Encrypt plaintext */
+  // Encrypt plaintext
   if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len)) {
   }
 
   ciphertext_len = len;
 
-  /* Output encrypted block */
-  /* Finalise: note get no output for GCM */
+  // Output encrypted block
+  // Finalise: note get no output for GCM
   if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) {
   }
 
-  /* Get tag */
+  // Get tag
   if (1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, 16, tag)) {
   }
 
@@ -69,6 +79,7 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
                                rtc::ArrayView<const uint8_t> frame,
                                rtc::ArrayView<uint8_t> encrypted_frame,
                                size_t* bytes_written) {
+  RTC_LOG(LS_VERBOSE) << "XXX encrypting";
   uint8_t unencrypted_bytes = 1;
   switch (media_type) {
     case cricket::MEDIA_TYPE_AUDIO:
@@ -97,6 +108,10 @@ int GCMFrameEncryptor::Encrypt(cricket::MediaType media_type,
   for (size_t i = 0; i < frame.size() - unencrypted_bytes; i++) {
     plaintext[i] = frame[i + unencrypted_bytes];
   }
+
+for(size_t i = 0; i < this->key_bytes.size();i++) {
+  RTC_LOG(LS_VERBOSE) << "XXX key " << i <<  " " << key_bytes[i];
+}
 
   size_t ciphertext_len;
   unsigned char* ciphertext =
@@ -127,8 +142,20 @@ size_t GCMFrameEncryptor::GetMaxCiphertextByteSize(
 }
 
 void GCMFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
-  this->key_bytes = key_bytes;
-        RTC_LOG(LS_VERBOSE) << "XXX settingKey";
+  RTC_LOG(LS_VERBOSE) << "XXX settingKey1 " << key_bytes.size();
+  RTC_LOG(LS_VERBOSE) << "XXX settingKey12 " << this->key_bytes.size();
 
+  this->key_bytes.clear();
+
+  for (size_t i = 0; i < key_bytes.size(); i++) {
+    this->key_bytes.push_back(key_bytes[i]);
+  }
+  /*RTC_LOG(LS_VERBOSE) << "XXX settingKey122 " << this->key_bytes.size();
+  std::vector<uint8_t>::iterator it;
+  it = key_bytes.begin();
+  this->key_bytes.assign(it, key_bytes.end());*/
+
+  RTC_LOG(LS_VERBOSE) << "XXX settingKey13 " << this->key_bytes.size();
+  RTC_LOG(LS_VERBOSE) << "XXX settingKey2";
 }
 }  // namespace webrtc

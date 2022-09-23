@@ -9,6 +9,8 @@
 
 namespace webrtc {
 
+GCMFrameDecryptor::GCMFrameDecryptor() {}
+
 int decrypt(unsigned char* key,
             unsigned char* ciphertext,
             int ciphertext_len,
