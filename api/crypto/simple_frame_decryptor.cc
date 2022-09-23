@@ -51,7 +51,7 @@ size_t SimpleFrameDecryptor::GetMaxPlaintextByteSize(cricket::MediaType media_ty
 void SimpleFrameDecryptor::SetKey(std::vector<uint8_t> key_bytes) {
   RTC_LOG(LS_VERBOSE) << "XXX settingKey1 " << key_bytes.size();
   RTC_LOG(LS_VERBOSE) << "XXX settingKey12 " << this->key_bytes.size();
-  this->key_bytes = key_bytes;
+//  this->key_bytes = key_bytes;
   RTC_LOG(LS_VERBOSE) << "XXX settingKey13 " << this->key_bytes.size();
 }
 }  // namespace webrtc

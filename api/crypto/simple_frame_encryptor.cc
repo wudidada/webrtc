@@ -58,17 +58,17 @@ void SimpleFrameEncryptor::SetKey(std::vector<uint8_t> key_bytes) {
   RTC_LOG(LS_VERBOSE) << "XXX settingKey1 " << key_bytes.size();
   RTC_LOG(LS_VERBOSE) << "XXX settingKey12 " << this->key_bytes.size();
 
-  this->key_bytes.clear();
-
-  for (size_t i = 0; i < key_bytes.size(); i++) {
-    this->key_bytes.push_back(key_bytes[i]);
-  }
+//  this->key_bytes.clear();
+//
+//  for (size_t i = 0; i < key_bytes.size(); i++) {
+//    this->key_bytes.push_back(key_bytes[i]);
+//  }
   /*RTC_LOG(LS_VERBOSE) << "XXX settingKey122 " << this->key_bytes.size();
   std::vector<uint8_t>::iterator it;
   it = key_bytes.begin();
   this->key_bytes.assign(it, key_bytes.end());*/
 
-  RTC_LOG(LS_VERBOSE) << "XXX settingKey13 " << this->key_bytes.size();
-  RTC_LOG(LS_VERBOSE) << "XXX settingKey2";
+//  RTC_LOG(LS_VERBOSE) << "XXX settingKey13 " << this->key_bytes.size();
+//  RTC_LOG(LS_VERBOSE) << "XXX settingKey2";
 }
 }  // namespace webrtc
