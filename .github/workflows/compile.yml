@@ -5,9 +5,9 @@ on:
 
 jobs:
   compile:
+    runs-on: ubuntu-latest
     steps:
     - name: deploy
-      runs-on: ubuntu-latest
       uses: appleboy/ssh-action@master
       with: 
         host: ${{ secrets.HOST }}
