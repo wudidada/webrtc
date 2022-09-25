@@ -48,8 +48,8 @@ size_t GeneralFrameDecryptor::GetMaxPlaintextByteSize(cricket::MediaType media_t
   return encrypted_frame_size;
 }
 
-static jlong JNI_GCMFrameDecryptor_GetGCMFrameDecryptor(JNIEnv* jni) {
-  return jlongFromPointer(new GCMFrameDecryptor());
+static jlong JNI_GeneralFrameDecryptor_GetGeneralFrameDecryptor(JNIEnv* jni) {
+  return jlongFromPointer(new GeneralFrameDecryptor());
 }
 }  // namespace jni
 }  // namespace webrtc

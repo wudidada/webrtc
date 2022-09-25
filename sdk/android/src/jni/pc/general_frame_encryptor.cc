@@ -6,10 +6,10 @@
 
 namespace webrtc {
 namespace jni {
-GeneralFrameDecryptor::GeneralFrameDecryptor() {
+GeneralFrameDecryptor::GeneralFrameEncryptor() {
 }
 
-int GeneralFrameDecryptor::Encrypt(cricket::MediaType media_type,
+int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
                                    uint32_t ssrc,
                                    rtc::ArrayView<const uint8_t> additional_data,
                                    rtc::ArrayView<const uint8_t> frame,
@@ -41,10 +41,15 @@ int GeneralFrameDecryptor::Encrypt(cricket::MediaType media_type,
   return 0;
 }
 
-size_t GeneralFrameDecryptor::GetMaxCiphertextByteSize(
+size_t GeneralFrameEncryptor::GetMaxCiphertextByteSize(
     cricket::MediaType media_type,
     size_t frame_size) {
   return frame_size + 30;
+}
+
+
+static jlong JNI_GeneralFrameEncryptor_GetGeneralFrameEncryptor(JNIEnv* jni) {
+  return jlongFromPointer(new GeneralFrameEncryptor());
 }
 }   // namespace jni
 }  // namespace webrtc
