@@ -15,7 +15,7 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
     cricket::MediaType media_type,
     const std::vector<uint32_t>& csrcs,
     rtc::ArrayView<const uint8_t> additional_data,
-    rtc::ArrayView<const uint8_t> c,
+    rtc::ArrayView<const uint8_t> encrypted_frame,
     rtc::ArrayView<uint8_t> frame) {
   uint8_t unencrypted_bytes = 1;
   switch (media_type) {
@@ -41,7 +41,6 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
 //  JNIEnv* jni = AttachCurrentThreadIfNeeded();
 
   return Result(Status::kOk, encrypted_frame.size());
-}
 }
 
 size_t GeneralFrameDecryptor::GetMaxPlaintextByteSize(cricket::MediaType media_type,
