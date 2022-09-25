@@ -5,6 +5,7 @@
 
 #include "sdk/android/generated_peerconnection_jni/GeneralFrameEncryptor_jni.h"
 #include "sdk/android/src/jni/jni_helpers.h"
+#include "sdk/android/native_api/jni/java_types.h"
 
 #include "rtc_base/logging.h"
 
@@ -48,14 +49,14 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
       Java_GeneralFrameEncryptor_encrypt(env, j_frame);
 
   // type convert: Java to native
-  uint8_t* array_ptr =
+  uint8_t const* array_ptr =
       reinterpret_cast<uint8_t const*>(env->GetByteArrayElements(j_encrypted_frame.obj(), /*isCopy=*/nullptr));
 
   // write encrypted frame data
-  unit8_t* frame_ptr = &frame[unencrypted_bytes];
+  unit8_t* encrypted_frame_ptr = &encrypted_frame[unencrypted_bytes];
   size_t j_length = env->GetArrayLength(j_encrypted_frame.obj());
   for (size_t i = 0; i < j_length; ++i) {
-    frame_ptr[i] = array_ptr[i];
+    encrypted_frame[i] = array_ptr[i];
   }
   env->ReleaseByteArrayElements(jarray.obj(), array_ptr, /*mode=*/JNI_ABORT);
 

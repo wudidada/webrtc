@@ -2,6 +2,8 @@
 
 #include "sdk/android/generated_peerconnection_jni/GeneralFrameDecryptor_jni.h"
 #include "sdk/android/src/jni/jni_helpers.h"
+#include "sdk/android/native_api/jni/java_types.h"
+
 #include <stddef.h>
 #include <stdio.h>
 
@@ -46,7 +48,7 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
       Java_GeneralFrameDecryptor_decrypt(env, j_encrypted_frame);
 
   // type convert: Java to native
-  uint8_t* array_ptr =
+  uint8_t const* array_ptr =
       reinterpret_cast<uint8_t const*>(env->GetByteArrayElements(j_frame.obj(), /*isCopy=*/nullptr));
 
   // write encrypted frame data
