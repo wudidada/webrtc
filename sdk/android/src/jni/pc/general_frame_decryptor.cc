@@ -6,6 +6,7 @@
 
 #include <stddef.h>
 #include <stdio.h>
+#include <jni.h>
 
 #include <vector>
 
@@ -44,7 +45,7 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
   rtc::ArrayView<const uint8_t> encrypted_frame_payload = encrypted_frame.subview(unencrypted_bytes);
   ScopedJavaLocalRef<jbyteArray> j_encrypted_frame_payload(env,
                                                  env->NewByteArray(encrypted_frame_payload.size()));
-  env->SetByteArrayRegion(j_encrypted_frame_payload.obj(), 0, encrypted_frame_payload.size(), reinterpret_cast<jconst byte*>(encrypted_frame_payload.data()));
+  env->SetByteArrayRegion(j_encrypted_frame_payload.obj(), 0, encrypted_frame_payload.size(), reinterpret_cast<const jbyte*>(encrypted_frame_payload.data()));
 
   // call Java side function
   ScopedJavaLocalRef<jbyteArray> j_frame_payload =

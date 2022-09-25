@@ -45,7 +45,7 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
   rtc::ArrayView<const uint8_t> frame_payload = frame.subview(unencrypted_bytes);
   ScopedJavaLocalRef<jbyteArray> j_frame_payload(env,
                                         env->NewByteArray(frame_payload.size()));
-  env->SetByteArrayRegion(j_frame_payload.obj(), 0, frame_payload.size(), reinterpret_cast<jconst byte*>(frame_payload.data()));
+  env->SetByteArrayRegion(j_frame_payload.obj(), 0, frame_payload.size(), reinterpret_cast<const jbyte*>(frame_payload.data()));
 
   // call Java side function
   ScopedJavaLocalRef<jbyteArray> j_encrypted_frame_payload =
