@@ -44,12 +44,12 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
   ScopedJavaLocalRef<jbyteArray> j_frame =
       NativeToJavaByteArray(env, frame.subview(unencrypted_bytes));
 
-  ScopedJavaLocalRef<jobjectArray> j_encrypted_frame =
+  ScopedJavaLocalRef<jbyteArray> j_encrypted_frame =
       Java_GeneralFrameEncryptor_encrypt(env, j_frame);
 
   // type convert: Java to native
   uint8_t* array_ptr =
-      static_cast<uint8_t const*>(env->GetByteArrayElements(j_encrypted_frame.obj(), /*isCopy=*/nullptr));
+      reinterpret_cast<uint8_t const*>(env->GetByteArrayElements(j_encrypted_frame.obj(), /*isCopy=*/nullptr));
 
   // write encrypted frame data
   unit8_t* frame_ptr = &frame[unencrypted_bytes];

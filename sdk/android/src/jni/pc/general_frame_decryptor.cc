@@ -40,14 +40,14 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
 
   // type convert: native to Java
   ScopedJavaLocalRef<jbyteArray> j_encrypted_frame =
-      NativeToJavaByteArray(env, encrypted_frame.subview(unencrypted_byte));
+      NativeToJavaByteArray(env, encrypted_frame.subview(unencrypted_bytes));
 
-  ScopedJavaLocalRef<jobjectArray> j_frame =
+  ScopedJavaLocalRef<jbyteArray> j_frame =
       Java_GeneralFrameDecryptor_decrypt(env, j_encrypted_frame);
 
   // type convert: Java to native
   uint8_t* array_ptr =
-      static_cast<uint8_t const*>(env->GetByteArrayElements(j_frame.obj(), /*isCopy=*/nullptr));
+      reinterpret_cast<uint8_t const*>(env->GetByteArrayElements(j_frame.obj(), /*isCopy=*/nullptr));
 
   // write encrypted frame data
   unit8_t* frame_ptr = &frame[unencrypted_bytes];
