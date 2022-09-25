@@ -1,11 +1,11 @@
 package org.webrtc;
 
-public class SimpleFrameDecryptor implements FrameDecryptor {
+public class GeneralFrameDecryptor implements FrameDecryptor {
 
     private final long nativeDecryptor;
 
-    public SimpleFrameDecryptor() {
-        nativeDecryptor = nativeGetSimpleFrameDecryptor();
+    public GeneralFrameDecryptor() {
+        nativeDecryptor = nativeGetGeneralFrameDecryptor();
     }
 
     @CalledByNative
@@ -22,5 +22,5 @@ public class SimpleFrameDecryptor implements FrameDecryptor {
         return nativeDecryptor;
     }
 
-    private static native long nativeGetSimpleFrameDecryptor();
+    private static native long nativeGetGeneralFrameDecryptor();
 }

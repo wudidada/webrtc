@@ -1,11 +1,11 @@
 package org.webrtc;
 
-public class SimpleFrameEncryptor implements FrameEncryptor {
+public class GeneralFrameEncryptor implements FrameEncryptor {
 
     private final long nativeEncryptor;
 
-    public SimpleFrameEncryptor() {
-        nativeEncryptor = nativeGetSimpleFrameEncryptor();
+    public GeneralFrameEncryptor() {
+        nativeEncryptor = nativeGetGeneralFrameEncryptor();
     }
 
     @CalledByNative
@@ -19,8 +19,8 @@ public class SimpleFrameEncryptor implements FrameEncryptor {
 
     @Override
     public long getNativeFrameEncryptor() {
-        return nativeGetSimpleFrameEncryptor();
+        return nativeGetGeneralFrameEncryptor();
     }
 
-    private static native long nativeGetSimpleFrameEncryptor();
+    private static native long nativeGetGeneralFrameEncryptor();
 }
