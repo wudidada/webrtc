@@ -44,7 +44,7 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
   rtc::ArrayView<const uint8_t> encrypted_frame_payload = encrypted_frame.subview(unencrypted_bytes);
   ScopedJavaLocalRef<jbyteArray> j_encrypted_frame_payload(env,
                                                  env->NewByteArray(encrypted_frame_payload.size()));
-  env->SetByteArrayRegion(j_encrypted_frame_payload, 0, encrypted_frame_payload.size(), encrypted_frame_payload.data());
+  env->SetByteArrayRegion(j_encrypted_frame_payload.obj(), 0, encrypted_frame_payload.size(), encrypted_frame_payload.data());
 
   // call Java side function
   ScopedJavaLocalRef<jbyteArray> j_frame_payload =
@@ -54,10 +54,9 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
   std::vector<int8_t> frame_payload = JavaToNativeByteArray(env, j_frame_payload);
 
   // write encrypted frame data
-  unit8_t* frame_ptr = &frame[unencrypted_bytes];
-  size_t j_length = frame_payload;
+  size_t j_length = frame_payload.size();
   for (size_t i = 0; i < j_length; ++i) {
-    frame_ptr[i] = frame_payload[i];
+    frame[i+unencrypted_bytes] = frame_payload[i];
   }
 
   return Result(Status::kOk, unencrypted_bytes + j_length);
