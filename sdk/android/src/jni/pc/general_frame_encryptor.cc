@@ -9,7 +9,7 @@
 
 namespace webrtc {
 namespace jni {
-GeneralFrameDecryptor::GeneralFrameEncryptor() {
+GeneralFrameEncryptor::GeneralFrameEncryptor() {
 }
 
 int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
@@ -18,6 +18,7 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
                                    rtc::ArrayView<const uint8_t> frame,
                                    rtc::ArrayView<uint8_t> encrypted_frame,
                                    size_t* bytes_written) {
+  uint8_t unencrypted_bytes = 1;
   switch (media_type) {
     case cricket::MEDIA_TYPE_AUDIO:
       unencrypted_bytes = 1;
