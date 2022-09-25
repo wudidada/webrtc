@@ -41,7 +41,7 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
   }
 
   JNIEnv* jni = AttachCurrentThreadIfNeeded();
-  Java_GeneralFrameEncryptor_encode(jni);
+  Java_GeneralFrameEncryptor_encrypt(jni);
 
   *bytes_written = encrypted_frame.size();
 

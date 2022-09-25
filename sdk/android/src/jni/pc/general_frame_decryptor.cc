@@ -40,7 +40,7 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
   }
 
   JNIEnv* jni = AttachCurrentThreadIfNeeded();
-  Java_GeneralFrameDecryptor_encode(jni);
+  Java_GeneralFrameDecryptor_decrypt(jni);
 
   return Result(Status::kOk, encrypted_frame.size());
 }
