@@ -49,16 +49,14 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
       Java_GeneralFrameEncryptor_encrypt(env, j_frame);
 
   // type convert: Java to native
-  uint8_t const* array_ptr =
-      reinterpret_cast<uint8_t const*>(env->GetByteArrayElements(j_encrypted_frame.obj(), /*isCopy=*/nullptr));
+  std::vector<int8_t> encrypted_frame_payload = JavaToNativeByteArray(env, j_encrypted_frame);
 
   // write encrypted frame data
   unit8_t* encrypted_frame_ptr = &encrypted_frame[unencrypted_bytes];
-  size_t j_length = env->GetArrayLength(j_encrypted_frame.obj());
+  size_t j_length = encrypted_frame_payload.size();
   for (size_t i = 0; i < j_length; ++i) {
-    encrypted_frame[i] = array_ptr[i];
+    encrypted_frame[i] = encrypted_frame_payload[i];
   }
-  env->ReleaseByteArrayElements(jarray.obj(), array_ptr, /*mode=*/JNI_ABORT);
 
   *bytes_written = unencrypted_bytes + j_length;
 
