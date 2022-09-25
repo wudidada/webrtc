@@ -31,18 +31,33 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
       break;
   }
 
+  // write unencrypted frame head
   for (size_t i = 0; i < unencrypted_bytes; i++) {
     frame[i] = encrypted_frame[i];
   }
 
-  for (size_t i = unencrypted_bytes; i < encrypted_frame.size(); i++) {
-    frame[i] = encrypted_frame[i];
+  JNIEnv* env = AttachCurrentThreadIfNeeded();
+
+  // type convert: native to Java
+  ScopedJavaLocalRef<jbyteArray> j_frame =
+      NativeToJavaByteArray(env, encrypted_frame(unencrypted_bytes, encrypted_frame.size()));
+
+  ScopedJavaLocalRef<jobjectArray> j_frame =
+      Java_GeneralFrameDecryptor_decrypt(env, j_frame);
+
+  // type convert: Java to native
+  uint8_t* array_ptr =
+      env->GetByteArrayElements(j_frame.obj(), /*isCopy=*/nullptr);
+
+  // write encrypted frame data
+  unit8_t* frame_ptr = &frame[unencrypted_bytes];
+  size_t j_length = env->GetArrayLength(j_frame.obj());
+  for (size_t i = 0; i < j_length; ++i) {
+    frame_ptr[i] = array_ptr[i];
   }
+  env->ReleaseByteArrayElements(jarray.obj(), array_ptr, /*mode=*/JNI_ABORT);
 
-  JNIEnv* jni = AttachCurrentThreadIfNeeded();
-  Java_GeneralFrameDecryptor_decrypt(jni);
-
-  return Result(Status::kOk, encrypted_frame.size());
+  return Result(Status::kOk, unencrypted_bytes + j_length);
 }
 
 size_t GeneralFrameDecryptor::GetMaxPlaintextByteSize(cricket::MediaType media_type,

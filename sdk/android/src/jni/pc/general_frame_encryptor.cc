@@ -1,6 +1,7 @@
 #include "sdk/android/src/jni/pc/general_frame_encryptor.h"
 
 #include <stdio.h>
+#include <jni.h>
 
 #include "sdk/android/generated_peerconnection_jni/GeneralFrameEncryptor_jni.h"
 #include "sdk/android/src/jni/jni_helpers.h"
@@ -32,18 +33,33 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
       break;
   }
 
+  // write unencrypted frame head
   for (size_t i = 0; i < unencrypted_bytes; i++) {
     encrypted_frame[i] = frame[i];
   }
 
-  for (size_t i = unencrypted_bytes; i < frame.size(); i++) {
-    encrypted_frame[i] = frame[i];
+  JNIEnv* env = AttachCurrentThreadIfNeeded();
+
+  // type convert: native to Java
+  ScopedJavaLocalRef<jbyteArray> j_frame =
+      NativeToJavaByteArray(env, frame(unencrypted_bytes, frame.size()));
+
+  ScopedJavaLocalRef<jobjectArray> j_encrypted_frame =
+      Java_GeneralFrameEncryptor_encrypt(env, j_frame);
+
+  // type convert: Java to native
+  uint8_t* array_ptr =
+      env->GetByteArrayElements(j_encrypted_frame.obj(), /*isCopy=*/nullptr);
+
+  // write encrypted frame data
+  unit8_t* frame_ptr = &frame[unencrypted_bytes];
+  size_t j_length = env->GetArrayLength(j_encrypted_frame.obj());
+  for (size_t i = 0; i < j_length; ++i) {
+    frame_ptr[i] = array_ptr[i];
   }
+  env->ReleaseByteArrayElements(jarray.obj(), array_ptr, /*mode=*/JNI_ABORT);
 
-  JNIEnv* jni = AttachCurrentThreadIfNeeded();
-  Java_GeneralFrameEncryptor_encrypt(jni);
-
-  *bytes_written = encrypted_frame.size();
+  *bytes_written = unencrypted_bytes + j_length;
 
   return 0;
 }

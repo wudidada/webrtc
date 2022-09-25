@@ -10,8 +10,13 @@ public class GeneralFrameDecryptor implements FrameDecryptor {
     }
 
     @CalledByNative
-    public static void decrypt() {
+    public static byte[] decrypt(byte[] encrpytedFrame) {
         Logging.d(TAG, "encrypting!!!");
+        byte[] frame = new byte[encrpytedFrame.length];
+        for (int i = 0; i < encrpytedFrame.length; i++) {
+            frame[i] = (byte) ~encrpytedFrame[i];
+        }
+        return frame;
     }
 
     // TODO glue GetMaxPlaintextByteSize

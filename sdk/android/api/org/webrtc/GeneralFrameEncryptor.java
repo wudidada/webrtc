@@ -10,8 +10,13 @@ public class GeneralFrameEncryptor implements FrameEncryptor {
     }
 
     @CalledByNative
-    public static void encrypt() {
+    public static byte[] encrypt(byte[] frame) {
         Logging.d(TAG, "encrypting!!!");
+        byte[] encrpytedFrame = new byte[frame.length];
+        for (int i = 0; i < frame.length; i++) {
+            encrpytedFrame[i] = (byte) ~frame[i];
+        }
+        return encrpytedFrame;
     }
 
     // TODO glue GetMaxCiphertextByteSize
