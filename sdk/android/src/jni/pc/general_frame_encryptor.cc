@@ -42,17 +42,20 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
   JNIEnv* env = AttachCurrentThreadIfNeeded();
 
   // type convert: native to Java
-  ScopedJavaLocalRef<jbyteArray> j_frame =
-      NativeToJavaByteArray(env, frame.subview(unencrypted_bytes));
+  rtc::ArrayView<const uint8_t> frame_payload = frame.subview(unencrypted_bytes);
+  ScopedJavaLocalRef<jbyteArray> j_frame_payload(env,
+                                        env->NewByteArray(frame_payload.size()));
+  env->SetByteArrayRegion(j_frame_payload, 0, frame_payload.size(), frame_payload.data());
 
-  ScopedJavaLocalRef<jbyteArray> j_encrypted_frame =
-      Java_GeneralFrameEncryptor_encrypt(env, j_frame);
+  // call Java side function
+  ScopedJavaLocalRef<jbyteArray> j_encrypted_frame_payload =
+      Java_GeneralFrameEncryptor_encrypt(env, j_frame_payload);
 
   // type convert: Java to native
-  std::vector<int8_t> encrypted_frame_payload = JavaToNativeByteArray(env, j_encrypted_frame);
+  std::vector<int8_t> encrypted_frame_payload = JavaToNativeByteArray(env, j_encrypted_frame_payload);
 
   // write encrypted frame data
-  unit8_t* encrypted_frame_ptr = &encrypted_frame[unencrypted_bytes];
+  int8_t* encrypted_frame_ptr = &encrypted_frame[unencrypted_bytes];
   size_t j_length = encrypted_frame_payload.size();
   for (size_t i = 0; i < j_length; ++i) {
     encrypted_frame[i] = encrypted_frame_payload[i];

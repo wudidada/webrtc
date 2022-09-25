@@ -41,14 +41,17 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
   JNIEnv* env = AttachCurrentThreadIfNeeded();
 
   // type convert: native to Java
-  ScopedJavaLocalRef<jbyteArray> j_encrypted_frame =
-      NativeToJavaByteArray(env, encrypted_frame.subview(unencrypted_bytes));
+  rtc::ArrayView<const uint8_t> encrypted_frame_payload = encrypted_frame.subview(unencrypted_bytes);
+  ScopedJavaLocalRef<jbyteArray> j_encrypted_frame_payload(env,
+                                                 env->NewByteArray(encrypted_frame_payload.size()));
+  env->SetByteArrayRegion(j_encrypted_frame_payload, 0, encrypted_frame_payload.size(), encrypted_frame_payload.data());
 
-  ScopedJavaLocalRef<jbyteArray> j_frame =
-      Java_GeneralFrameDecryptor_decrypt(env, j_encrypted_frame);
+  // call Java side function
+  ScopedJavaLocalRef<jbyteArray> j_frame_payload =
+      Java_GeneralFrameDecryptor_decrypt(env, j_encrypted_frame_payload);
 
   // type convert: Java to native
-  std::vector<int8_t> frame_payload = JavaToNativeByteArray(env, j_frame);
+  std::vector<int8_t> frame_payload = JavaToNativeByteArray(env, j_frame_payload);
 
   // write encrypted frame data
   unit8_t* frame_ptr = &frame[unencrypted_bytes];
