@@ -1,6 +1,7 @@
 package org.webrtc;
 
 public class GeneralFrameDecryptor implements FrameDecryptor {
+    private static final String TAG = "GeneralFrameDecryptor";
 
     private final long nativeDecryptor;
 
@@ -8,9 +9,9 @@ public class GeneralFrameDecryptor implements FrameDecryptor {
         nativeDecryptor = nativeGetGeneralFrameDecryptor();
     }
 
-//    @CalledByNative
-    public byte[] decrypt(byte[] frame) {
-        return frame;
+    @CalledByNative
+    public static void decrypt() {
+        Logging.d(TAG, "encrypting!!!");
     }
 
     // TODO glue GetMaxPlaintextByteSize

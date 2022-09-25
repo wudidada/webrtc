@@ -40,6 +40,8 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
     encrypted_frame[i] = frame[i];
   }
 
+  Java_GeneralFrameEncryptor_encode(jni);
+
   *bytes_written = encrypted_frame.size();
 
   return 0;

@@ -1,6 +1,7 @@
 package org.webrtc;
 
 public class GeneralFrameEncryptor implements FrameEncryptor {
+    private static final String TAG = "GeneralFrameEncryptor";
 
     private final long nativeEncryptor;
 
@@ -8,9 +9,9 @@ public class GeneralFrameEncryptor implements FrameEncryptor {
         nativeEncryptor = nativeGetGeneralFrameEncryptor();
     }
 
-//    @CalledByNative
-    public byte[] encrypt(byte[] encryptedFrame) {
-        return encryptedFrame;
+    @CalledByNative
+    public static void encrypt() {
+        Logging.d(TAG, "encrypting!!!");
     }
 
     // TODO glue GetMaxCiphertextByteSize
