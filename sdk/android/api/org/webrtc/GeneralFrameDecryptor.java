@@ -8,7 +8,7 @@ public class GeneralFrameDecryptor implements FrameDecryptor {
         nativeDecryptor = nativeGetGeneralFrameDecryptor();
     }
 
-    @CalledByNative
+//    @CalledByNative
     public byte[] decrypt(byte[] frame) {
         return frame;
     }

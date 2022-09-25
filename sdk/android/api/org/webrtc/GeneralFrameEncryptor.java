@@ -8,7 +8,7 @@ public class GeneralFrameEncryptor implements FrameEncryptor {
         nativeEncryptor = nativeGetGeneralFrameEncryptor();
     }
 
-    @CalledByNative
+//    @CalledByNative
     public byte[] encrypt(byte[] encryptedFrame) {
         return encryptedFrame;
     }

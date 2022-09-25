@@ -2,6 +2,9 @@
 
 #include <stdio.h>
 
+#include "sdk/android/generated_peerconnection_jni/GeneralFrameEncryptor_jni.h"
+#include "sdk/android/src/jni/jni_helpers.h"
+
 #include "rtc_base/logging.h"
 
 namespace webrtc {
