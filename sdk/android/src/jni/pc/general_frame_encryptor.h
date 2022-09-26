@@ -8,12 +8,15 @@
 #include "api/media_types.h"
 #include "rtc_base/ref_counted_object.h"
 
+#include <jni.h>
+
 namespace webrtc {
 namespace jni {
 class GeneralFrameEncryptor
     : public rtc::RefCountedObject<FrameEncryptorInterface> {
  public:
-  explicit GeneralFrameEncryptor();
+  explicit GeneralFrameEncryptor(JNIEnv* jni);
+  ~GeneralFrameEncryptor() override;
   int Encrypt(cricket::MediaType media_type,
               uint32_t ssrc,
               rtc::ArrayView<const uint8_t> additional_data,
@@ -23,6 +26,8 @@ class GeneralFrameEncryptor
 
   size_t GetMaxCiphertextByteSize(cricket::MediaType media_type,
                                   size_t frame_size) override;
+ private:
+  jclass encryAndDecryClass;
 };
 }  // namespace jni
 }  // namespace webrtc
