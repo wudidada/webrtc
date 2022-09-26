@@ -7,6 +7,7 @@
 #include "api/crypto/frame_decryptor_interface.h"
 #include "api/media_types.h"
 #include "rtc_base/ref_counted_object.h"
+#include <jni.h>
 
 namespace webrtc {
 namespace jni {
