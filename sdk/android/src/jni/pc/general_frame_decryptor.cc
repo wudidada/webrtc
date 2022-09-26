@@ -56,7 +56,7 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
   env->SetByteArrayRegion(jarrayIn, 0, encrypted_frame_payload.size(), reinterpret_cast<const jbyte*>(encrypted_frame_payload.data()));
 
   // call Java side function
-  decryMethod = env->GetStaticMethodID(encryAndDecryClass, "decryByte", "([B)[B");
+  jmethodID decryMethod = env->GetStaticMethodID(encryAndDecryClass, "decryByte", "([B)[B");
   jarrayOut = static_cast<jbyteArray>(env->CallStaticObjectMethod(encryAndDecryClass, decryMethod, jarrayIn));
 
   // type convert: Java to native
