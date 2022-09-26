@@ -13,11 +13,12 @@
 namespace webrtc {
 namespace jni {
 GeneralFrameDecryptor::GeneralFrameDecryptor(JNIEnv* env) {
-  jclass encryAndDecryClassTemp = static_cast<jclass>(env->FindClass("org/pjsip/pjsua2/service/EncryAndDecry"));
-  encryAndDecryClass = env->NewGlobalRef(encryAndDecryClassTemp);
+  jclass encryAndDecryClassTemp = env->FindClass("org/pjsip/pjsua2/service/EncryAndDecry");
+  encryAndDecryClass = static_cast<jclass>(env->NewGlobalRef(encryAndDecryClassTemp));
 }
 
 GeneralFrameDecryptor::~GeneralFrameDecryptor() {
+  JNIEnv* env = AttachCurrentThreadIfNeeded();
   env->DeleteGlobalRef(encryAndDecryClass);
 }
 
@@ -51,12 +52,12 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
   // type convert: native to Java
   rtc::ArrayView<const uint8_t> encrypted_frame_payload = encrypted_frame.subview(unencrypted_bytes);
     jbyteArray jarrayIn, jarrayOut;
-  jarrayIn = env->NewByteArray(encrypted_frame_payload.size()));
+  jarrayIn = env->NewByteArray(encrypted_frame_payload.size());
   env->SetByteArrayRegion(jarrayIn, 0, encrypted_frame_payload.size(), reinterpret_cast<const jbyte*>(encrypted_frame_payload.data()));
 
   // call Java side function
   decryMethod = env->GetStaticMethodID(encryAndDecryClass, "decryByte", "([B)[B");
-  jarrayOut = env->CallStaticObjectMethod(encryAndDecryClass, decryMethod, jarrayIn);
+  jarrayOut = static_cast<jbyteArray>(env->CallStaticObjectMethod(encryAndDecryClass, decryMethod, jarrayIn));
 
   // type convert: Java to native
   int8_t* frame_payload = reinterpret_cast<int8_t*>(env->GetByteArrayElements(jarrayOut, 0));

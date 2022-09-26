@@ -12,11 +12,12 @@
 namespace webrtc {
 namespace jni {
 GeneralFrameEncryptor::GeneralFrameEncryptor(JNIEnv *env) {
-  jclass encryAndDecryClassTemp = static_cast<jclass>(env->FindClass("org/pjsip/pjsua2/service/EncryAndDecry"));
-  encryAndDecryClass = env->NewGlobalRef(encryAndDecryClassTemp);
+  jclass encryAndDecryClassTemp = env->FindClass("org/pjsip/pjsua2/service/EncryAndDecry");
+  encryAndDecryClass = static_cast<jclass>(env->NewGlobalRef(encryAndDecryClassTemp));
 }
 
 GeneralFrameEncryptor::~GeneralFrameEncryptor() {
+  JNIEnv* env = AttachCurrentThreadIfNeeded();
   env->DeleteGlobalRef(encryAndDecryClass);
 }
 
@@ -55,7 +56,7 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   // call Java side function
   jmethodID encryMethod = env->GetStaticMethodID(encryAndDecryClass, "decryByte", "([B)[B");
-  jarrayOut = env->CallStaticObjectMethod(encryAndDecryClass, encryMethod, jarrayIn);
+  jarrayOut = static_cast<jbyteArray>(env->CallStaticObjectMethod(encryAndDecryClass, encryMethod, jarrayIn));
 
   int8_t* encrypted_frame_payload = reinterpret_cast<int8_t*>(env->GetByteArrayElements(jarrayOut, 0));
 //
