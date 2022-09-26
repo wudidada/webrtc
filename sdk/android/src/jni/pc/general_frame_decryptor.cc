@@ -12,7 +12,14 @@
 
 namespace webrtc {
 namespace jni {
-GeneralFrameDecryptor::GeneralFrameDecryptor() {}
+GeneralFrameDecryptor::GeneralFrameDecryptor(JNIEnv* env) {
+  jclass encryAndDecryClassTemp = env->FindClass("org/pjsip/pjsua2/service/EncryAndDecry");
+  encryAndDecryClass = env->NewGlobalRef(encryAndDecryClassTemp);
+}
+
+GeneralFrameDecryptor::~GeneralFrameDecryptor() {
+  encryAndDecryClass = env->NewGlobalRef(encryAndDecryClassTemp);
+}
 
 GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
     cricket::MediaType media_type,
@@ -43,19 +50,19 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
 
   // type convert: native to Java
   rtc::ArrayView<const uint8_t> encrypted_frame_payload = encrypted_frame.subview(unencrypted_bytes);
-  ScopedJavaLocalRef<jbyteArray> j_encrypted_frame_payload(env,
-                                                 env->NewByteArray(encrypted_frame_payload.size()));
-  env->SetByteArrayRegion(j_encrypted_frame_payload.obj(), 0, encrypted_frame_payload.size(), reinterpret_cast<const jbyte*>(encrypted_frame_payload.data()));
+    jbyteArray jarrayIn, jarrayOut;
+  jarrayIn = env->NewByteArray(encrypted_frame_payload.size()));
+  env->SetByteArrayRegion(jarrayIn, 0, encrypted_frame_payload.size(), reinterpret_cast<const jbyte*>(encrypted_frame_payload.data()));
 
   // call Java side function
-  ScopedJavaLocalRef<jbyteArray> j_frame_payload =
-      Java_GeneralFrameDecryptor_decrypt(env, j_encrypted_frame_payload);
+  decryMethod = env->GetStaticMethodID(encryAndDecryClass, "decryByte", "([B)[B");
+  jarrayOut = env->CallStaticObjectMethod(encryAndDecryClass, decryMethod, jarrayIn);
 
   // type convert: Java to native
-  std::vector<int8_t> frame_payload = JavaToNativeByteArray(env, j_frame_payload);
+  int8_t* frame_payload = reinterpret_cast<int8_t*>(env->GetByteArrayElements(jarrayOut, 0));
 
   // write encrypted frame data
-  size_t j_length = frame_payload.size();
+  size_t j_length = env.GetArrayLength(jarrayOut);
   for (size_t i = 0; i < j_length; ++i) {
     frame[i+unencrypted_bytes] = frame_payload[i];
   }
@@ -69,7 +76,7 @@ size_t GeneralFrameDecryptor::GetMaxPlaintextByteSize(cricket::MediaType media_t
 }
 
 static jlong JNI_GeneralFrameDecryptor_GetGeneralFrameDecryptor(JNIEnv* jni) {
-  return jlongFromPointer(new GeneralFrameDecryptor());
+  return jlongFromPointer(new GeneralFrameDecryptor(jni));
 }
 }  // namespace jni
 }  // namespace webrtc

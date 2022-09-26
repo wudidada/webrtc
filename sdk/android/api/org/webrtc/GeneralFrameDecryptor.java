@@ -9,7 +9,12 @@ public class GeneralFrameDecryptor implements FrameDecryptor {
         nativeDecryptor = nativeGetGeneralFrameDecryptor();
     }
 
-    @CalledByNative
+    public static interface Observer {
+
+    }
+
+
+//        @CalledByNative
     public byte[] decrypt(byte[] encrpytedFrame) {
         Logging.d(TAG, "encrypting!!!");
         byte[] frame = new byte[encrpytedFrame.length];
@@ -18,7 +23,6 @@ public class GeneralFrameDecryptor implements FrameDecryptor {
         }
         return frame;
     }
-
     // TODO glue GetMaxPlaintextByteSize
 //    @CalledByNative
 //    public int getMaxCiphertextByteSize(MidiaType media_type, int encrypted_frame_size)

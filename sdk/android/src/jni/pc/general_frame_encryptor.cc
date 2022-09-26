@@ -11,7 +11,13 @@
 
 namespace webrtc {
 namespace jni {
-GeneralFrameEncryptor::GeneralFrameEncryptor() {
+GeneralFrameEncryptor::GeneralFrameEncryptor(JNIEnv *env) {
+  jclass encryAndDecryClassTemp = env->FindClass("org/pjsip/pjsua2/service/EncryAndDecry");
+  encryAndDecryClass = env->NewGlobalRef(encryAndDecryClassTemp);
+}
+
+GeneralFrameEncryptor::~GeneralFrameEncryptor() {
+  env->DeleteGlobalRef(encryAndDecryClass);
 }
 
 int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
@@ -43,19 +49,24 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   // type convert: native to Java
   rtc::ArrayView<const uint8_t> frame_payload = frame.subview(unencrypted_bytes);
-  ScopedJavaLocalRef<jbyteArray> j_frame_payload(env,
-                                        env->NewByteArray(frame_payload.size()));
-  env->SetByteArrayRegion(j_frame_payload.obj(), 0, frame_payload.size(), reinterpret_cast<const jbyte*>(frame_payload.data()));
+  jbyteArray jarrayIn, jarrayOut;
+  jarrayIn = env->NewByteArray(frame_payload.size());
+  env->SetByteArrayRegion(jarrayIn, 0, frame_payload.size(), reinterpret_cast<const jbyte*>(frame_payload.data()));
 
   // call Java side function
-  ScopedJavaLocalRef<jbyteArray> j_encrypted_frame_payload =
-      Java_GeneralFrameEncryptor_encrypt(env, j_frame_payload);
+  jmethodID encryMethod = env->GetStaticMethodID(encryAndDecryClass, "decryByte", "([B)[B");
+  jarrayOut = env->CallStaticObjectMethod(encryAndDecryClass, encryMethod, jarrayIn);
+
+  int8_t* encrypted_frame_payload = reinterpret_cast<int8_t*>(env->GetByteArrayElements(jarrayOut, 0));
+//
+//  ScopedJavaLocalRef<jbyteArray> j_encrypted_frame_payload =
+//      Java_GeneralFrameEncryptor_encrypt(env, j_frame_payload);
 
   // type convert: Java to native
-  std::vector<int8_t> encrypted_frame_payload = JavaToNativeByteArray(env, j_encrypted_frame_payload);
+//  std::vector<int8_t> encrypted_frame_payload = JavaToNativeByteArray(env, j_encrypted_frame_payload);
 
   // write encrypted frame data
-  size_t j_length = encrypted_frame_payload.size();
+  size_t j_length = env.GetArrayLength(jarrayOut);
   for (size_t i = 0; i < j_length; ++i) {
     encrypted_frame[i+unencrypted_bytes] = encrypted_frame_payload[i];
   }
@@ -73,7 +84,7 @@ size_t GeneralFrameEncryptor::GetMaxCiphertextByteSize(
 
 
 static jlong JNI_GeneralFrameEncryptor_GetGeneralFrameEncryptor(JNIEnv* jni) {
-  return jlongFromPointer(new GeneralFrameEncryptor());
+  return jlongFromPointer(new GeneralFrameEncryptor(jni));
 }
 }   // namespace jni
 }  // namespace webrtc
