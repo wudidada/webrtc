@@ -13,12 +13,12 @@
 namespace webrtc {
 namespace jni {
 GeneralFrameDecryptor::GeneralFrameDecryptor(JNIEnv* env) {
-  jclass encryAndDecryClassTemp = env->FindClass("org/pjsip/pjsua2/service/EncryAndDecry");
+  jclass encryAndDecryClassTemp = static_cast<jclass>(env->FindClass("org/pjsip/pjsua2/service/EncryAndDecry"));
   encryAndDecryClass = env->NewGlobalRef(encryAndDecryClassTemp);
 }
 
 GeneralFrameDecryptor::~GeneralFrameDecryptor() {
-  encryAndDecryClass = env->NewGlobalRef(encryAndDecryClassTemp);
+  env->DeleteGlobalRef(encryAndDecryClass);
 }
 
 GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
@@ -62,7 +62,7 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
   int8_t* frame_payload = reinterpret_cast<int8_t*>(env->GetByteArrayElements(jarrayOut, 0));
 
   // write encrypted frame data
-  size_t j_length = env.GetArrayLength(jarrayOut);
+  size_t j_length = env->GetArrayLength(jarrayOut);
   for (size_t i = 0; i < j_length; ++i) {
     frame[i+unencrypted_bytes] = frame_payload[i];
   }

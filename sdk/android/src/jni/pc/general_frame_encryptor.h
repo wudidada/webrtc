@@ -15,7 +15,7 @@ namespace jni {
 class GeneralFrameEncryptor
     : public rtc::RefCountedObject<FrameEncryptorInterface> {
  public:
-  explicit GeneralFrameEncryptor(JNIEne* jni);
+  explicit GeneralFrameEncryptor(JNIEnv* jni);
   ~GeneralFrameEncryptor() override;
   int Encrypt(cricket::MediaType media_type,
               uint32_t ssrc,

@@ -12,7 +12,7 @@
 namespace webrtc {
 namespace jni {
 GeneralFrameEncryptor::GeneralFrameEncryptor(JNIEnv *env) {
-  jclass encryAndDecryClassTemp = env->FindClass("org/pjsip/pjsua2/service/EncryAndDecry");
+  jclass encryAndDecryClassTemp = static_cast<jclass>(env->FindClass("org/pjsip/pjsua2/service/EncryAndDecry"));
   encryAndDecryClass = env->NewGlobalRef(encryAndDecryClassTemp);
 }
 
@@ -66,7 +66,7 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
 //  std::vector<int8_t> encrypted_frame_payload = JavaToNativeByteArray(env, j_encrypted_frame_payload);
 
   // write encrypted frame data
-  size_t j_length = env.GetArrayLength(jarrayOut);
+  size_t j_length = env->GetArrayLength(jarrayOut);
   for (size_t i = 0; i < j_length; ++i) {
     encrypted_frame[i+unencrypted_bytes] = encrypted_frame_payload[i];
   }
