@@ -1,0 +1,26 @@
+name: 'compile project'
+
+on:
+  push
+
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Branch
+        run: echo $BRANCH_NAME
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: unnecessary
+
+      - name: Adding Known Hosts
+        run: ssh-keyscan -p 22 -H ${{ secrets.HOST }}  >> ~/.ssh/known_hosts
+
+      - name: Deploy and Compile
+        run: ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} "zsh /root/tools/deploy_server.sh ${{ env.BRANCH_NAME }}"
