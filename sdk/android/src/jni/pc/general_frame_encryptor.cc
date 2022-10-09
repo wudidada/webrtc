@@ -55,7 +55,7 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
   env->SetByteArrayRegion(jarrayIn, 0, frame_payload.size(), reinterpret_cast<const jbyte*>(frame_payload.data()));
 
   // call Java side function
-  jmethodID encryMethod = env->GetStaticMethodID(encryAndDecryClass, "decryByte", "([B)[B");
+  jmethodID encryMethod = env->GetStaticMethodID(encryAndDecryClass, "encryByte", "([B)[B");
   jarrayOut = static_cast<jbyteArray>(env->CallStaticObjectMethod(encryAndDecryClass, encryMethod, jarrayIn));
 
   int8_t* encrypted_frame_payload = reinterpret_cast<int8_t*>(env->GetByteArrayElements(jarrayOut, 0));
