@@ -12,7 +12,7 @@
 namespace webrtc {
 namespace jni {
 GeneralFrameEncryptor::GeneralFrameEncryptor(JNIEnv *env) {
-  jclass encryAndDecryClassTemp = env->FindClass("org/pjsip/pjsua2/service/EncryAndDecry");
+  jclass encryAndDecryClassTemp = env->FindClass("org/webrtc/ict/EncryAndDecry");
   encryAndDecryClass = static_cast<jclass>(env->NewGlobalRef(encryAndDecryClassTemp));
 }
 
