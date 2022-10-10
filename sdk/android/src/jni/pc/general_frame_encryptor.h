@@ -1,3 +1,6 @@
+#ifndef SDK_ANDROID_SRC_JNI_PC_GENERAL_FRAME_ENCRYPTOR_H_
+#define SDK_ANDROID_SRC_JNI_PC_GENERAL_FRAME_ENCRYPTOR_H_
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -7,16 +10,25 @@
 #include "api/crypto/frame_encryptor_interface.h"
 #include "api/media_types.h"
 #include "rtc_base/ref_counted_object.h"
+#include "sdk/android/src/jni/jni_helpers.h"
 
 #include <jni.h>
+
+
+std::atomic<jclass> g_GeneralFrameEncryptor_clazz(nullptr);
+#ifndef GeneralFrameEncryptor_clazz_defined
+#define GeneralFrameEncryptor_clazz_defined
+inline jclass GeneralFrameEncryptor_clazz(JNIEnv* env) {
+  return base::android::LazyGetClass(env, "org/webrtc/GeneralFrameEncryptor",
+                                     &g_GeneralFrameEncryptor_clazz);
+}
+#endif
 
 namespace webrtc {
 namespace jni {
 class GeneralFrameEncryptor
     : public rtc::RefCountedObject<FrameEncryptorInterface> {
  public:
-  explicit GeneralFrameEncryptor(JNIEnv* jni);
-  ~GeneralFrameEncryptor() override;
   int Encrypt(cricket::MediaType media_type,
               uint32_t ssrc,
               rtc::ArrayView<const uint8_t> additional_data,
@@ -26,8 +38,8 @@ class GeneralFrameEncryptor
 
   size_t GetMaxCiphertextByteSize(cricket::MediaType media_type,
                                   size_t frame_size) override;
- private:
-  jclass encryAndDecryClass;
 };
 }  // namespace jni
 }  // namespace webrtc
+
+#endif  // SDK_ANDROID_SRC_JNI_PC_GENERAL_FRAME_ENCRYPTOR_H_

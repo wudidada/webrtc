@@ -11,16 +11,6 @@
 
 namespace webrtc {
 namespace jni {
-GeneralFrameEncryptor::GeneralFrameEncryptor(JNIEnv *env) {
-  jclass encryAndDecryClassTemp = env->FindClass("org/webrtc/GeneralFrameEncryptor");
-  encryAndDecryClass = static_cast<jclass>(env->NewGlobalRef(encryAndDecryClassTemp));
-}
-
-GeneralFrameEncryptor::~GeneralFrameEncryptor() {
-  JNIEnv* env = AttachCurrentThreadIfNeeded();
-  env->DeleteGlobalRef(encryAndDecryClass);
-}
-
 int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
                                    uint32_t ssrc,
                                    rtc::ArrayView<const uint8_t> additional_data,
@@ -50,13 +40,26 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   // type convert: native to Java
   rtc::ArrayView<const uint8_t> frame_payload = frame.subview(unencrypted_bytes);
-  jbyteArray jarrayIn, jarrayOut;
-  jarrayIn = env->NewByteArray(frame_payload.size());
+  jbyteArray jarrayIn = env->NewByteArray(frame_payload.size());
   env->SetByteArrayRegion(jarrayIn, 0, frame_payload.size(), reinterpret_cast<const jbyte*>(frame_payload.data()));
 
   // call Java side function
-  jmethodID encryMethod = env->GetStaticMethodID(encryAndDecryClass, "encryByte", "([B)[B");
-  jarrayOut = static_cast<jbyteArray>(env->CallStaticObjectMethod(encryAndDecryClass, encryMethod, jarrayIn));
+  jclass encryAndDecryClass = GeneralFrameEncryptor_clazz(env);
+  CHECK_CLAZZ(env, encryAndDecryClass,
+              GeneralFrameEncryptor_clazz(env), NULL);
+
+  jni_generator::JniJavaCallContextChecked call_context;
+  call_context.Init<
+      base::android::MethodID::TYPE_STATIC>(
+      env,
+      clazz,
+      "encryByte",
+      "([B)[B",
+      &g_GeneralFrameEncryptor_clazz);
+
+  jbyteArray jarrayOut =
+      static_cast<jbyteArray>(env->CallStaticObjectMethod(encryAndDecryClass,
+                                                          call_context.base.method_id, jarrayIn));
 
   int8_t* encrypted_frame_payload = reinterpret_cast<int8_t*>(env->GetByteArrayElements(jarrayOut, 0));
 //
