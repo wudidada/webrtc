@@ -12,15 +12,6 @@
 
 namespace webrtc {
 namespace jni {
-GeneralFrameDecryptor::GeneralFrameDecryptor(JNIEnv* env) {
-  jclass encryAndDecryClassTemp = env->FindClass("org/webrtc/GeneralFrameDecryptor");
-  encryAndDecryClass = static_cast<jclass>(env->NewGlobalRef(encryAndDecryClassTemp));
-}
-
-GeneralFrameDecryptor::~GeneralFrameDecryptor() {
-  JNIEnv* env = AttachCurrentThreadIfNeeded();
-  env->DeleteGlobalRef(encryAndDecryClass);
-}
 
 GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
     cricket::MediaType media_type,
@@ -51,13 +42,26 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
 
   // type convert: native to Java
   rtc::ArrayView<const uint8_t> encrypted_frame_payload = encrypted_frame.subview(unencrypted_bytes);
-    jbyteArray jarrayIn, jarrayOut;
-  jarrayIn = env->NewByteArray(encrypted_frame_payload.size());
+  jbyteArray jarrayIn = env->NewByteArray(encrypted_frame_payload.size());
   env->SetByteArrayRegion(jarrayIn, 0, encrypted_frame_payload.size(), reinterpret_cast<const jbyte*>(encrypted_frame_payload.data()));
 
   // call Java side function
-  jmethodID decryMethod = env->GetStaticMethodID(encryAndDecryClass, "decryByte", "([B)[B");
-  jarrayOut = static_cast<jbyteArray>(env->CallStaticObjectMethod(encryAndDecryClass, decryMethod, jarrayIn));
+  jclass encryAndDecryClass = GeneralFrameDecryptor_clazz(env);
+  CHECK_CLAZZ(env, encryAndDecryClass,
+              GeneralFrameDecryptor_clazz(env), NULL);
+  
+  jni_generator::JniJavaCallContextChecked call_context;
+  call_context.Init<
+      base::android::MethodID::TYPE_STATIC>(
+      env,
+      encryAndDecryClass,
+      "decryByte",
+      "([B)[B",
+      &g_GeneralFrameEncryptor_decryByte);
+
+  jbyteArray jarrayOut =
+      static_cast<jbyteArray>(env->CallStaticObjectMethod(encryAndDecryClass,
+                                                          call_context.base.method_id, jarrayIn));
 
   // type convert: Java to native
   int8_t* frame_payload = reinterpret_cast<int8_t*>(env->GetByteArrayElements(jarrayOut, 0));
@@ -77,7 +81,7 @@ size_t GeneralFrameDecryptor::GetMaxPlaintextByteSize(cricket::MediaType media_t
 }
 
 static jlong JNI_GeneralFrameDecryptor_GetGeneralFrameDecryptor(JNIEnv* jni) {
-  return jlongFromPointer(new GeneralFrameDecryptor(jni));
+  return jlongFromPointer(new GeneralFrameDecryptor());
 }
 }  // namespace jni
 }  // namespace webrtc

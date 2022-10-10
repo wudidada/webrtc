@@ -1,3 +1,6 @@
+#ifndef SDK_ANDROID_SRC_JNI_PC_GENERAL_FRAME_DECRYPTOR_H_
+#define SDK_ANDROID_SRC_JNI_PC_GENERAL_FRAME_DECRYPTOR_H_
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -9,13 +12,25 @@
 #include "rtc_base/ref_counted_object.h"
 #include <jni.h>
 
+#include "sdk/android/src/jni/jni_helpers.h"
+#include "sdk/android/src/jni/jni_generator_helper.h"
+
+std::atomic<jclass> g_GeneralFrameDecryptor_clazz(nullptr);
+#ifndef GeneralFrameDecryptor_clazz_defined
+#define GeneralFrameDecryptor_clazz_defined
+inline jclass GeneralFrameDecryptor_clazz(JNIEnv* env) {
+  return webrtc::LazyGetClass(env, "org/webrtc/GeneralFrameDecryptor",
+                              &g_GeneralFrameDecryptor_clazz);
+}
+#endif
+
+static std::atomic<jmethodID> g_GeneralFrameEncryptor_decryByte(nullptr);
+
 namespace webrtc {
 namespace jni {
 class GeneralFrameDecryptor final
     : public rtc::RefCountedObject<FrameDecryptorInterface> {
  public:
-  explicit GeneralFrameDecryptor(JNIEnv* jni);
-  ~GeneralFrameDecryptor();
   Result Decrypt(cricket::MediaType media_type,
                  const std::vector<uint32_t>& csrcs,
                  rtc::ArrayView<const uint8_t> additional_data,
@@ -28,3 +43,5 @@ class GeneralFrameDecryptor final
 };
 }   // namespace jni
 }  // namespace webrtc
+
+#endif  // SDK_ANDROID_SRC_JNI_PC_GENERAL_FRAME_DECRYPTOR_H_
