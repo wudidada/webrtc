@@ -38,8 +38,6 @@ class GeneralFrameDecryptor final
                  rtc::ArrayView<uint8_t> frame) override;
   size_t GetMaxPlaintextByteSize(cricket::MediaType media_type,
                                  size_t encrypted_frame_size) override;
- private:
-  jclass encryAndDecryClass;
 };
 }   // namespace jni
 }  // namespace webrtc
