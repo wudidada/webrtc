@@ -19,7 +19,7 @@ std::atomic<jclass> g_GeneralFrameEncryptor_clazz(nullptr);
 #ifndef GeneralFrameEncryptor_clazz_defined
 #define GeneralFrameEncryptor_clazz_defined
 inline jclass GeneralFrameEncryptor_clazz(JNIEnv* env) {
-  return LazyGetClass(env, "org/webrtc/GeneralFrameEncryptor",
+  return webrtc::LazyGetClass(env, "org/webrtc/GeneralFrameEncryptor",
                                      &g_GeneralFrameEncryptor_clazz);
 }
 #endif
