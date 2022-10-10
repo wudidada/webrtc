@@ -11,6 +11,8 @@
 #include "api/media_types.h"
 #include "rtc_base/ref_counted_object.h"
 #include "sdk/android/src/jni/jni_helpers.h"
+#include "sdk/android/src/jni/jni_generator_helper.h"
+
 
 #include <jni.h>
 
