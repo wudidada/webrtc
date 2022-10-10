@@ -52,7 +52,7 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
   call_context.Init<
       base::android::MethodID::TYPE_STATIC>(
       env,
-      clazz,
+      encryAndDecryClass,
       "encryByte",
       "([B)[B",
       &g_GeneralFrameEncryptor_clazz);
@@ -88,7 +88,7 @@ size_t GeneralFrameEncryptor::GetMaxCiphertextByteSize(
 
 
 static jlong JNI_GeneralFrameEncryptor_GetGeneralFrameEncryptor(JNIEnv* jni) {
-  return jlongFromPointer(new GeneralFrameEncryptor(jni));
+  return jlongFromPointer(new GeneralFrameEncryptor());
 }
 }   // namespace jni
 }  // namespace webrtc
