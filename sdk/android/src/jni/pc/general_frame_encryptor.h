@@ -24,6 +24,8 @@ inline jclass GeneralFrameEncryptor_clazz(JNIEnv* env) {
 }
 #endif
 
+static std::atomic<jmethodID> g_GeneralFrameEncryptor_encryByte(nullptr);
+
 namespace webrtc {
 namespace jni {
 class GeneralFrameEncryptor

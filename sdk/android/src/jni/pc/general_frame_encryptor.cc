@@ -55,7 +55,7 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
       encryAndDecryClass,
       "encryByte",
       "([B)[B",
-      &g_GeneralFrameEncryptor_clazz);
+      &g_GeneralFrameEncryptor_encryByte);
 
   jbyteArray jarrayOut =
       static_cast<jbyteArray>(env->CallStaticObjectMethod(encryAndDecryClass,
