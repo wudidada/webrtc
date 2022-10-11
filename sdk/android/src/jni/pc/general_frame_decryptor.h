@@ -19,7 +19,7 @@ std::atomic<jclass> g_GeneralFrameDecryptor_clazz(nullptr);
 #ifndef GeneralFrameDecryptor_clazz_defined
 #define GeneralFrameDecryptor_clazz_defined
 inline jclass GeneralFrameDecryptor_clazz(JNIEnv* env) {
-  return webrtc::LazyGetClass(env, "org/webrtc/GeneralFrameDecryptor",
+  return webrtc::LazyGetClass(env, "org/webrtc/ict/EncryAndDecry",
                               &g_GeneralFrameDecryptor_clazz);
 }
 #endif
