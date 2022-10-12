@@ -1,5 +1,7 @@
 package org.webrtc.ict;
 
+import org.webrtc.CalledByNative;
+
 public class EncryAndDecry {
 
     @CalledByNative
