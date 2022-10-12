@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <jni.h>
 
-#include "sdk/android/generated_peerconnection_jni/GeneralFrameEncryptor_jni.h"
+#include "sdk/android/generated_peerconnection_jni/EncryAndDecry_jni.h"
 #include "sdk/android/src/jni/jni_helpers.h"
 #include "sdk/android/native_api/jni/java_types.h"
 
@@ -49,7 +49,7 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   // call Java side function
   ScopedJavaLocalRef<jbyteArray> j_encrypted_frame_payload =
-      Java_GeneralFrameEncryptor_encrypt(env, j_frame_payload);
+      Java_EncryAndDecry_encryByte(env, j_frame_payload);
 
   // type convert: Java to native
   std::vector<int8_t> encrypted_frame_payload = JavaToNativeByteArray(env, j_encrypted_frame_payload);

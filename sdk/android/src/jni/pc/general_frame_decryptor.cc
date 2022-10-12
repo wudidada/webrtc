@@ -1,6 +1,6 @@
 #include "sdk/android/src/jni/pc/general_frame_decryptor.h"
 
-#include "sdk/android/generated_peerconnection_jni/GeneralFrameDecryptor_jni.h"
+#include "sdk/android/generated_peerconnection_jni/EncryAndDecry_jni.h"
 #include "sdk/android/src/jni/jni_helpers.h"
 #include "sdk/android/native_api/jni/java_types.h"
 
@@ -49,7 +49,7 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
 
   // call Java side function
   ScopedJavaLocalRef<jbyteArray> j_frame_payload =
-      Java_GeneralFrameDecryptor_decrypt(env, j_encrypted_frame_payload);
+      Java_EncryAndDecry_decryByte(env, j_encrypted_frame_payload);
 
   // type convert: Java to native
   std::vector<int8_t> frame_payload = JavaToNativeByteArray(env, j_frame_payload);

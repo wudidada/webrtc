@@ -268,6 +268,7 @@ if (is_android) {
       "api/org/webrtc/GeneralFrameEncryptor.java",
       "api/org/webrtc/SimpleFrameDecryptor.java",
       "api/org/webrtc/SimpleFrameEncryptor.java",
+      "api/org/webrtc/ict/EncryAndDecry.java"
       "api/org/webrtc/IceCandidate.java",
       "api/org/webrtc/IceCandidateErrorEvent.java",
       "api/org/webrtc/MediaConstraints.java",
@@ -1395,6 +1396,7 @@ if (current_os == "linux" || is_android) {
       "api/org/webrtc/SimpleFrameEncryptor.java",
       "api/org/webrtc/GeneralFrameDecryptor.java",
       "api/org/webrtc/GeneralFrameEncryptor.java",
+      "api/org/webrtc/ict/EncryAndDecry.java"
       "api/org/webrtc/IceCandidate.java",
       "api/org/webrtc/IceCandidateErrorEvent.java",
       "api/org/webrtc/MediaConstraints.java",
