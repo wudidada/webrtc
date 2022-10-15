@@ -9,6 +9,8 @@
 #include <jni.h>
 
 #include <vector>
+#include "rtc_base/logging.h"
+
 
 namespace webrtc {
 namespace jni {
