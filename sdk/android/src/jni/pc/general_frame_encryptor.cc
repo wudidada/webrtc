@@ -80,7 +80,7 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
 size_t GeneralFrameEncryptor::GetMaxCiphertextByteSize(
     cricket::MediaType media_type,
     size_t frame_size) {
-  return frame_size + 30;
+  return frame_size;
 }
 
 
