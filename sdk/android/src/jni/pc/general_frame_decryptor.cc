@@ -60,6 +60,14 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
     frame[i+unencrypted_bytes] = frame_payload[i];
   }
 
+  if (frame_payload.size() != encrypted_frame_payload.size()) {
+    RTC_LOG(LS_ERROR) << "decrypt frame failed: "
+                      << encrypted_frame_payload.size()
+                      << " -> "
+                      << frame_payload.size();
+    return Result(Status::kFailedToDecrypt, unencrypted_bytes + j_length);
+  }
+
   return Result(Status::kOk, unencrypted_bytes + j_length);
 }
 

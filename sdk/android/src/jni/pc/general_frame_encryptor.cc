@@ -62,6 +62,14 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
 
   *bytes_written = unencrypted_bytes + j_length;
 
+  if (encrypted_frame_payload.size() != frame_payload.size()) {
+    RTC_LOG(LS_ERROR) << "encrypt frame failed: "
+                      << frame_payload.size()
+                      << " -> "
+                      << encrypted_frame_payload.size();
+    return -1;
+  }
+
   return 0;
 }
 
