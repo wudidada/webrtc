@@ -28,7 +28,7 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
       unencrypted_bytes = 1;
       break;
     case cricket::MEDIA_TYPE_VIDEO:
-      unencrypted_bytes = 10;
+      unencrypted_bytes = 20;
       break;
     case cricket::MEDIA_TYPE_DATA:
       break;
