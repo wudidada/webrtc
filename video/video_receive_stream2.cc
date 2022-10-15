@@ -652,8 +652,8 @@ void VideoReceiveStream2::RequestKeyFrame(int64_t timestamp_ms) {
   // Running on worker_sequence_checker_.
   // Called from RtpVideoStreamReceiver (rtp_video_stream_receiver_ is
   // ultimately responsible).
-  absl::optional<int64_t> last_keyframe_packet_ms = rtp_video_stream_receiver_.LastReceivedKeyframePacketMs();
-  absl::optional<int64_t> last_packet_ms = rtp_video_stream_receiver_.LastReceivedPacketMs();
+  absl::optional<int64_t> last_keyframe_packet_ms = rtp_video_stream_receiver_.LastReceivedKeyframePacketMs() || 0;
+  absl::optional<int64_t> last_packet_ms = rtp_video_stream_receiver_.LastReceivedPacketMs() || 0;
   RTC_LOG(LS_INFO) << "last received keyframe packet: "
                    << *last_keyframe_packet_ms
                    << "["
