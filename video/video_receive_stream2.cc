@@ -300,7 +300,7 @@ VideoReceiveStream2::VideoReceiveStream2(
 
 VideoReceiveStream2::~VideoReceiveStream2() {
   RTC_DCHECK_RUN_ON(&worker_sequence_checker_);
-  RTC_LOG(LS_INFO) << "~VideoReceiveStream2: " << config_.ToString();
+  RTC_LOG(LS_INFO) << "";
   RTC_DCHECK(!media_receiver_);
   RTC_DCHECK(!rtx_receiver_);
   Stop();
@@ -652,6 +652,11 @@ void VideoReceiveStream2::RequestKeyFrame(int64_t timestamp_ms) {
   // Running on worker_sequence_checker_.
   // Called from RtpVideoStreamReceiver (rtp_video_stream_receiver_ is
   // ultimately responsible).
+  RTC_LOG(LS_WARN) << "last received keyframe packet: "
+                   << rtp_video_stream_receiver_.LastReceivedKeyframePacketMs()
+                   << "["
+                   << rtp_video_stream_receiver_.LastReceivedPacketMs()
+                   << "]";
   rtp_video_stream_receiver_.RequestKeyFrame();
   decode_queue_.PostTask([this, timestamp_ms]() {
     RTC_DCHECK_RUN_ON(&decode_queue_);
