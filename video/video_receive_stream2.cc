@@ -653,9 +653,9 @@ void VideoReceiveStream2::RequestKeyFrame(int64_t timestamp_ms) {
   // Called from RtpVideoStreamReceiver (rtp_video_stream_receiver_ is
   // ultimately responsible).
   RTC_LOG(LS_INFO) << "last received keyframe packet: "
-                   << rtp_video_stream_receiver_.LastReceivedKeyframePacketMs().value()
+                   << *(rtp_video_stream_receiver_.LastReceivedKeyframePacketMs())
                    << "["
-                   << rtp_video_stream_receiver_.LastReceivedPacketMs().value()
+                   << *(rtp_video_stream_receiver_.LastReceivedPacketMs())
                    << "]";
   rtp_video_stream_receiver_.RequestKeyFrame();
   decode_queue_.PostTask([this, timestamp_ms]() {
