@@ -672,6 +672,8 @@ void RtpVideoStreamReceiver2::RequestKeyFrame() {
   // TODO(bugs.webrtc.org/10336): Allow the sender to ignore key frame requests
   // issued by anything other than the LossNotificationController if it (the
   // sender) is relying on LNTF alone.
+  RTC_DCHECK_RUN_ON(&packet_sequence_checker_);
+
   int64_t last_keyframe_time = 0;
   if (last_received_keyframe_rtp_system_time_)
     last_keyframe_time = last_received_keyframe_rtp_system_time_->ms();
@@ -679,6 +681,7 @@ void RtpVideoStreamReceiver2::RequestKeyFrame() {
   int64_t last_frame_time = 0;
   if (last_received_rtp_system_time_)
     last_frame_time = last_received_rtp_system_time_->ms();
+
   RTC_LOG(LS_INFO) << "last received keyframe packet: "
                    << last_keyframe_time
                    << "["
