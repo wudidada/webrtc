@@ -26,12 +26,21 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
       unencrypted_bytes = 1;
       break;
     case cricket::MEDIA_TYPE_VIDEO:
-      unencrypted_bytes = 20;
+      unencrypted_bytes = 40;
       break;
     case cricket::MEDIA_TYPE_DATA:
       break;
     case cricket::MEDIA_TYPE_UNSUPPORTED:
       break;
+  }
+
+  // we can't sure the fix size of head
+  if (frame.size() <= unencrypted_bytes) {
+    for (size_t i = 0; i < frame.size(); i++) {
+      encrypted_frame[i] = frame[i];
+    }
+    *bytes_written = frame.size();
+    return 0;
   }
 
   // write unencrypted frame head

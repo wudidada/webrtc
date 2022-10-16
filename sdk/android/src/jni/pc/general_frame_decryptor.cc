@@ -28,12 +28,20 @@ GeneralFrameDecryptor::Result GeneralFrameDecryptor::Decrypt(
       unencrypted_bytes = 1;
       break;
     case cricket::MEDIA_TYPE_VIDEO:
-      unencrypted_bytes = 20;
+      unencrypted_bytes = 40;
       break;
     case cricket::MEDIA_TYPE_DATA:
       break;
     case cricket::MEDIA_TYPE_UNSUPPORTED:
       break;
+  }
+
+  // we can't sure the fix size of head
+  if (encrypted_frame.size() <= unencrypted_bytes) {
+    for (size_t i = 0; i < encrypted_frame.size(); i++) {
+      frame[i] = encrypted_frame[i];
+    }
+    return Result(Status::kOk, encrypted_frame.size());
   }
 
   // write unencrypted frame head
