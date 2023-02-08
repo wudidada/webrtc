@@ -49,6 +49,39 @@ int GeneralFrameEncryptor::Encrypt(cricket::MediaType media_type,
   }
 
   *bytes_written = frame.size();
+  if (frame.size() == *bytes_written)
+    return 0;
+
+  JNIEnv* env = AttachCurrentThreadIfNeeded();
+
+  // type convert: native to Java
+  rtc::ArrayView<const uint8_t> frame_payload = frame.subview(unencrypted_bytes);
+  ScopedJavaLocalRef<jbyteArray> j_frame_payload(env,
+                                                 env->NewByteArray(frame_payload.size()));
+  env->SetByteArrayRegion(j_frame_payload.obj(), 0, frame_payload.size(), reinterpret_cast<const jbyte*>(frame_payload.data()));
+
+  // call Java side function
+  ScopedJavaLocalRef<jbyteArray> j_encrypted_frame_payload =
+      Java_GeneralFrameEncryptor_encrypt(env, j_frame_payload);
+
+  // type convert: Java to native
+  std::vector<int8_t> encrypted_frame_payload = JavaToNativeByteArray(env, j_encrypted_frame_payload);
+
+  // write encrypted frame data
+  size_t j_length = encrypted_frame_payload.size();
+  for (size_t i = 0; i < j_length; ++i) {
+    encrypted_frame[i+unencrypted_bytes] = encrypted_frame_payload[i];
+  }
+
+  *bytes_written = unencrypted_bytes + j_length;
+
+  if (encrypted_frame_payload.size() != frame_payload.size()) {
+    RTC_LOG(LS_ERROR) << "encrypt frame failed: "
+                      << frame_payload.size()
+                      << " -> "
+                      << encrypted_frame_payload.size();
+    return -1;
+  }
 
   return 0;
 }
